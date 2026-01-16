@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="https://jakarta.ee/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd"
+             version="3.0">
+    <persistence-unit name="CFInt31PU" transaction-type="RESOURCE_LOCAL">
+        <class>io.github.msobkow.v3_1.cfint.cfint.jpa.CFIntJpaLicense</class>
+        <class>io.github.msobkow.v3_1.cfint.cfint.jpa.CFIntJpaMajorVersion</class>
+        <class>io.github.msobkow.v3_1.cfint.cfint.jpa.CFIntJpaMajorVersionH</class>
+        <class>io.github.msobkow.v3_1.cfint.cfint.jpa.CFIntJpaMimeType</class>
+        <class>io.github.msobkow.v3_1.cfint.cfint.jpa.CFIntJpaMimeTypeH</class>
+        <class>io.github.msobkow.v3_1.cfint.cfint.jpa.CFIntJpaMinorVersion</class>
+        <class>io.github.msobkow.v3_1.cfint.cfint.jpa.CFIntJpaMinorVersionH</class>
+        <class>io.github.msobkow.v3_1.cfint.cfint.jpa.CFIntJpaSubProject</class>
+        <class>io.github.msobkow.v3_1.cfint.cfint.jpa.CFIntJpaSubProjectH</class>
+        <class>io.github.msobkow.v3_1.cfint.cfint.jpa.CFIntJpaTld</class>
+        <class>io.github.msobkow.v3_1.cfint.cfint.jpa.CFIntJpaTldH</class>
+        <class>io.github.msobkow.v3_1.cfint.cfint.jpa.CFIntJpaTopDomain</class>
+        <class>io.github.msobkow.v3_1.cfint.cfint.jpa.CFIntJpaTopDomainH</class>
+        <class>io.github.msobkow.v3_1.cfint.cfint.jpa.CFIntJpaTopProject</class>
+        <class>io.github.msobkow.v3_1.cfint.cfint.jpa.CFIntJpaTopProjectH</class>
+        <class>io.github.msobkow.v3_1.cfint.cfint.jpa.CFIntJpaURLProtocol</class>
+        <class>io.github.msobkow.v3_1.cfint.cfint.jpa.CFIntJpaURLProtocolH</class>
+        <properties>
+            <!-- Example properties, adjust for your DBMS -->
+            <property name="hibernate.transaction.jta.platform" value="org.hibernate.engine.transaction.jta.platform.internal.SpringJtaPlatform"/>
+            <property name="jakarta.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/cfint31"/>
+            <property name="jakarta.persistence.jdbc.user" value="youruser"/>
+            <property name="jakarta.persistence.jdbc.password" value="yourpassword"/>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>
+            <property name="hibernate.hbm2ddl.auto" value="update"/>
+            <property name="hibernate.show_sql" value="false"/>
+        </properties>
+    </persistence-unit>
+
+</persistence>
