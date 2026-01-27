@@ -65,12 +65,44 @@ public class CFIntJpaURLProtocolDefaultFactory
         return( hpkey );
     }
 
+	public CFIntJpaURLProtocolHPKey ensureHPKey(ICFIntURLProtocolHPKey key) {
+		if (key == null) {
+			return( null );
+		}
+		else if( key instanceof CFIntJpaURLProtocolHPKey) {
+			return( (CFIntJpaURLProtocolHPKey)key );
+		}
+		else {
+			CFIntJpaURLProtocolHPKey mapped = new CFIntJpaURLProtocolHPKey();
+			mapped.setAuditClusterId(key.getAuditClusterId());
+			mapped.setAuditActionId(key.getAuditActionId());
+			mapped.setAuditSessionId(key.getAuditSessionId());
+			mapped.setAuditStamp(key.getAuditStamp());
+			mapped.setRequiredURLProtocolId( key.getRequiredURLProtocolId() );
+			return( mapped );
+		}
+	}
+
     @Override
     public ICFIntURLProtocolByUNameIdxKey newByUNameIdxKey() {
 	ICFIntURLProtocolByUNameIdxKey key =
             new CFIntJpaURLProtocolByUNameIdxKey();
 	return( key );
     }
+
+	public CFIntJpaURLProtocolByUNameIdxKey ensureByUNameIdxKey(ICFIntURLProtocolByUNameIdxKey key) {
+		if (key == null) {
+			return( null );
+		}
+		else if (key instanceof CFIntJpaURLProtocolByUNameIdxKey) {
+			return( (CFIntJpaURLProtocolByUNameIdxKey)key );
+		}
+		else {
+			CFIntJpaURLProtocolByUNameIdxKey mapped = new CFIntJpaURLProtocolByUNameIdxKey();
+			mapped.setRequiredName( key.getRequiredName() );
+			return( mapped );
+		}
+	}
 
     @Override
     public ICFIntURLProtocolByIsSecureIdxKey newByIsSecureIdxKey() {
@@ -79,6 +111,20 @@ public class CFIntJpaURLProtocolDefaultFactory
 	return( key );
     }
 
+	public CFIntJpaURLProtocolByIsSecureIdxKey ensureByIsSecureIdxKey(ICFIntURLProtocolByIsSecureIdxKey key) {
+		if (key == null) {
+			return( null );
+		}
+		else if (key instanceof CFIntJpaURLProtocolByIsSecureIdxKey) {
+			return( (CFIntJpaURLProtocolByIsSecureIdxKey)key );
+		}
+		else {
+			CFIntJpaURLProtocolByIsSecureIdxKey mapped = new CFIntJpaURLProtocolByIsSecureIdxKey();
+			mapped.setRequiredIsSecure( key.getRequiredIsSecure() );
+			return( mapped );
+		}
+	}
+
     @Override
     public ICFIntURLProtocol newRec() {
         ICFIntURLProtocol rec =
@@ -86,10 +132,38 @@ public class CFIntJpaURLProtocolDefaultFactory
         return( rec );
     }
 
+	public CFIntJpaURLProtocol ensureRec(ICFIntURLProtocol rec) {
+		if( rec == null ) {
+			return( null );
+		}
+		else if (rec instanceof CFIntJpaURLProtocol) {
+			return( (CFIntJpaURLProtocol)rec );
+		}
+		else {
+			CFIntJpaURLProtocol mapped = new CFIntJpaURLProtocol();
+			mapped.set(rec);
+			return( mapped );
+		}
+	}
+
     @Override
     public ICFIntURLProtocolH newHRec() {
         ICFIntURLProtocolH hrec =
             new CFIntJpaURLProtocolH();
         return( hrec );
     }
+
+	public CFIntJpaURLProtocolH ensureHRec(ICFIntURLProtocolH hrec) {
+		if (hrec == null) {
+			return( null );
+		}
+		else if( hrec instanceof CFIntJpaURLProtocolH) {
+			return( (CFIntJpaURLProtocolH)hrec );
+		}
+		else {
+			CFIntJpaURLProtocolH mapped = new CFIntJpaURLProtocolH();
+			mapped.set(hrec);
+			return( mapped );
+		}
+	}
 }

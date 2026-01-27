@@ -65,12 +65,44 @@ public class CFIntJpaTldDefaultFactory
         return( hpkey );
     }
 
+	public CFIntJpaTldHPKey ensureHPKey(ICFIntTldHPKey key) {
+		if (key == null) {
+			return( null );
+		}
+		else if( key instanceof CFIntJpaTldHPKey) {
+			return( (CFIntJpaTldHPKey)key );
+		}
+		else {
+			CFIntJpaTldHPKey mapped = new CFIntJpaTldHPKey();
+			mapped.setAuditClusterId(key.getAuditClusterId());
+			mapped.setAuditActionId(key.getAuditActionId());
+			mapped.setAuditSessionId(key.getAuditSessionId());
+			mapped.setAuditStamp(key.getAuditStamp());
+			mapped.setRequiredId( key.getRequiredId() );
+			return( mapped );
+		}
+	}
+
     @Override
     public ICFIntTldByTenantIdxKey newByTenantIdxKey() {
 	ICFIntTldByTenantIdxKey key =
             new CFIntJpaTldByTenantIdxKey();
 	return( key );
     }
+
+	public CFIntJpaTldByTenantIdxKey ensureByTenantIdxKey(ICFIntTldByTenantIdxKey key) {
+		if (key == null) {
+			return( null );
+		}
+		else if (key instanceof CFIntJpaTldByTenantIdxKey) {
+			return( (CFIntJpaTldByTenantIdxKey)key );
+		}
+		else {
+			CFIntJpaTldByTenantIdxKey mapped = new CFIntJpaTldByTenantIdxKey();
+			mapped.setRequiredTenantId( key.getRequiredTenantId() );
+			return( mapped );
+		}
+	}
 
     @Override
     public ICFIntTldByNameIdxKey newByNameIdxKey() {
@@ -79,6 +111,20 @@ public class CFIntJpaTldDefaultFactory
 	return( key );
     }
 
+	public CFIntJpaTldByNameIdxKey ensureByNameIdxKey(ICFIntTldByNameIdxKey key) {
+		if (key == null) {
+			return( null );
+		}
+		else if (key instanceof CFIntJpaTldByNameIdxKey) {
+			return( (CFIntJpaTldByNameIdxKey)key );
+		}
+		else {
+			CFIntJpaTldByNameIdxKey mapped = new CFIntJpaTldByNameIdxKey();
+			mapped.setRequiredName( key.getRequiredName() );
+			return( mapped );
+		}
+	}
+
     @Override
     public ICFIntTld newRec() {
         ICFIntTld rec =
@@ -86,10 +132,38 @@ public class CFIntJpaTldDefaultFactory
         return( rec );
     }
 
+	public CFIntJpaTld ensureRec(ICFIntTld rec) {
+		if( rec == null ) {
+			return( null );
+		}
+		else if (rec instanceof CFIntJpaTld) {
+			return( (CFIntJpaTld)rec );
+		}
+		else {
+			CFIntJpaTld mapped = new CFIntJpaTld();
+			mapped.set(rec);
+			return( mapped );
+		}
+	}
+
     @Override
     public ICFIntTldH newHRec() {
         ICFIntTldH hrec =
             new CFIntJpaTldH();
         return( hrec );
     }
+
+	public CFIntJpaTldH ensureHRec(ICFIntTldH hrec) {
+		if (hrec == null) {
+			return( null );
+		}
+		else if( hrec instanceof CFIntJpaTldH) {
+			return( (CFIntJpaTldH)hrec );
+		}
+		else {
+			CFIntJpaTldH mapped = new CFIntJpaTldH();
+			mapped.set(hrec);
+			return( mapped );
+		}
+	}
 }

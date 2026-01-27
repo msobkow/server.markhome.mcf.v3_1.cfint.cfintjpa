@@ -65,12 +65,44 @@ public class CFIntJpaTopDomainDefaultFactory
         return( hpkey );
     }
 
+	public CFIntJpaTopDomainHPKey ensureHPKey(ICFIntTopDomainHPKey key) {
+		if (key == null) {
+			return( null );
+		}
+		else if( key instanceof CFIntJpaTopDomainHPKey) {
+			return( (CFIntJpaTopDomainHPKey)key );
+		}
+		else {
+			CFIntJpaTopDomainHPKey mapped = new CFIntJpaTopDomainHPKey();
+			mapped.setAuditClusterId(key.getAuditClusterId());
+			mapped.setAuditActionId(key.getAuditActionId());
+			mapped.setAuditSessionId(key.getAuditSessionId());
+			mapped.setAuditStamp(key.getAuditStamp());
+			mapped.setRequiredId( key.getRequiredId() );
+			return( mapped );
+		}
+	}
+
     @Override
     public ICFIntTopDomainByTenantIdxKey newByTenantIdxKey() {
 	ICFIntTopDomainByTenantIdxKey key =
             new CFIntJpaTopDomainByTenantIdxKey();
 	return( key );
     }
+
+	public CFIntJpaTopDomainByTenantIdxKey ensureByTenantIdxKey(ICFIntTopDomainByTenantIdxKey key) {
+		if (key == null) {
+			return( null );
+		}
+		else if (key instanceof CFIntJpaTopDomainByTenantIdxKey) {
+			return( (CFIntJpaTopDomainByTenantIdxKey)key );
+		}
+		else {
+			CFIntJpaTopDomainByTenantIdxKey mapped = new CFIntJpaTopDomainByTenantIdxKey();
+			mapped.setRequiredTenantId( key.getRequiredTenantId() );
+			return( mapped );
+		}
+	}
 
     @Override
     public ICFIntTopDomainByTldIdxKey newByTldIdxKey() {
@@ -79,12 +111,41 @@ public class CFIntJpaTopDomainDefaultFactory
 	return( key );
     }
 
+	public CFIntJpaTopDomainByTldIdxKey ensureByTldIdxKey(ICFIntTopDomainByTldIdxKey key) {
+		if (key == null) {
+			return( null );
+		}
+		else if (key instanceof CFIntJpaTopDomainByTldIdxKey) {
+			return( (CFIntJpaTopDomainByTldIdxKey)key );
+		}
+		else {
+			CFIntJpaTopDomainByTldIdxKey mapped = new CFIntJpaTopDomainByTldIdxKey();
+			mapped.setRequiredTldId( key.getRequiredTldId() );
+			return( mapped );
+		}
+	}
+
     @Override
     public ICFIntTopDomainByNameIdxKey newByNameIdxKey() {
 	ICFIntTopDomainByNameIdxKey key =
             new CFIntJpaTopDomainByNameIdxKey();
 	return( key );
     }
+
+	public CFIntJpaTopDomainByNameIdxKey ensureByNameIdxKey(ICFIntTopDomainByNameIdxKey key) {
+		if (key == null) {
+			return( null );
+		}
+		else if (key instanceof CFIntJpaTopDomainByNameIdxKey) {
+			return( (CFIntJpaTopDomainByNameIdxKey)key );
+		}
+		else {
+			CFIntJpaTopDomainByNameIdxKey mapped = new CFIntJpaTopDomainByNameIdxKey();
+			mapped.setRequiredTldId( key.getRequiredTldId() );
+			mapped.setRequiredName( key.getRequiredName() );
+			return( mapped );
+		}
+	}
 
     @Override
     public ICFIntTopDomain newRec() {
@@ -93,10 +154,38 @@ public class CFIntJpaTopDomainDefaultFactory
         return( rec );
     }
 
+	public CFIntJpaTopDomain ensureRec(ICFIntTopDomain rec) {
+		if( rec == null ) {
+			return( null );
+		}
+		else if (rec instanceof CFIntJpaTopDomain) {
+			return( (CFIntJpaTopDomain)rec );
+		}
+		else {
+			CFIntJpaTopDomain mapped = new CFIntJpaTopDomain();
+			mapped.set(rec);
+			return( mapped );
+		}
+	}
+
     @Override
     public ICFIntTopDomainH newHRec() {
         ICFIntTopDomainH hrec =
             new CFIntJpaTopDomainH();
         return( hrec );
     }
+
+	public CFIntJpaTopDomainH ensureHRec(ICFIntTopDomainH hrec) {
+		if (hrec == null) {
+			return( null );
+		}
+		else if( hrec instanceof CFIntJpaTopDomainH) {
+			return( (CFIntJpaTopDomainH)hrec );
+		}
+		else {
+			CFIntJpaTopDomainH mapped = new CFIntJpaTopDomainH();
+			mapped.set(hrec);
+			return( mapped );
+		}
+	}
 }

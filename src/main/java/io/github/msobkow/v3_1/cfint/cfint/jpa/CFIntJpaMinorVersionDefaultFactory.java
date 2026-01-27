@@ -65,12 +65,44 @@ public class CFIntJpaMinorVersionDefaultFactory
         return( hpkey );
     }
 
+	public CFIntJpaMinorVersionHPKey ensureHPKey(ICFIntMinorVersionHPKey key) {
+		if (key == null) {
+			return( null );
+		}
+		else if( key instanceof CFIntJpaMinorVersionHPKey) {
+			return( (CFIntJpaMinorVersionHPKey)key );
+		}
+		else {
+			CFIntJpaMinorVersionHPKey mapped = new CFIntJpaMinorVersionHPKey();
+			mapped.setAuditClusterId(key.getAuditClusterId());
+			mapped.setAuditActionId(key.getAuditActionId());
+			mapped.setAuditSessionId(key.getAuditSessionId());
+			mapped.setAuditStamp(key.getAuditStamp());
+			mapped.setRequiredId( key.getRequiredId() );
+			return( mapped );
+		}
+	}
+
     @Override
     public ICFIntMinorVersionByTenantIdxKey newByTenantIdxKey() {
 	ICFIntMinorVersionByTenantIdxKey key =
             new CFIntJpaMinorVersionByTenantIdxKey();
 	return( key );
     }
+
+	public CFIntJpaMinorVersionByTenantIdxKey ensureByTenantIdxKey(ICFIntMinorVersionByTenantIdxKey key) {
+		if (key == null) {
+			return( null );
+		}
+		else if (key instanceof CFIntJpaMinorVersionByTenantIdxKey) {
+			return( (CFIntJpaMinorVersionByTenantIdxKey)key );
+		}
+		else {
+			CFIntJpaMinorVersionByTenantIdxKey mapped = new CFIntJpaMinorVersionByTenantIdxKey();
+			mapped.setRequiredTenantId( key.getRequiredTenantId() );
+			return( mapped );
+		}
+	}
 
     @Override
     public ICFIntMinorVersionByMajorVerIdxKey newByMajorVerIdxKey() {
@@ -79,12 +111,41 @@ public class CFIntJpaMinorVersionDefaultFactory
 	return( key );
     }
 
+	public CFIntJpaMinorVersionByMajorVerIdxKey ensureByMajorVerIdxKey(ICFIntMinorVersionByMajorVerIdxKey key) {
+		if (key == null) {
+			return( null );
+		}
+		else if (key instanceof CFIntJpaMinorVersionByMajorVerIdxKey) {
+			return( (CFIntJpaMinorVersionByMajorVerIdxKey)key );
+		}
+		else {
+			CFIntJpaMinorVersionByMajorVerIdxKey mapped = new CFIntJpaMinorVersionByMajorVerIdxKey();
+			mapped.setRequiredMajorVersionId( key.getRequiredMajorVersionId() );
+			return( mapped );
+		}
+	}
+
     @Override
     public ICFIntMinorVersionByNameIdxKey newByNameIdxKey() {
 	ICFIntMinorVersionByNameIdxKey key =
             new CFIntJpaMinorVersionByNameIdxKey();
 	return( key );
     }
+
+	public CFIntJpaMinorVersionByNameIdxKey ensureByNameIdxKey(ICFIntMinorVersionByNameIdxKey key) {
+		if (key == null) {
+			return( null );
+		}
+		else if (key instanceof CFIntJpaMinorVersionByNameIdxKey) {
+			return( (CFIntJpaMinorVersionByNameIdxKey)key );
+		}
+		else {
+			CFIntJpaMinorVersionByNameIdxKey mapped = new CFIntJpaMinorVersionByNameIdxKey();
+			mapped.setRequiredMajorVersionId( key.getRequiredMajorVersionId() );
+			mapped.setRequiredName( key.getRequiredName() );
+			return( mapped );
+		}
+	}
 
     @Override
     public ICFIntMinorVersion newRec() {
@@ -93,10 +154,38 @@ public class CFIntJpaMinorVersionDefaultFactory
         return( rec );
     }
 
+	public CFIntJpaMinorVersion ensureRec(ICFIntMinorVersion rec) {
+		if( rec == null ) {
+			return( null );
+		}
+		else if (rec instanceof CFIntJpaMinorVersion) {
+			return( (CFIntJpaMinorVersion)rec );
+		}
+		else {
+			CFIntJpaMinorVersion mapped = new CFIntJpaMinorVersion();
+			mapped.set(rec);
+			return( mapped );
+		}
+	}
+
     @Override
     public ICFIntMinorVersionH newHRec() {
         ICFIntMinorVersionH hrec =
             new CFIntJpaMinorVersionH();
         return( hrec );
     }
+
+	public CFIntJpaMinorVersionH ensureHRec(ICFIntMinorVersionH hrec) {
+		if (hrec == null) {
+			return( null );
+		}
+		else if( hrec instanceof CFIntJpaMinorVersionH) {
+			return( (CFIntJpaMinorVersionH)hrec );
+		}
+		else {
+			CFIntJpaMinorVersionH mapped = new CFIntJpaMinorVersionH();
+			mapped.set(hrec);
+			return( mapped );
+		}
+	}
 }

@@ -65,12 +65,44 @@ public class CFIntJpaSubProjectDefaultFactory
         return( hpkey );
     }
 
+	public CFIntJpaSubProjectHPKey ensureHPKey(ICFIntSubProjectHPKey key) {
+		if (key == null) {
+			return( null );
+		}
+		else if( key instanceof CFIntJpaSubProjectHPKey) {
+			return( (CFIntJpaSubProjectHPKey)key );
+		}
+		else {
+			CFIntJpaSubProjectHPKey mapped = new CFIntJpaSubProjectHPKey();
+			mapped.setAuditClusterId(key.getAuditClusterId());
+			mapped.setAuditActionId(key.getAuditActionId());
+			mapped.setAuditSessionId(key.getAuditSessionId());
+			mapped.setAuditStamp(key.getAuditStamp());
+			mapped.setRequiredId( key.getRequiredId() );
+			return( mapped );
+		}
+	}
+
     @Override
     public ICFIntSubProjectByTenantIdxKey newByTenantIdxKey() {
 	ICFIntSubProjectByTenantIdxKey key =
             new CFIntJpaSubProjectByTenantIdxKey();
 	return( key );
     }
+
+	public CFIntJpaSubProjectByTenantIdxKey ensureByTenantIdxKey(ICFIntSubProjectByTenantIdxKey key) {
+		if (key == null) {
+			return( null );
+		}
+		else if (key instanceof CFIntJpaSubProjectByTenantIdxKey) {
+			return( (CFIntJpaSubProjectByTenantIdxKey)key );
+		}
+		else {
+			CFIntJpaSubProjectByTenantIdxKey mapped = new CFIntJpaSubProjectByTenantIdxKey();
+			mapped.setRequiredTenantId( key.getRequiredTenantId() );
+			return( mapped );
+		}
+	}
 
     @Override
     public ICFIntSubProjectByTopProjectIdxKey newByTopProjectIdxKey() {
@@ -79,12 +111,41 @@ public class CFIntJpaSubProjectDefaultFactory
 	return( key );
     }
 
+	public CFIntJpaSubProjectByTopProjectIdxKey ensureByTopProjectIdxKey(ICFIntSubProjectByTopProjectIdxKey key) {
+		if (key == null) {
+			return( null );
+		}
+		else if (key instanceof CFIntJpaSubProjectByTopProjectIdxKey) {
+			return( (CFIntJpaSubProjectByTopProjectIdxKey)key );
+		}
+		else {
+			CFIntJpaSubProjectByTopProjectIdxKey mapped = new CFIntJpaSubProjectByTopProjectIdxKey();
+			mapped.setRequiredTopProjectId( key.getRequiredTopProjectId() );
+			return( mapped );
+		}
+	}
+
     @Override
     public ICFIntSubProjectByNameIdxKey newByNameIdxKey() {
 	ICFIntSubProjectByNameIdxKey key =
             new CFIntJpaSubProjectByNameIdxKey();
 	return( key );
     }
+
+	public CFIntJpaSubProjectByNameIdxKey ensureByNameIdxKey(ICFIntSubProjectByNameIdxKey key) {
+		if (key == null) {
+			return( null );
+		}
+		else if (key instanceof CFIntJpaSubProjectByNameIdxKey) {
+			return( (CFIntJpaSubProjectByNameIdxKey)key );
+		}
+		else {
+			CFIntJpaSubProjectByNameIdxKey mapped = new CFIntJpaSubProjectByNameIdxKey();
+			mapped.setRequiredTopProjectId( key.getRequiredTopProjectId() );
+			mapped.setRequiredName( key.getRequiredName() );
+			return( mapped );
+		}
+	}
 
     @Override
     public ICFIntSubProject newRec() {
@@ -93,10 +154,38 @@ public class CFIntJpaSubProjectDefaultFactory
         return( rec );
     }
 
+	public CFIntJpaSubProject ensureRec(ICFIntSubProject rec) {
+		if( rec == null ) {
+			return( null );
+		}
+		else if (rec instanceof CFIntJpaSubProject) {
+			return( (CFIntJpaSubProject)rec );
+		}
+		else {
+			CFIntJpaSubProject mapped = new CFIntJpaSubProject();
+			mapped.set(rec);
+			return( mapped );
+		}
+	}
+
     @Override
     public ICFIntSubProjectH newHRec() {
         ICFIntSubProjectH hrec =
             new CFIntJpaSubProjectH();
         return( hrec );
     }
+
+	public CFIntJpaSubProjectH ensureHRec(ICFIntSubProjectH hrec) {
+		if (hrec == null) {
+			return( null );
+		}
+		else if( hrec instanceof CFIntJpaSubProjectH) {
+			return( (CFIntJpaSubProjectH)hrec );
+		}
+		else {
+			CFIntJpaSubProjectH mapped = new CFIntJpaSubProjectH();
+			mapped.set(hrec);
+			return( mapped );
+		}
+	}
 }

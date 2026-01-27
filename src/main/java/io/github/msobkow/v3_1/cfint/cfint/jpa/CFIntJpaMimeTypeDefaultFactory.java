@@ -65,12 +65,44 @@ public class CFIntJpaMimeTypeDefaultFactory
         return( hpkey );
     }
 
+	public CFIntJpaMimeTypeHPKey ensureHPKey(ICFIntMimeTypeHPKey key) {
+		if (key == null) {
+			return( null );
+		}
+		else if( key instanceof CFIntJpaMimeTypeHPKey) {
+			return( (CFIntJpaMimeTypeHPKey)key );
+		}
+		else {
+			CFIntJpaMimeTypeHPKey mapped = new CFIntJpaMimeTypeHPKey();
+			mapped.setAuditClusterId(key.getAuditClusterId());
+			mapped.setAuditActionId(key.getAuditActionId());
+			mapped.setAuditSessionId(key.getAuditSessionId());
+			mapped.setAuditStamp(key.getAuditStamp());
+			mapped.setRequiredMimeTypeId( key.getRequiredMimeTypeId() );
+			return( mapped );
+		}
+	}
+
     @Override
     public ICFIntMimeTypeByUNameIdxKey newByUNameIdxKey() {
 	ICFIntMimeTypeByUNameIdxKey key =
             new CFIntJpaMimeTypeByUNameIdxKey();
 	return( key );
     }
+
+	public CFIntJpaMimeTypeByUNameIdxKey ensureByUNameIdxKey(ICFIntMimeTypeByUNameIdxKey key) {
+		if (key == null) {
+			return( null );
+		}
+		else if (key instanceof CFIntJpaMimeTypeByUNameIdxKey) {
+			return( (CFIntJpaMimeTypeByUNameIdxKey)key );
+		}
+		else {
+			CFIntJpaMimeTypeByUNameIdxKey mapped = new CFIntJpaMimeTypeByUNameIdxKey();
+			mapped.setRequiredName( key.getRequiredName() );
+			return( mapped );
+		}
+	}
 
     @Override
     public ICFIntMimeType newRec() {
@@ -79,10 +111,38 @@ public class CFIntJpaMimeTypeDefaultFactory
         return( rec );
     }
 
+	public CFIntJpaMimeType ensureRec(ICFIntMimeType rec) {
+		if( rec == null ) {
+			return( null );
+		}
+		else if (rec instanceof CFIntJpaMimeType) {
+			return( (CFIntJpaMimeType)rec );
+		}
+		else {
+			CFIntJpaMimeType mapped = new CFIntJpaMimeType();
+			mapped.set(rec);
+			return( mapped );
+		}
+	}
+
     @Override
     public ICFIntMimeTypeH newHRec() {
         ICFIntMimeTypeH hrec =
             new CFIntJpaMimeTypeH();
         return( hrec );
     }
+
+	public CFIntJpaMimeTypeH ensureHRec(ICFIntMimeTypeH hrec) {
+		if (hrec == null) {
+			return( null );
+		}
+		else if( hrec instanceof CFIntJpaMimeTypeH) {
+			return( (CFIntJpaMimeTypeH)hrec );
+		}
+		else {
+			CFIntJpaMimeTypeH mapped = new CFIntJpaMimeTypeH();
+			mapped.set(hrec);
+			return( mapped );
+		}
+	}
 }

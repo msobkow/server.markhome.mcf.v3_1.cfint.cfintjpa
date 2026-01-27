@@ -65,12 +65,40 @@ public class CFIntJpaLicenseDefaultFactory
 	return( key );
     }
 
+	public CFIntJpaLicenseByLicnTenantIdxKey ensureByLicnTenantIdxKey(ICFIntLicenseByLicnTenantIdxKey key) {
+		if (key == null) {
+			return( null );
+		}
+		else if (key instanceof CFIntJpaLicenseByLicnTenantIdxKey) {
+			return( (CFIntJpaLicenseByLicnTenantIdxKey)key );
+		}
+		else {
+			CFIntJpaLicenseByLicnTenantIdxKey mapped = new CFIntJpaLicenseByLicnTenantIdxKey();
+			mapped.setRequiredTenantId( key.getRequiredTenantId() );
+			return( mapped );
+		}
+	}
+
     @Override
     public ICFIntLicenseByDomainIdxKey newByDomainIdxKey() {
 	ICFIntLicenseByDomainIdxKey key =
             new CFIntJpaLicenseByDomainIdxKey();
 	return( key );
     }
+
+	public CFIntJpaLicenseByDomainIdxKey ensureByDomainIdxKey(ICFIntLicenseByDomainIdxKey key) {
+		if (key == null) {
+			return( null );
+		}
+		else if (key instanceof CFIntJpaLicenseByDomainIdxKey) {
+			return( (CFIntJpaLicenseByDomainIdxKey)key );
+		}
+		else {
+			CFIntJpaLicenseByDomainIdxKey mapped = new CFIntJpaLicenseByDomainIdxKey();
+			mapped.setRequiredTopDomainId( key.getRequiredTopDomainId() );
+			return( mapped );
+		}
+	}
 
     @Override
     public ICFIntLicenseByUNameIdxKey newByUNameIdxKey() {
@@ -79,10 +107,39 @@ public class CFIntJpaLicenseDefaultFactory
 	return( key );
     }
 
+	public CFIntJpaLicenseByUNameIdxKey ensureByUNameIdxKey(ICFIntLicenseByUNameIdxKey key) {
+		if (key == null) {
+			return( null );
+		}
+		else if (key instanceof CFIntJpaLicenseByUNameIdxKey) {
+			return( (CFIntJpaLicenseByUNameIdxKey)key );
+		}
+		else {
+			CFIntJpaLicenseByUNameIdxKey mapped = new CFIntJpaLicenseByUNameIdxKey();
+			mapped.setRequiredTopDomainId( key.getRequiredTopDomainId() );
+			mapped.setRequiredName( key.getRequiredName() );
+			return( mapped );
+		}
+	}
+
     @Override
     public ICFIntLicense newRec() {
         ICFIntLicense rec =
             new CFIntJpaLicense();
         return( rec );
     }
+
+	public CFIntJpaLicense ensureRec(ICFIntLicense rec) {
+		if( rec == null ) {
+			return( null );
+		}
+		else if (rec instanceof CFIntJpaLicense) {
+			return( (CFIntJpaLicense)rec );
+		}
+		else {
+			CFIntJpaLicense mapped = new CFIntJpaLicense();
+			mapped.set(rec);
+			return( mapped );
+		}
+	}
 }
