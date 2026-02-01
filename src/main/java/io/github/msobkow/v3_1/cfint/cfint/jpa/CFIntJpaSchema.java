@@ -255,31 +255,31 @@ public class CFIntJpaSchema
 
 	@Override
 	public void wireTableTableInstances() {
-		if (tableLicense == null) {
+		if (tableLicense == null || !(tableLicense instanceof CFIntJpaLicenseTable)) {
 			tableLicense = new CFIntJpaLicenseTable(this);
 		}
-		if (tableMajorVersion == null) {
+		if (tableMajorVersion == null || !(tableMajorVersion instanceof CFIntJpaMajorVersionTable)) {
 			tableMajorVersion = new CFIntJpaMajorVersionTable(this);
 		}
-		if (tableMimeType == null) {
+		if (tableMimeType == null || !(tableMimeType instanceof CFIntJpaMimeTypeTable)) {
 			tableMimeType = new CFIntJpaMimeTypeTable(this);
 		}
-		if (tableMinorVersion == null) {
+		if (tableMinorVersion == null || !(tableMinorVersion instanceof CFIntJpaMinorVersionTable)) {
 			tableMinorVersion = new CFIntJpaMinorVersionTable(this);
 		}
-		if (tableSubProject == null) {
+		if (tableSubProject == null || !(tableSubProject instanceof CFIntJpaSubProjectTable)) {
 			tableSubProject = new CFIntJpaSubProjectTable(this);
 		}
-		if (tableTld == null) {
+		if (tableTld == null || !(tableTld instanceof CFIntJpaTldTable)) {
 			tableTld = new CFIntJpaTldTable(this);
 		}
-		if (tableTopDomain == null) {
+		if (tableTopDomain == null || !(tableTopDomain instanceof CFIntJpaTopDomainTable)) {
 			tableTopDomain = new CFIntJpaTopDomainTable(this);
 		}
-		if (tableTopProject == null) {
+		if (tableTopProject == null || !(tableTopProject instanceof CFIntJpaTopProjectTable)) {
 			tableTopProject = new CFIntJpaTopProjectTable(this);
 		}
-		if (tableURLProtocol == null) {
+		if (tableURLProtocol == null || !(tableURLProtocol instanceof CFIntJpaURLProtocolTable)) {
 			tableURLProtocol = new CFIntJpaURLProtocolTable(this);
 		}
 	}
