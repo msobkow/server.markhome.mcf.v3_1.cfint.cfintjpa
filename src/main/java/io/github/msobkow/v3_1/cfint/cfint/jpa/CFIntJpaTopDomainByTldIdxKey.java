@@ -80,8 +80,8 @@ public class CFIntJpaTopDomainByTldIdxKey
 		}
 		else if (obj instanceof ICFIntTopDomainByTldIdxKey) {
 			ICFIntTopDomainByTldIdxKey rhs = (ICFIntTopDomainByTldIdxKey)obj;
-			if( getRequiredTldId() != null && !getRequiredTldId().isNull() ) {
-				if( rhs.getRequiredTldId() != null && !rhs.getRequiredTldId().isNull() ) {
+			if( getRequiredTldId() != null ) {
+				if( rhs.getRequiredTldId() != null ) {
 					if( ! getRequiredTldId().equals( rhs.getRequiredTldId() ) ) {
 						return( false );
 					}
@@ -91,7 +91,7 @@ public class CFIntJpaTopDomainByTldIdxKey
 				}
 			}
 			else {
-				if( rhs.getRequiredTldId() != null && !getRequiredTldId().isNull()) {
+				if( rhs.getRequiredTldId() != null ) {
 					return( false );
 				}
 			}
@@ -99,8 +99,8 @@ public class CFIntJpaTopDomainByTldIdxKey
 		}
 		else if (obj instanceof ICFIntTopDomain) {
 			ICFIntTopDomain rhs = (ICFIntTopDomain)obj;
-			if( getRequiredTldId() != null && !getRequiredTldId().isNull() ) {
-				if( rhs.getRequiredTldId() != null && !rhs.getRequiredTldId().isNull() ) {
+			if( getRequiredTldId() != null ) {
+				if( rhs.getRequiredTldId() != null ) {
 					if( ! getRequiredTldId().equals( rhs.getRequiredTldId() ) ) {
 						return( false );
 					}
@@ -110,7 +110,7 @@ public class CFIntJpaTopDomainByTldIdxKey
 				}
 			}
 			else {
-				if( rhs.getRequiredTldId() != null && !getRequiredTldId().isNull()) {
+				if( rhs.getRequiredTldId() != null ) {
 					return( false );
 				}
 			}
@@ -118,8 +118,8 @@ public class CFIntJpaTopDomainByTldIdxKey
 		}
 		else if (obj instanceof ICFIntTopDomainH) {
 			ICFIntTopDomainH rhs = (ICFIntTopDomainH)obj;
-			if( getRequiredTldId() != null && !getRequiredTldId().isNull() ) {
-				if( rhs.getRequiredTldId() != null && !rhs.getRequiredTldId().isNull() ) {
+			if( getRequiredTldId() != null ) {
+				if( rhs.getRequiredTldId() != null ) {
 					if( ! getRequiredTldId().equals( rhs.getRequiredTldId() ) ) {
 						return( false );
 					}
@@ -129,7 +129,7 @@ public class CFIntJpaTopDomainByTldIdxKey
 				}
 			}
 			else {
-				if( rhs.getRequiredTldId() != null && !getRequiredTldId().isNull()) {
+				if( rhs.getRequiredTldId() != null ) {
 					return( false );
 				}
 			}

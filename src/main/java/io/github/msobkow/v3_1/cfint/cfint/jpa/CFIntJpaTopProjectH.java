@@ -343,8 +343,8 @@ public class CFIntJpaTopProjectH
 			return( false );
 		}
 
-			if( getRequiredTenantId() != null && !getRequiredTenantId().isNull() ) {
-				if( rhs.getRequiredTenantId() != null && !rhs.getRequiredTenantId().isNull() ) {
+			if( getRequiredTenantId() != null ) {
+				if( rhs.getRequiredTenantId() != null ) {
 					if( ! getRequiredTenantId().equals( rhs.getRequiredTenantId() ) ) {
 						return( false );
 					}
@@ -354,12 +354,12 @@ public class CFIntJpaTopProjectH
 				}
 			}
 			else {
-				if( rhs.getRequiredTenantId() != null && !getRequiredTenantId().isNull()) {
+				if( rhs.getRequiredTenantId() != null ) {
 					return( false );
 				}
 			}
-			if( getRequiredTopDomainId() != null && !getRequiredTopDomainId().isNull() ) {
-				if( rhs.getRequiredTopDomainId() != null && !rhs.getRequiredTopDomainId().isNull() ) {
+			if( getRequiredTopDomainId() != null ) {
+				if( rhs.getRequiredTopDomainId() != null ) {
 					if( ! getRequiredTopDomainId().equals( rhs.getRequiredTopDomainId() ) ) {
 						return( false );
 					}
@@ -369,7 +369,7 @@ public class CFIntJpaTopProjectH
 				}
 			}
 			else {
-				if( rhs.getRequiredTopDomainId() != null && !getRequiredTopDomainId().isNull()) {
+				if( rhs.getRequiredTopDomainId() != null ) {
 					return( false );
 				}
 			}
@@ -421,8 +421,8 @@ public class CFIntJpaTopProjectH
 			return( false );
 		}
 
-			if( getRequiredTenantId() != null && !getRequiredTenantId().isNull() ) {
-				if( rhs.getRequiredTenantId() != null && !rhs.getRequiredTenantId().isNull() ) {
+			if( getRequiredTenantId() != null ) {
+				if( rhs.getRequiredTenantId() != null ) {
 					if( ! getRequiredTenantId().equals( rhs.getRequiredTenantId() ) ) {
 						return( false );
 					}
@@ -432,12 +432,12 @@ public class CFIntJpaTopProjectH
 				}
 			}
 			else {
-				if( rhs.getRequiredTenantId() != null && !getRequiredTenantId().isNull()) {
+				if( rhs.getRequiredTenantId() != null ) {
 					return( false );
 				}
 			}
-			if( getRequiredTopDomainId() != null && !getRequiredTopDomainId().isNull() ) {
-				if( rhs.getRequiredTopDomainId() != null && !rhs.getRequiredTopDomainId().isNull() ) {
+			if( getRequiredTopDomainId() != null ) {
+				if( rhs.getRequiredTopDomainId() != null ) {
 					if( ! getRequiredTopDomainId().equals( rhs.getRequiredTopDomainId() ) ) {
 						return( false );
 					}
@@ -447,7 +447,7 @@ public class CFIntJpaTopProjectH
 				}
 			}
 			else {
-				if( rhs.getRequiredTopDomainId() != null && !getRequiredTopDomainId().isNull()) {
+				if( rhs.getRequiredTopDomainId() != null ) {
 					return( false );
 				}
 			}
@@ -485,8 +485,8 @@ public class CFIntJpaTopProjectH
         }
         else if (obj instanceof ICFIntTopProjectHPKey) {
 		ICFIntTopProjectHPKey rhs = (ICFIntTopProjectHPKey)obj;
-			if( getRequiredId() != null && !getRequiredId().isNull() ) {
-				if( rhs.getRequiredId() != null && !rhs.getRequiredId().isNull() ) {
+			if( getRequiredId() != null ) {
+				if( rhs.getRequiredId() != null ) {
 					if( ! getRequiredId().equals( rhs.getRequiredId() ) ) {
 						return( false );
 					}
@@ -496,7 +496,7 @@ public class CFIntJpaTopProjectH
 				}
 			}
 			else {
-				if( rhs.getRequiredId() != null && !getRequiredId().isNull()) {
+				if( rhs.getRequiredId() != null ) {
 					return( false );
 				}
 			}
@@ -504,8 +504,8 @@ public class CFIntJpaTopProjectH
         }
         else if (obj instanceof ICFIntTopProjectByTenantIdxKey) {
             ICFIntTopProjectByTenantIdxKey rhs = (ICFIntTopProjectByTenantIdxKey)obj;
-			if( getRequiredTenantId() != null && !getRequiredTenantId().isNull() ) {
-				if( rhs.getRequiredTenantId() != null && !rhs.getRequiredTenantId().isNull() ) {
+			if( getRequiredTenantId() != null ) {
+				if( rhs.getRequiredTenantId() != null ) {
 					if( ! getRequiredTenantId().equals( rhs.getRequiredTenantId() ) ) {
 						return( false );
 					}
@@ -515,7 +515,7 @@ public class CFIntJpaTopProjectH
 				}
 			}
 			else {
-				if( rhs.getRequiredTenantId() != null && !getRequiredTenantId().isNull()) {
+				if( rhs.getRequiredTenantId() != null ) {
 					return( false );
 				}
 			}
@@ -523,8 +523,8 @@ public class CFIntJpaTopProjectH
         }
         else if (obj instanceof ICFIntTopProjectByTopDomainIdxKey) {
             ICFIntTopProjectByTopDomainIdxKey rhs = (ICFIntTopProjectByTopDomainIdxKey)obj;
-			if( getRequiredTopDomainId() != null && !getRequiredTopDomainId().isNull() ) {
-				if( rhs.getRequiredTopDomainId() != null && !rhs.getRequiredTopDomainId().isNull() ) {
+			if( getRequiredTopDomainId() != null ) {
+				if( rhs.getRequiredTopDomainId() != null ) {
 					if( ! getRequiredTopDomainId().equals( rhs.getRequiredTopDomainId() ) ) {
 						return( false );
 					}
@@ -534,7 +534,7 @@ public class CFIntJpaTopProjectH
 				}
 			}
 			else {
-				if( rhs.getRequiredTopDomainId() != null && !getRequiredTopDomainId().isNull()) {
+				if( rhs.getRequiredTopDomainId() != null ) {
 					return( false );
 				}
 			}
@@ -542,8 +542,8 @@ public class CFIntJpaTopProjectH
         }
         else if (obj instanceof ICFIntTopProjectByNameIdxKey) {
             ICFIntTopProjectByNameIdxKey rhs = (ICFIntTopProjectByNameIdxKey)obj;
-			if( getRequiredTopDomainId() != null && !getRequiredTopDomainId().isNull() ) {
-				if( rhs.getRequiredTopDomainId() != null && !rhs.getRequiredTopDomainId().isNull() ) {
+			if( getRequiredTopDomainId() != null ) {
+				if( rhs.getRequiredTopDomainId() != null ) {
 					if( ! getRequiredTopDomainId().equals( rhs.getRequiredTopDomainId() ) ) {
 						return( false );
 					}
@@ -553,7 +553,7 @@ public class CFIntJpaTopProjectH
 				}
 			}
 			else {
-				if( rhs.getRequiredTopDomainId() != null && !getRequiredTopDomainId().isNull()) {
+				if( rhs.getRequiredTopDomainId() != null ) {
 					return( false );
 				}
 			}

@@ -80,8 +80,8 @@ public class CFIntJpaMajorVersionBySubProjectIdxKey
 		}
 		else if (obj instanceof ICFIntMajorVersionBySubProjectIdxKey) {
 			ICFIntMajorVersionBySubProjectIdxKey rhs = (ICFIntMajorVersionBySubProjectIdxKey)obj;
-			if( getRequiredSubProjectId() != null && !getRequiredSubProjectId().isNull() ) {
-				if( rhs.getRequiredSubProjectId() != null && !rhs.getRequiredSubProjectId().isNull() ) {
+			if( getRequiredSubProjectId() != null ) {
+				if( rhs.getRequiredSubProjectId() != null ) {
 					if( ! getRequiredSubProjectId().equals( rhs.getRequiredSubProjectId() ) ) {
 						return( false );
 					}
@@ -91,7 +91,7 @@ public class CFIntJpaMajorVersionBySubProjectIdxKey
 				}
 			}
 			else {
-				if( rhs.getRequiredSubProjectId() != null && !getRequiredSubProjectId().isNull()) {
+				if( rhs.getRequiredSubProjectId() != null ) {
 					return( false );
 				}
 			}
@@ -99,8 +99,8 @@ public class CFIntJpaMajorVersionBySubProjectIdxKey
 		}
 		else if (obj instanceof ICFIntMajorVersion) {
 			ICFIntMajorVersion rhs = (ICFIntMajorVersion)obj;
-			if( getRequiredSubProjectId() != null && !getRequiredSubProjectId().isNull() ) {
-				if( rhs.getRequiredSubProjectId() != null && !rhs.getRequiredSubProjectId().isNull() ) {
+			if( getRequiredSubProjectId() != null ) {
+				if( rhs.getRequiredSubProjectId() != null ) {
 					if( ! getRequiredSubProjectId().equals( rhs.getRequiredSubProjectId() ) ) {
 						return( false );
 					}
@@ -110,7 +110,7 @@ public class CFIntJpaMajorVersionBySubProjectIdxKey
 				}
 			}
 			else {
-				if( rhs.getRequiredSubProjectId() != null && !getRequiredSubProjectId().isNull()) {
+				if( rhs.getRequiredSubProjectId() != null ) {
 					return( false );
 				}
 			}
@@ -118,8 +118,8 @@ public class CFIntJpaMajorVersionBySubProjectIdxKey
 		}
 		else if (obj instanceof ICFIntMajorVersionH) {
 			ICFIntMajorVersionH rhs = (ICFIntMajorVersionH)obj;
-			if( getRequiredSubProjectId() != null && !getRequiredSubProjectId().isNull() ) {
-				if( rhs.getRequiredSubProjectId() != null && !rhs.getRequiredSubProjectId().isNull() ) {
+			if( getRequiredSubProjectId() != null ) {
+				if( rhs.getRequiredSubProjectId() != null ) {
 					if( ! getRequiredSubProjectId().equals( rhs.getRequiredSubProjectId() ) ) {
 						return( false );
 					}
@@ -129,7 +129,7 @@ public class CFIntJpaMajorVersionBySubProjectIdxKey
 				}
 			}
 			else {
-				if( rhs.getRequiredSubProjectId() != null && !getRequiredSubProjectId().isNull()) {
+				if( rhs.getRequiredSubProjectId() != null ) {
 					return( false );
 				}
 			}

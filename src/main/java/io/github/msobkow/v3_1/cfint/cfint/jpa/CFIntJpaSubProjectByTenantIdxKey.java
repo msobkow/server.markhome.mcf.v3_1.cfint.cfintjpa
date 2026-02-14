@@ -80,8 +80,8 @@ public class CFIntJpaSubProjectByTenantIdxKey
 		}
 		else if (obj instanceof ICFIntSubProjectByTenantIdxKey) {
 			ICFIntSubProjectByTenantIdxKey rhs = (ICFIntSubProjectByTenantIdxKey)obj;
-			if( getRequiredTenantId() != null && !getRequiredTenantId().isNull() ) {
-				if( rhs.getRequiredTenantId() != null && !rhs.getRequiredTenantId().isNull() ) {
+			if( getRequiredTenantId() != null ) {
+				if( rhs.getRequiredTenantId() != null ) {
 					if( ! getRequiredTenantId().equals( rhs.getRequiredTenantId() ) ) {
 						return( false );
 					}
@@ -91,7 +91,7 @@ public class CFIntJpaSubProjectByTenantIdxKey
 				}
 			}
 			else {
-				if( rhs.getRequiredTenantId() != null && !getRequiredTenantId().isNull()) {
+				if( rhs.getRequiredTenantId() != null ) {
 					return( false );
 				}
 			}
@@ -99,8 +99,8 @@ public class CFIntJpaSubProjectByTenantIdxKey
 		}
 		else if (obj instanceof ICFIntSubProject) {
 			ICFIntSubProject rhs = (ICFIntSubProject)obj;
-			if( getRequiredTenantId() != null && !getRequiredTenantId().isNull() ) {
-				if( rhs.getRequiredTenantId() != null && !rhs.getRequiredTenantId().isNull() ) {
+			if( getRequiredTenantId() != null ) {
+				if( rhs.getRequiredTenantId() != null ) {
 					if( ! getRequiredTenantId().equals( rhs.getRequiredTenantId() ) ) {
 						return( false );
 					}
@@ -110,7 +110,7 @@ public class CFIntJpaSubProjectByTenantIdxKey
 				}
 			}
 			else {
-				if( rhs.getRequiredTenantId() != null && !getRequiredTenantId().isNull()) {
+				if( rhs.getRequiredTenantId() != null ) {
 					return( false );
 				}
 			}
@@ -118,8 +118,8 @@ public class CFIntJpaSubProjectByTenantIdxKey
 		}
 		else if (obj instanceof ICFIntSubProjectH) {
 			ICFIntSubProjectH rhs = (ICFIntSubProjectH)obj;
-			if( getRequiredTenantId() != null && !getRequiredTenantId().isNull() ) {
-				if( rhs.getRequiredTenantId() != null && !rhs.getRequiredTenantId().isNull() ) {
+			if( getRequiredTenantId() != null ) {
+				if( rhs.getRequiredTenantId() != null ) {
 					if( ! getRequiredTenantId().equals( rhs.getRequiredTenantId() ) ) {
 						return( false );
 					}
@@ -129,7 +129,7 @@ public class CFIntJpaSubProjectByTenantIdxKey
 				}
 			}
 			else {
-				if( rhs.getRequiredTenantId() != null && !getRequiredTenantId().isNull()) {
+				if( rhs.getRequiredTenantId() != null ) {
 					return( false );
 				}
 			}
