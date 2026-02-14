@@ -72,7 +72,6 @@ public class CFIntJpaTld
 	protected CFLibDbKeyHash256 requiredId;
 	@OneToMany(fetch=FetchType.LAZY, mappedBy="requiredContainerParentTld")
 	protected Set<CFIntJpaTopDomain> optionalComponentsTopDomain;
-	@Version
 	protected int requiredRevision;
 
 

@@ -75,7 +75,6 @@ public class CFIntJpaTopDomain
 	protected Set<CFIntJpaTopProject> optionalComponentsTopProject;
 	@OneToMany(fetch=FetchType.LAZY, mappedBy="requiredContainerTopDomain")
 	protected Set<CFIntJpaLicense> optionalComponentsLicense;
-	@Version
 	protected int requiredRevision;
 
 	@ManyToOne(fetch=FetchType.LAZY, optional=false)

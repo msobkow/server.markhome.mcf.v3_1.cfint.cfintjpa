@@ -70,7 +70,6 @@ public class CFIntJpaURLProtocol
 	@SequenceGenerator(name = "URLProtoIdGenSeq", allocationSize = 1, initialValue = 0, schema = "CFInt31")
 	@Column( name="URLProtocolId", nullable=false )
 	protected int requiredURLProtocolId;
-	@Version
 	protected int requiredRevision;
 
 

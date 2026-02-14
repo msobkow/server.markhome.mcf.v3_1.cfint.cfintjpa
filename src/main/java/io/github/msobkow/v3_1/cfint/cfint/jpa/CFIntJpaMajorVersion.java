@@ -73,7 +73,6 @@ public class CFIntJpaMajorVersion
 	protected CFLibDbKeyHash256 requiredId;
 	@OneToMany(fetch=FetchType.LAZY, mappedBy="requiredContainerParentMajVer")
 	protected Set<CFIntJpaMinorVersion> optionalComponentsMinorVer;
-	@Version
 	protected int requiredRevision;
 
 	@ManyToOne(fetch=FetchType.LAZY, optional=false)

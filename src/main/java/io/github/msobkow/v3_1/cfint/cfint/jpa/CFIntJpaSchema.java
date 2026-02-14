@@ -38,6 +38,7 @@ package io.github.msobkow.v3_1.cfint.cfint.jpa;
 import java.io.Serializable;
 import java.math.*;
 import java.time.*;
+import java.net.InetAddress;
 import java.util.*;
 import jakarta.persistence.*;
 import jakarta.transaction.Transactional;
@@ -1036,5 +1037,8 @@ public class CFIntJpaSchema
 	 */
 	public static void setTablePerms( ICFSecTablePerms value ) {
 		CFSecJpaSchema.setTablePerms(value);
+	}
+
+	public void bootstrapSchema() {
 	}
 }

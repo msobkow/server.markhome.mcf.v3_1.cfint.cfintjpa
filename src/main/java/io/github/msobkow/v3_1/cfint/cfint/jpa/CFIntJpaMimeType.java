@@ -69,7 +69,6 @@ public class CFIntJpaMimeType
 	@SequenceGenerator(name = "MimeTypeIdGenSeq", allocationSize = 1, initialValue = 0, schema = "CFInt31")
 	@Column( name="MimeTypeId", nullable=false )
 	protected int requiredMimeTypeId;
-	@Version
 	protected int requiredRevision;
 
 
