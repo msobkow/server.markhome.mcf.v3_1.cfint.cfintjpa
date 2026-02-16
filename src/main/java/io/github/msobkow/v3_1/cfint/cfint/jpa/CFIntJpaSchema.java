@@ -44,6 +44,8 @@ import jakarta.persistence.*;
 import jakarta.transaction.Transactional;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.text.StringEscapeUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Configurable;
 import io.github.msobkow.v3_1.cflib.*;
 import io.github.msobkow.v3_1.cflib.dbutil.*;
 import io.github.msobkow.v3_1.cflib.xml.CFLibXmlUtil;
@@ -51,6 +53,7 @@ import io.github.msobkow.v3_1.cfsec.cfsec.*;
 import io.github.msobkow.v3_1.cfint.cfint.*;
 import io.github.msobkow.v3_1.cfsec.cfsec.jpa.*;
 
+@Configurable
 public class CFIntJpaSchema
 	implements ICFIntSchema,
 		ICFSecSchema
@@ -117,6 +120,9 @@ public class CFIntJpaSchema
 	protected ICFIntTopProjectFactory factoryTopProject;
 	protected ICFIntURLProtocolFactory factoryURLProtocol;
 
+
+	@Autowired
+	CFIntJpaSchemaService schemaService;
 
 	@Override
 	public int initClassMapEntries(int value) {
@@ -306,6 +312,7 @@ public class CFIntJpaSchema
 		ICFIntSchema.setBackingCFInt(schema);
 		schema.wireRecConstructors();
 	}
+
 
 	public CFIntJpaSchema() {
 
@@ -1040,5 +1047,6 @@ public class CFIntJpaSchema
 	}
 
 	public void bootstrapSchema() {
+		schemaService.bootstrapSchema();
 	}
 }
