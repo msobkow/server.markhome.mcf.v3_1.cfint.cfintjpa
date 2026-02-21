@@ -45,18 +45,23 @@ import jakarta.transaction.Transactional;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.text.StringEscapeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.BeansException;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import io.github.msobkow.v3_1.cflib.*;
 import io.github.msobkow.v3_1.cflib.dbutil.*;
 import io.github.msobkow.v3_1.cflib.xml.CFLibXmlUtil;
 import io.github.msobkow.v3_1.cfsec.cfsec.*;
 import io.github.msobkow.v3_1.cfint.cfint.*;
 import io.github.msobkow.v3_1.cfsec.cfsec.jpa.*;
-import io.github.msobkow.v3_1.cfint.cfintjpahooks.*;
 
 public class CFIntJpaSchema
 	implements ICFIntSchema,
-		ICFSecSchema
+		ICFSecSchema, ApplicationContextAware
 {
+	private ApplicationContext applicationContext = null;
+	private CFIntJpaSchemaService cfintJpaSchemaService = null;
+
 	protected ICFSecClusterTable tableCluster;
 	protected ICFSecHostNodeTable tableHostNode;
 	protected ICFSecISOCcyTable tableISOCcy;
@@ -119,8 +124,6 @@ public class CFIntJpaSchema
 	protected ICFIntTopProjectFactory factoryTopProject;
 	protected ICFIntURLProtocolFactory factoryURLProtocol;
 
-
-	protected CFIntJpaHooksSchema schemaHooks = null;
 
 	@Override
 	public int initClassMapEntries(int value) {
@@ -311,11 +314,33 @@ public class CFIntJpaSchema
 		schema.wireRecConstructors();
 	}
 
-	public CFIntJpaHooksSchema getSchemaHooks() {
-		if (schemaHooks == null) {
-			schemaHooks = new CFIntJpaHooksSchema();
+	@Override
+	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+		this.applicationContext = applicationContext;
+	}
+
+	public CFIntJpaSchemaService getJpaSchemaService() {
+		if ( cfintJpaSchemaService == null ) {
+			if (applicationContext == null) {
+				throw new CFLibNullArgumentException(getClass(), "getJpaSchemaService", 0, "applicationContext");
+			}
+			try {
+				// Third alternative is scoped, which is a form of singleton as far as I'm aware as of 2026-02-21 -- mark.sobkow@gmail.com
+				if ((!applicationContext.isSingleton("cfintJpaSchemaService")) && applicationContext.isPrototype("cfintJpaSchemaService")) {
+					throw new CFLibNotImplementedYetException(getClass(), "getJpaSchemaService",
+						"Bean 'cfintJpaSchemaService' is not a singleton",
+						"Bean 'cfintJpaSchemaService' is not a singleton");
+				}
+				cfintJpaSchemaService = (CFIntJpaSchemaService)(applicationContext.getBean("cfintJpaSchemaService", CFIntJpaSchemaService.class));
+				if (cfintJpaSchemaService == null) {
+					throw new CFLibNullArgumentException(getClass(), "getJpaSchemaService", 0, "applicationContext.getBean('cfintJpaSchemaService', CFIntJpaSchemaService.class)");
+				}
+			}
+			catch (BeansException ex) {
+				throw new CFLibNullArgumentException(getClass(), "getJpaSchemaService", 0, "applicationContext.getBean('cfintJpaSchemaService', CFIntJpaSchemaService.class)");
+			}
 		}
-		return( schemaHooks );
+		return( cfintJpaSchemaService );
 	}
 
 
@@ -1052,6 +1077,6 @@ public class CFIntJpaSchema
 	}
 
 	public void bootstrapSchema() {
-		getSchemaHooks().getSchemaService().bootstrapSchema();
+		getJpaSchemaService().bootstrapSchema();
 	}
 }
