@@ -441,5 +441,4 @@ public class CFIntJpaMinorVersionService {
 	public void deleteByNameIdx(ICFIntMinorVersionByNameIdxKey key) {
 		cfint31MinorVersionRepository.deleteByNameIdx(key.getRequiredMajorVersionId(), key.getRequiredName());
 	}
-
 }

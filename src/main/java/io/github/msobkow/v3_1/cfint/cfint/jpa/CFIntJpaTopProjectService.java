@@ -441,5 +441,4 @@ public class CFIntJpaTopProjectService {
 	public void deleteByNameIdx(ICFIntTopProjectByNameIdxKey key) {
 		cfint31TopProjectRepository.deleteByNameIdx(key.getRequiredTopDomainId(), key.getRequiredName());
 	}
-
 }

@@ -347,5 +347,4 @@ public class CFIntJpaURLProtocolService {
 	public void deleteByIsSecureIdx(ICFIntURLProtocolByIsSecureIdxKey key) {
 		cfint31URLProtocolRepository.deleteByIsSecureIdx(key.getRequiredIsSecure());
 	}
-
 }

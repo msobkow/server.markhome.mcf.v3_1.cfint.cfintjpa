@@ -45,15 +45,14 @@ import jakarta.transaction.Transactional;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.text.StringEscapeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Configurable;
 import io.github.msobkow.v3_1.cflib.*;
 import io.github.msobkow.v3_1.cflib.dbutil.*;
 import io.github.msobkow.v3_1.cflib.xml.CFLibXmlUtil;
 import io.github.msobkow.v3_1.cfsec.cfsec.*;
 import io.github.msobkow.v3_1.cfint.cfint.*;
 import io.github.msobkow.v3_1.cfsec.cfsec.jpa.*;
+import io.github.msobkow.v3_1.cfint.cfintjpahooks.*;
 
-@Configurable
 public class CFIntJpaSchema
 	implements ICFIntSchema,
 		ICFSecSchema
@@ -121,8 +120,7 @@ public class CFIntJpaSchema
 	protected ICFIntURLProtocolFactory factoryURLProtocol;
 
 
-	@Autowired
-	CFIntJpaSchemaService schemaService;
+	protected CFIntJpaHooksSchema schemaHooks = null;
 
 	@Override
 	public int initClassMapEntries(int value) {
@@ -311,6 +309,13 @@ public class CFIntJpaSchema
 	public void setCFIntSchema(ICFIntSchema schema) {
 		ICFIntSchema.setBackingCFInt(schema);
 		schema.wireRecConstructors();
+	}
+
+	public CFIntJpaHooksSchema getSchemaHooks() {
+		if (schemaHooks == null) {
+			schemaHooks = new CFIntJpaHooksSchema();
+		}
+		return( schemaHooks );
 	}
 
 
@@ -1047,6 +1052,6 @@ public class CFIntJpaSchema
 	}
 
 	public void bootstrapSchema() {
-		schemaService.bootstrapSchema();
+		getSchemaHooks().getSchemaService().bootstrapSchema();
 	}
 }
