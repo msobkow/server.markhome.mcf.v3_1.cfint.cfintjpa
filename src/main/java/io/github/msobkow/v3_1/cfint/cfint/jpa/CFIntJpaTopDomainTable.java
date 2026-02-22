@@ -63,6 +63,7 @@ import io.github.msobkow.v3_1.cfsec.cfsec.*;
 import io.github.msobkow.v3_1.cfint.cfint.*;
 import io.github.msobkow.v3_1.cfsec.cfsecobj.*;
 import io.github.msobkow.v3_1.cfint.cfintobj.*;
+import io.github.msobkow.v3_1.cfint.cfintjpahooks.CFIntJpaHooksSchema;
 
 /*
  *	CFIntJpaTopDomainTable database implementation for TopDomain
@@ -70,35 +71,7 @@ import io.github.msobkow.v3_1.cfint.cfintobj.*;
 public class CFIntJpaTopDomainTable implements ICFIntTopDomainTable
 {
 	protected CFIntJpaSchema schema;
-    @Autowired
-    @Qualifier("cfint31EntityManagerFactory")
-    private LocalContainerEntityManagerFactoryBean cfintEntityManagerFactory;
-	@Autowired
-	private CFIntJpaLicenseService licenseService;
-
-	@Autowired
-	private CFIntJpaMajorVersionService majorversionService;
-
-	@Autowired
-	private CFIntJpaMimeTypeService mimetypeService;
-
-	@Autowired
-	private CFIntJpaMinorVersionService minorversionService;
-
-	@Autowired
-	private CFIntJpaSubProjectService subprojectService;
-
-	@Autowired
-	private CFIntJpaTldService tldService;
-
-	@Autowired
-	private CFIntJpaTopDomainService topdomainService;
-
-	@Autowired
-	private CFIntJpaTopProjectService topprojectService;
-
-	@Autowired
-	private CFIntJpaURLProtocolService urlprotocolService;
+	protected CFIntJpaHooksSchema jpaHooksSchema;
 
 
 	public CFIntJpaTopDomainTable(ICFIntSchema schema) {
@@ -107,6 +80,7 @@ public class CFIntJpaTopDomainTable implements ICFIntTopDomainTable
 		}
 		if (schema instanceof CFIntJpaSchema) {
 			this.schema = (CFIntJpaSchema)schema;
+			this.jpaHooksSchema = this.schema.getJpaHooksSchema();
 		}
 		else {
 			throw new CFLibUnsupportedClassException(getClass(), "constructor", "schema", schema, "CFIntJpaSchema");
@@ -130,7 +104,7 @@ public class CFIntJpaTopDomainTable implements ICFIntTopDomainTable
 		}
 		else if (rec instanceof CFIntJpaTopDomain) {
 			CFIntJpaTopDomain jparec = (CFIntJpaTopDomain)rec;
-			CFIntJpaTopDomain created = topdomainService.create(jparec);
+			CFIntJpaTopDomain created = jpaHooksSchema.getTopDomainService().create(jparec);
 			return( created );
 		}
 		else {
@@ -155,7 +129,7 @@ public class CFIntJpaTopDomainTable implements ICFIntTopDomainTable
 		}
 		else if (rec instanceof CFIntJpaTopDomain) {
 			CFIntJpaTopDomain jparec = (CFIntJpaTopDomain)rec;
-			CFIntJpaTopDomain updated = topdomainService.update(jparec);
+			CFIntJpaTopDomain updated = jpaHooksSchema.getTopDomainService().update(jparec);
 			return( updated );
 		}
 		else {
@@ -179,7 +153,7 @@ public class CFIntJpaTopDomainTable implements ICFIntTopDomainTable
 		}
 		if (rec instanceof CFIntJpaTopDomain) {
 			CFIntJpaTopDomain jparec = (CFIntJpaTopDomain)rec;
-			topdomainService.deleteByIdIdx(jparec.getPKey());
+			jpaHooksSchema.getTopDomainService().deleteByIdIdx(jparec.getPKey());
 		}
 		else {
 			throw new CFLibUnsupportedClassException(getClass(), "deleteTopDomain", "rec", rec, "CFIntJpaTopDomain");
@@ -199,7 +173,7 @@ public class CFIntJpaTopDomainTable implements ICFIntTopDomainTable
 	public void deleteTopDomainByIdIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 argKey )
 	{
-		topdomainService.deleteByIdIdx(argKey);
+		jpaHooksSchema.getTopDomainService().deleteByIdIdx(argKey);
 	}
 
 	/**
@@ -213,7 +187,7 @@ public class CFIntJpaTopDomainTable implements ICFIntTopDomainTable
 	public void deleteTopDomainByTenantIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 argTenantId )
 	{
-		topdomainService.deleteByTenantIdx(argTenantId);
+		jpaHooksSchema.getTopDomainService().deleteByTenantIdx(argTenantId);
 	}
 
 
@@ -228,7 +202,7 @@ public class CFIntJpaTopDomainTable implements ICFIntTopDomainTable
 	public void deleteTopDomainByTenantIdx( ICFSecAuthorization Authorization,
 		ICFIntTopDomainByTenantIdxKey argKey )
 	{
-		topdomainService.deleteByTenantIdx(argKey.getRequiredTenantId());
+		jpaHooksSchema.getTopDomainService().deleteByTenantIdx(argKey.getRequiredTenantId());
 	}
 
 	/**
@@ -242,7 +216,7 @@ public class CFIntJpaTopDomainTable implements ICFIntTopDomainTable
 	public void deleteTopDomainByTldIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 argTldId )
 	{
-		topdomainService.deleteByTldIdx(argTldId);
+		jpaHooksSchema.getTopDomainService().deleteByTldIdx(argTldId);
 	}
 
 
@@ -257,7 +231,7 @@ public class CFIntJpaTopDomainTable implements ICFIntTopDomainTable
 	public void deleteTopDomainByTldIdx( ICFSecAuthorization Authorization,
 		ICFIntTopDomainByTldIdxKey argKey )
 	{
-		topdomainService.deleteByTldIdx(argKey.getRequiredTldId());
+		jpaHooksSchema.getTopDomainService().deleteByTldIdx(argKey.getRequiredTldId());
 	}
 
 	/**
@@ -274,7 +248,7 @@ public class CFIntJpaTopDomainTable implements ICFIntTopDomainTable
 		CFLibDbKeyHash256 argTldId,
 		String argName )
 	{
-		topdomainService.deleteByNameIdx(argTldId,
+		jpaHooksSchema.getTopDomainService().deleteByNameIdx(argTldId,
 		argName);
 	}
 
@@ -290,7 +264,7 @@ public class CFIntJpaTopDomainTable implements ICFIntTopDomainTable
 	public void deleteTopDomainByNameIdx( ICFSecAuthorization Authorization,
 		ICFIntTopDomainByNameIdxKey argKey )
 	{
-		topdomainService.deleteByNameIdx(argKey.getRequiredTldId(),
+		jpaHooksSchema.getTopDomainService().deleteByNameIdx(argKey.getRequiredTldId(),
 			argKey.getRequiredName());
 	}
 
@@ -309,7 +283,7 @@ public class CFIntJpaTopDomainTable implements ICFIntTopDomainTable
 	public ICFIntTopDomain readDerived( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 PKey )
 	{
-		return( topdomainService.find(PKey) );
+		return( jpaHooksSchema.getTopDomainService().find(PKey) );
 	}
 
 	/**
@@ -326,7 +300,7 @@ public class CFIntJpaTopDomainTable implements ICFIntTopDomainTable
 	public ICFIntTopDomain lockDerived( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 PKey )
 	{
-		return( topdomainService.lockByIdIdx(PKey) );
+		return( jpaHooksSchema.getTopDomainService().lockByIdIdx(PKey) );
 	}
 
 	/**
@@ -338,7 +312,7 @@ public class CFIntJpaTopDomainTable implements ICFIntTopDomainTable
 	 */
 	@Override
 	public ICFIntTopDomain[] readAllDerived( ICFSecAuthorization Authorization ) {
-		List<CFIntJpaTopDomain> results = topdomainService.findAll();
+		List<CFIntJpaTopDomain> results = jpaHooksSchema.getTopDomainService().findAll();
 		ICFIntTopDomain[] retset = new ICFIntTopDomain[results.size()];
 		int idx = 0;
 		for (CFIntJpaTopDomain cur: results) {
@@ -361,7 +335,7 @@ public class CFIntJpaTopDomainTable implements ICFIntTopDomainTable
 	public ICFIntTopDomain readDerivedByIdIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 argId )
 	{
-		return( topdomainService.find(argId) );
+		return( jpaHooksSchema.getTopDomainService().find(argId) );
 	}
 
 	/**
@@ -377,7 +351,7 @@ public class CFIntJpaTopDomainTable implements ICFIntTopDomainTable
 	public ICFIntTopDomain[] readDerivedByTenantIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 argTenantId )
 	{
-		List<CFIntJpaTopDomain> results = topdomainService.findByTenantIdx(argTenantId);
+		List<CFIntJpaTopDomain> results = jpaHooksSchema.getTopDomainService().findByTenantIdx(argTenantId);
 		ICFIntTopDomain[] retset = new ICFIntTopDomain[results.size()];
 		int idx = 0;
 		for (CFIntJpaTopDomain cur: results) {
@@ -399,7 +373,7 @@ public class CFIntJpaTopDomainTable implements ICFIntTopDomainTable
 	public ICFIntTopDomain[] readDerivedByTldIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 argTldId )
 	{
-		List<CFIntJpaTopDomain> results = topdomainService.findByTldIdx(argTldId);
+		List<CFIntJpaTopDomain> results = jpaHooksSchema.getTopDomainService().findByTldIdx(argTldId);
 		ICFIntTopDomain[] retset = new ICFIntTopDomain[results.size()];
 		int idx = 0;
 		for (CFIntJpaTopDomain cur: results) {
@@ -425,7 +399,7 @@ public class CFIntJpaTopDomainTable implements ICFIntTopDomainTable
 		CFLibDbKeyHash256 argTldId,
 		String argName )
 	{
-		return( topdomainService.findByNameIdx(argTldId,
+		return( jpaHooksSchema.getTopDomainService().findByNameIdx(argTldId,
 		argName) );
 	}
 

@@ -29,8 +29,6 @@
 	<jakarta-annotation-api.version>3.0.0</jakarta-annotation-api.version>
 	<jakarta-persistence-api.version>3.2.0</jakarta-persistence-api.version>
 	<postgresql.version>42.7.8</postgresql.version>
-	<spring-aspects.version>7.0.5</spring-aspects.version>
-	<aspectj-runtime.version>1.9.25.1</aspectj-runtime.version>
   </properties>
 
   <dependencies>
@@ -106,21 +104,6 @@
         <groupId>org.springframework</groupId>
         <artifactId>spring-orm</artifactId>
 		<version>${orm.version}</version>
-    </dependency>
-    <dependency>
-        <groupId>org.springframework</groupId>
-        <artifactId>spring-aspects</artifactId>
-		<version>${spring-aspects.version}</version>
-    </dependency>
-    <dependency>
-        <groupId>org.aspectj</groupId>
-        <artifactId>aspectjrt</artifactId>
-		<version>${aspectj-runtime.version}</version>
-    </dependency>
-    <dependency>
-        <groupId>org.aspectj</groupId>
-        <artifactId>aspectjtools</artifactId>
-		<version>${aspectj-runtime.version}</version>
     </dependency>
     <dependency>
         <groupId>io.github.msobkow.v3_1</groupId>

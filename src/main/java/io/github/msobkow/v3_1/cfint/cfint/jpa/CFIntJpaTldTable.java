@@ -63,6 +63,7 @@ import io.github.msobkow.v3_1.cfsec.cfsec.*;
 import io.github.msobkow.v3_1.cfint.cfint.*;
 import io.github.msobkow.v3_1.cfsec.cfsecobj.*;
 import io.github.msobkow.v3_1.cfint.cfintobj.*;
+import io.github.msobkow.v3_1.cfint.cfintjpahooks.CFIntJpaHooksSchema;
 
 /*
  *	CFIntJpaTldTable database implementation for Tld
@@ -70,35 +71,7 @@ import io.github.msobkow.v3_1.cfint.cfintobj.*;
 public class CFIntJpaTldTable implements ICFIntTldTable
 {
 	protected CFIntJpaSchema schema;
-    @Autowired
-    @Qualifier("cfint31EntityManagerFactory")
-    private LocalContainerEntityManagerFactoryBean cfintEntityManagerFactory;
-	@Autowired
-	private CFIntJpaLicenseService licenseService;
-
-	@Autowired
-	private CFIntJpaMajorVersionService majorversionService;
-
-	@Autowired
-	private CFIntJpaMimeTypeService mimetypeService;
-
-	@Autowired
-	private CFIntJpaMinorVersionService minorversionService;
-
-	@Autowired
-	private CFIntJpaSubProjectService subprojectService;
-
-	@Autowired
-	private CFIntJpaTldService tldService;
-
-	@Autowired
-	private CFIntJpaTopDomainService topdomainService;
-
-	@Autowired
-	private CFIntJpaTopProjectService topprojectService;
-
-	@Autowired
-	private CFIntJpaURLProtocolService urlprotocolService;
+	protected CFIntJpaHooksSchema jpaHooksSchema;
 
 
 	public CFIntJpaTldTable(ICFIntSchema schema) {
@@ -107,6 +80,7 @@ public class CFIntJpaTldTable implements ICFIntTldTable
 		}
 		if (schema instanceof CFIntJpaSchema) {
 			this.schema = (CFIntJpaSchema)schema;
+			this.jpaHooksSchema = this.schema.getJpaHooksSchema();
 		}
 		else {
 			throw new CFLibUnsupportedClassException(getClass(), "constructor", "schema", schema, "CFIntJpaSchema");
@@ -130,7 +104,7 @@ public class CFIntJpaTldTable implements ICFIntTldTable
 		}
 		else if (rec instanceof CFIntJpaTld) {
 			CFIntJpaTld jparec = (CFIntJpaTld)rec;
-			CFIntJpaTld created = tldService.create(jparec);
+			CFIntJpaTld created = jpaHooksSchema.getTldService().create(jparec);
 			return( created );
 		}
 		else {
@@ -155,7 +129,7 @@ public class CFIntJpaTldTable implements ICFIntTldTable
 		}
 		else if (rec instanceof CFIntJpaTld) {
 			CFIntJpaTld jparec = (CFIntJpaTld)rec;
-			CFIntJpaTld updated = tldService.update(jparec);
+			CFIntJpaTld updated = jpaHooksSchema.getTldService().update(jparec);
 			return( updated );
 		}
 		else {
@@ -179,7 +153,7 @@ public class CFIntJpaTldTable implements ICFIntTldTable
 		}
 		if (rec instanceof CFIntJpaTld) {
 			CFIntJpaTld jparec = (CFIntJpaTld)rec;
-			tldService.deleteByIdIdx(jparec.getPKey());
+			jpaHooksSchema.getTldService().deleteByIdIdx(jparec.getPKey());
 		}
 		else {
 			throw new CFLibUnsupportedClassException(getClass(), "deleteTld", "rec", rec, "CFIntJpaTld");
@@ -199,7 +173,7 @@ public class CFIntJpaTldTable implements ICFIntTldTable
 	public void deleteTldByIdIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 argKey )
 	{
-		tldService.deleteByIdIdx(argKey);
+		jpaHooksSchema.getTldService().deleteByIdIdx(argKey);
 	}
 
 	/**
@@ -213,7 +187,7 @@ public class CFIntJpaTldTable implements ICFIntTldTable
 	public void deleteTldByTenantIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 argTenantId )
 	{
-		tldService.deleteByTenantIdx(argTenantId);
+		jpaHooksSchema.getTldService().deleteByTenantIdx(argTenantId);
 	}
 
 
@@ -228,7 +202,7 @@ public class CFIntJpaTldTable implements ICFIntTldTable
 	public void deleteTldByTenantIdx( ICFSecAuthorization Authorization,
 		ICFIntTldByTenantIdxKey argKey )
 	{
-		tldService.deleteByTenantIdx(argKey.getRequiredTenantId());
+		jpaHooksSchema.getTldService().deleteByTenantIdx(argKey.getRequiredTenantId());
 	}
 
 	/**
@@ -242,7 +216,7 @@ public class CFIntJpaTldTable implements ICFIntTldTable
 	public void deleteTldByNameIdx( ICFSecAuthorization Authorization,
 		String argName )
 	{
-		tldService.deleteByNameIdx(argName);
+		jpaHooksSchema.getTldService().deleteByNameIdx(argName);
 	}
 
 
@@ -257,7 +231,7 @@ public class CFIntJpaTldTable implements ICFIntTldTable
 	public void deleteTldByNameIdx( ICFSecAuthorization Authorization,
 		ICFIntTldByNameIdxKey argKey )
 	{
-		tldService.deleteByNameIdx(argKey.getRequiredName());
+		jpaHooksSchema.getTldService().deleteByNameIdx(argKey.getRequiredName());
 	}
 
 
@@ -275,7 +249,7 @@ public class CFIntJpaTldTable implements ICFIntTldTable
 	public ICFIntTld readDerived( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 PKey )
 	{
-		return( tldService.find(PKey) );
+		return( jpaHooksSchema.getTldService().find(PKey) );
 	}
 
 	/**
@@ -292,7 +266,7 @@ public class CFIntJpaTldTable implements ICFIntTldTable
 	public ICFIntTld lockDerived( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 PKey )
 	{
-		return( tldService.lockByIdIdx(PKey) );
+		return( jpaHooksSchema.getTldService().lockByIdIdx(PKey) );
 	}
 
 	/**
@@ -304,7 +278,7 @@ public class CFIntJpaTldTable implements ICFIntTldTable
 	 */
 	@Override
 	public ICFIntTld[] readAllDerived( ICFSecAuthorization Authorization ) {
-		List<CFIntJpaTld> results = tldService.findAll();
+		List<CFIntJpaTld> results = jpaHooksSchema.getTldService().findAll();
 		ICFIntTld[] retset = new ICFIntTld[results.size()];
 		int idx = 0;
 		for (CFIntJpaTld cur: results) {
@@ -327,7 +301,7 @@ public class CFIntJpaTldTable implements ICFIntTldTable
 	public ICFIntTld readDerivedByIdIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 argId )
 	{
-		return( tldService.find(argId) );
+		return( jpaHooksSchema.getTldService().find(argId) );
 	}
 
 	/**
@@ -343,7 +317,7 @@ public class CFIntJpaTldTable implements ICFIntTldTable
 	public ICFIntTld[] readDerivedByTenantIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 argTenantId )
 	{
-		List<CFIntJpaTld> results = tldService.findByTenantIdx(argTenantId);
+		List<CFIntJpaTld> results = jpaHooksSchema.getTldService().findByTenantIdx(argTenantId);
 		ICFIntTld[] retset = new ICFIntTld[results.size()];
 		int idx = 0;
 		for (CFIntJpaTld cur: results) {
@@ -366,7 +340,7 @@ public class CFIntJpaTldTable implements ICFIntTldTable
 	public ICFIntTld readDerivedByNameIdx( ICFSecAuthorization Authorization,
 		String argName )
 	{
-		return( tldService.findByNameIdx(argName) );
+		return( jpaHooksSchema.getTldService().findByNameIdx(argName) );
 	}
 
 	/**

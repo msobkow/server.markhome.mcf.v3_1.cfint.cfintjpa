@@ -63,6 +63,7 @@ import io.github.msobkow.v3_1.cfsec.cfsec.*;
 import io.github.msobkow.v3_1.cfint.cfint.*;
 import io.github.msobkow.v3_1.cfsec.cfsecobj.*;
 import io.github.msobkow.v3_1.cfint.cfintobj.*;
+import io.github.msobkow.v3_1.cfint.cfintjpahooks.CFIntJpaHooksSchema;
 
 /*
  *	CFIntJpaTopProjectTable database implementation for TopProject
@@ -70,35 +71,7 @@ import io.github.msobkow.v3_1.cfint.cfintobj.*;
 public class CFIntJpaTopProjectTable implements ICFIntTopProjectTable
 {
 	protected CFIntJpaSchema schema;
-    @Autowired
-    @Qualifier("cfint31EntityManagerFactory")
-    private LocalContainerEntityManagerFactoryBean cfintEntityManagerFactory;
-	@Autowired
-	private CFIntJpaLicenseService licenseService;
-
-	@Autowired
-	private CFIntJpaMajorVersionService majorversionService;
-
-	@Autowired
-	private CFIntJpaMimeTypeService mimetypeService;
-
-	@Autowired
-	private CFIntJpaMinorVersionService minorversionService;
-
-	@Autowired
-	private CFIntJpaSubProjectService subprojectService;
-
-	@Autowired
-	private CFIntJpaTldService tldService;
-
-	@Autowired
-	private CFIntJpaTopDomainService topdomainService;
-
-	@Autowired
-	private CFIntJpaTopProjectService topprojectService;
-
-	@Autowired
-	private CFIntJpaURLProtocolService urlprotocolService;
+	protected CFIntJpaHooksSchema jpaHooksSchema;
 
 
 	public CFIntJpaTopProjectTable(ICFIntSchema schema) {
@@ -107,6 +80,7 @@ public class CFIntJpaTopProjectTable implements ICFIntTopProjectTable
 		}
 		if (schema instanceof CFIntJpaSchema) {
 			this.schema = (CFIntJpaSchema)schema;
+			this.jpaHooksSchema = this.schema.getJpaHooksSchema();
 		}
 		else {
 			throw new CFLibUnsupportedClassException(getClass(), "constructor", "schema", schema, "CFIntJpaSchema");
@@ -130,7 +104,7 @@ public class CFIntJpaTopProjectTable implements ICFIntTopProjectTable
 		}
 		else if (rec instanceof CFIntJpaTopProject) {
 			CFIntJpaTopProject jparec = (CFIntJpaTopProject)rec;
-			CFIntJpaTopProject created = topprojectService.create(jparec);
+			CFIntJpaTopProject created = jpaHooksSchema.getTopProjectService().create(jparec);
 			return( created );
 		}
 		else {
@@ -155,7 +129,7 @@ public class CFIntJpaTopProjectTable implements ICFIntTopProjectTable
 		}
 		else if (rec instanceof CFIntJpaTopProject) {
 			CFIntJpaTopProject jparec = (CFIntJpaTopProject)rec;
-			CFIntJpaTopProject updated = topprojectService.update(jparec);
+			CFIntJpaTopProject updated = jpaHooksSchema.getTopProjectService().update(jparec);
 			return( updated );
 		}
 		else {
@@ -179,7 +153,7 @@ public class CFIntJpaTopProjectTable implements ICFIntTopProjectTable
 		}
 		if (rec instanceof CFIntJpaTopProject) {
 			CFIntJpaTopProject jparec = (CFIntJpaTopProject)rec;
-			topprojectService.deleteByIdIdx(jparec.getPKey());
+			jpaHooksSchema.getTopProjectService().deleteByIdIdx(jparec.getPKey());
 		}
 		else {
 			throw new CFLibUnsupportedClassException(getClass(), "deleteTopProject", "rec", rec, "CFIntJpaTopProject");
@@ -199,7 +173,7 @@ public class CFIntJpaTopProjectTable implements ICFIntTopProjectTable
 	public void deleteTopProjectByIdIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 argKey )
 	{
-		topprojectService.deleteByIdIdx(argKey);
+		jpaHooksSchema.getTopProjectService().deleteByIdIdx(argKey);
 	}
 
 	/**
@@ -213,7 +187,7 @@ public class CFIntJpaTopProjectTable implements ICFIntTopProjectTable
 	public void deleteTopProjectByTenantIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 argTenantId )
 	{
-		topprojectService.deleteByTenantIdx(argTenantId);
+		jpaHooksSchema.getTopProjectService().deleteByTenantIdx(argTenantId);
 	}
 
 
@@ -228,7 +202,7 @@ public class CFIntJpaTopProjectTable implements ICFIntTopProjectTable
 	public void deleteTopProjectByTenantIdx( ICFSecAuthorization Authorization,
 		ICFIntTopProjectByTenantIdxKey argKey )
 	{
-		topprojectService.deleteByTenantIdx(argKey.getRequiredTenantId());
+		jpaHooksSchema.getTopProjectService().deleteByTenantIdx(argKey.getRequiredTenantId());
 	}
 
 	/**
@@ -242,7 +216,7 @@ public class CFIntJpaTopProjectTable implements ICFIntTopProjectTable
 	public void deleteTopProjectByTopDomainIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 argTopDomainId )
 	{
-		topprojectService.deleteByTopDomainIdx(argTopDomainId);
+		jpaHooksSchema.getTopProjectService().deleteByTopDomainIdx(argTopDomainId);
 	}
 
 
@@ -257,7 +231,7 @@ public class CFIntJpaTopProjectTable implements ICFIntTopProjectTable
 	public void deleteTopProjectByTopDomainIdx( ICFSecAuthorization Authorization,
 		ICFIntTopProjectByTopDomainIdxKey argKey )
 	{
-		topprojectService.deleteByTopDomainIdx(argKey.getRequiredTopDomainId());
+		jpaHooksSchema.getTopProjectService().deleteByTopDomainIdx(argKey.getRequiredTopDomainId());
 	}
 
 	/**
@@ -274,7 +248,7 @@ public class CFIntJpaTopProjectTable implements ICFIntTopProjectTable
 		CFLibDbKeyHash256 argTopDomainId,
 		String argName )
 	{
-		topprojectService.deleteByNameIdx(argTopDomainId,
+		jpaHooksSchema.getTopProjectService().deleteByNameIdx(argTopDomainId,
 		argName);
 	}
 
@@ -290,7 +264,7 @@ public class CFIntJpaTopProjectTable implements ICFIntTopProjectTable
 	public void deleteTopProjectByNameIdx( ICFSecAuthorization Authorization,
 		ICFIntTopProjectByNameIdxKey argKey )
 	{
-		topprojectService.deleteByNameIdx(argKey.getRequiredTopDomainId(),
+		jpaHooksSchema.getTopProjectService().deleteByNameIdx(argKey.getRequiredTopDomainId(),
 			argKey.getRequiredName());
 	}
 
@@ -309,7 +283,7 @@ public class CFIntJpaTopProjectTable implements ICFIntTopProjectTable
 	public ICFIntTopProject readDerived( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 PKey )
 	{
-		return( topprojectService.find(PKey) );
+		return( jpaHooksSchema.getTopProjectService().find(PKey) );
 	}
 
 	/**
@@ -326,7 +300,7 @@ public class CFIntJpaTopProjectTable implements ICFIntTopProjectTable
 	public ICFIntTopProject lockDerived( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 PKey )
 	{
-		return( topprojectService.lockByIdIdx(PKey) );
+		return( jpaHooksSchema.getTopProjectService().lockByIdIdx(PKey) );
 	}
 
 	/**
@@ -338,7 +312,7 @@ public class CFIntJpaTopProjectTable implements ICFIntTopProjectTable
 	 */
 	@Override
 	public ICFIntTopProject[] readAllDerived( ICFSecAuthorization Authorization ) {
-		List<CFIntJpaTopProject> results = topprojectService.findAll();
+		List<CFIntJpaTopProject> results = jpaHooksSchema.getTopProjectService().findAll();
 		ICFIntTopProject[] retset = new ICFIntTopProject[results.size()];
 		int idx = 0;
 		for (CFIntJpaTopProject cur: results) {
@@ -361,7 +335,7 @@ public class CFIntJpaTopProjectTable implements ICFIntTopProjectTable
 	public ICFIntTopProject readDerivedByIdIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 argId )
 	{
-		return( topprojectService.find(argId) );
+		return( jpaHooksSchema.getTopProjectService().find(argId) );
 	}
 
 	/**
@@ -377,7 +351,7 @@ public class CFIntJpaTopProjectTable implements ICFIntTopProjectTable
 	public ICFIntTopProject[] readDerivedByTenantIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 argTenantId )
 	{
-		List<CFIntJpaTopProject> results = topprojectService.findByTenantIdx(argTenantId);
+		List<CFIntJpaTopProject> results = jpaHooksSchema.getTopProjectService().findByTenantIdx(argTenantId);
 		ICFIntTopProject[] retset = new ICFIntTopProject[results.size()];
 		int idx = 0;
 		for (CFIntJpaTopProject cur: results) {
@@ -399,7 +373,7 @@ public class CFIntJpaTopProjectTable implements ICFIntTopProjectTable
 	public ICFIntTopProject[] readDerivedByTopDomainIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 argTopDomainId )
 	{
-		List<CFIntJpaTopProject> results = topprojectService.findByTopDomainIdx(argTopDomainId);
+		List<CFIntJpaTopProject> results = jpaHooksSchema.getTopProjectService().findByTopDomainIdx(argTopDomainId);
 		ICFIntTopProject[] retset = new ICFIntTopProject[results.size()];
 		int idx = 0;
 		for (CFIntJpaTopProject cur: results) {
@@ -425,7 +399,7 @@ public class CFIntJpaTopProjectTable implements ICFIntTopProjectTable
 		CFLibDbKeyHash256 argTopDomainId,
 		String argName )
 	{
-		return( topprojectService.findByNameIdx(argTopDomainId,
+		return( jpaHooksSchema.getTopProjectService().findByNameIdx(argTopDomainId,
 		argName) );
 	}
 
