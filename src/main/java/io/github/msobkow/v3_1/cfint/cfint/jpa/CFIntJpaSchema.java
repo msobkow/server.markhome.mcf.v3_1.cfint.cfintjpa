@@ -50,6 +50,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import io.github.msobkow.v3_1.cflib.*;
 import io.github.msobkow.v3_1.cflib.dbutil.*;
+import io.github.msobkow.v3_1.cflib.inz.Inz;
 import io.github.msobkow.v3_1.cflib.xml.CFLibXmlUtil;
 import io.github.msobkow.v3_1.cfsec.cfsec.*;
 import io.github.msobkow.v3_1.cfint.cfint.*;
@@ -59,7 +60,7 @@ public class CFIntJpaSchema
 	implements ICFIntSchema,
 		ICFSecSchema, ApplicationContextAware
 {
-	private ApplicationContext applicationContext = null;
+	private static ApplicationContext applicationContext = null;
 	private CFIntJpaSchemaService cfintJpaSchemaService = null;
 
 	protected ICFSecClusterTable tableCluster;
@@ -315,29 +316,59 @@ public class CFIntJpaSchema
 	}
 
 	@Override
-	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+	public void setApplicationContext(final ApplicationContext applicationContext) throws BeansException {
 		this.applicationContext = applicationContext;
 	}
 
+	public static ApplicationContext getApplicationContext() {
+		return( applicationContext );
+	}
+
 	public CFIntJpaSchemaService getJpaSchemaService() {
+		final String S_ProcName = "getJpaSchemaService";
+		final String S_BeanClassName = "CFIntJpaSchemaService";
+		final String S_BeanName = "cfint31JpaSchemaService";
+		final String S_MemberName = "cfintJpaSchemaService";
 		if ( cfintJpaSchemaService == null ) {
 			if (applicationContext == null) {
-				throw new CFLibNullArgumentException(getClass(), "getJpaSchemaService", 0, "applicationContext");
+				throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "applicationContext");
 			}
 			try {
-				// Third alternative is scoped, which is a form of singleton as far as I'm aware as of 2026-02-21 -- mark.sobkow@gmail.com
-				if ((!applicationContext.isSingleton("cfintJpaSchemaService")) && applicationContext.isPrototype("cfintJpaSchemaService")) {
-					throw new CFLibNotImplementedYetException(getClass(), "getJpaSchemaService",
-						"Bean 'cfintJpaSchemaService' is not a singleton",
-						"Bean 'cfintJpaSchemaService' is not a singleton");
+				if (!applicationContext.containsBean(S_BeanName)) {
+					throw new CFLibInvalidStateException(getClass(), S_ProcName,
+						String.format(Inz.s("cflib.common.ACContainsBeanFailure"), S_BeanName),
+						String.format(Inz.x("cflib.common.ACContainsBeanFailure"), S_BeanName));
 				}
-				cfintJpaSchemaService = (CFIntJpaSchemaService)(applicationContext.getBean("cfintJpaSchemaService", CFIntJpaSchemaService.class));
+				if (!applicationContext.isTypeMatch(S_BeanName, CFIntJpaSchemaService.class)) {
+					throw new CFLibInvalidStateException(getClass(), S_ProcName,
+						String.format(Inz.s("cflib.common.ACBeanTypeFailure"), S_BeanName, S_BeanClassName),
+						String.format(Inz.x("cflib.common.ACBeanTypeFailure"), S_BeanName, S_BeanClassName));
+				}
+				if (applicationContext.isSingleton(S_BeanName)) {
+					// Resolve singletons like configuration data if they exist, hope that default construction takes place
+					cfintJpaSchemaService = (CFIntJpaSchemaService)(applicationContext.getBean(S_BeanName, CFIntJpaSchemaService.class));
+				}
+				else if(applicationContext.isPrototype(S_BeanName)) {
+					// If it is a prototype, get a copy for our manual 'autowiring' like Spring would do
+					cfintJpaSchemaService = (CFIntJpaSchemaService)(applicationContext.getBean(S_BeanName, CFIntJpaSchemaService.class));
+				}
+				// Otherwise it would be a scoped bean, and I've no idea how to search scoped beans as of 2026-02-21, so we'll default to constructing a local instance -- mark.sobkow@gmail.com
 				if (cfintJpaSchemaService == null) {
-					throw new CFLibNullArgumentException(getClass(), "getJpaSchemaService", 0, "applicationContext.getBean('cfintJpaSchemaService', CFIntJpaSchemaService.class)");
+					// Need to manually construct and register instance; the plumbing is presumed to happen automagically via createBean()
+					cfintJpaSchemaService = (CFIntJpaSchemaService)(applicationContext.getAutowireCapableBeanFactory().createBean(CFIntJpaSchemaService.class));
+					if (cfintJpaSchemaService == null) {
+						throw new CFLibInvalidStateException( getClass(), S_ProcName,
+							String.format(Inz.s("cflib.common.ACAutowireBeanInstanceCreationFailure"),	S_BeanClassName),
+							 String.format(Inz.x("cflib.common.ACAutowireBeanInstanceCreationFailure"), S_BeanClassName));
+					}
 				}
 			}
 			catch (BeansException ex) {
-				throw new CFLibNullArgumentException(getClass(), "getJpaSchemaService", 0, "applicationContext.getBean('cfintJpaSchemaService', CFIntJpaSchemaService.class)");
+				cfintJpaSchemaService = null;
+				throw new CFLibInvalidStateException(getClass(), S_ProcName, 
+					String.format(Inz.s("cflib.common.CaughtWhileTryingToResolve"), ex.getClass().getName(), S_BeanClassName, S_MemberName, ex.getMessage()),
+					String.format(Inz.x("cflib.common.CaughtWhileTryingToResolve"), ex.getClass().getName(), S_BeanClassName, S_MemberName, ex.getLocalizedMessage()),
+					ex);
 			}
 		}
 		return( cfintJpaSchemaService );
