@@ -63,7 +63,7 @@ import io.github.msobkow.v3_1.cfsec.cfsec.*;
 import io.github.msobkow.v3_1.cfint.cfint.*;
 import io.github.msobkow.v3_1.cfsec.cfsecobj.*;
 import io.github.msobkow.v3_1.cfint.cfintobj.*;
-import io.github.msobkow.v3_1.cfint.cfintjpahooks.CFIntJpaHooksSchema;
+import io.github.msobkow.v3_1.cfint.cfint.jpa.CFIntJpaHooksSchema;
 
 /*
  *	CFIntJpaMajorVersionTable database implementation for MajorVersion
@@ -71,7 +71,6 @@ import io.github.msobkow.v3_1.cfint.cfintjpahooks.CFIntJpaHooksSchema;
 public class CFIntJpaMajorVersionTable implements ICFIntMajorVersionTable
 {
 	protected CFIntJpaSchema schema;
-	protected CFIntJpaHooksSchema jpaHooksSchema;
 
 
 	public CFIntJpaMajorVersionTable(ICFIntSchema schema) {
@@ -80,7 +79,6 @@ public class CFIntJpaMajorVersionTable implements ICFIntMajorVersionTable
 		}
 		if (schema instanceof CFIntJpaSchema) {
 			this.schema = (CFIntJpaSchema)schema;
-			this.jpaHooksSchema = this.schema.getJpaHooksSchema();
 		}
 		else {
 			throw new CFLibUnsupportedClassException(getClass(), "constructor", "schema", schema, "CFIntJpaSchema");
@@ -104,7 +102,7 @@ public class CFIntJpaMajorVersionTable implements ICFIntMajorVersionTable
 		}
 		else if (rec instanceof CFIntJpaMajorVersion) {
 			CFIntJpaMajorVersion jparec = (CFIntJpaMajorVersion)rec;
-			CFIntJpaMajorVersion created = jpaHooksSchema.getMajorVersionService().create(jparec);
+			CFIntJpaMajorVersion created = schema.getJpaHooksSchema().getMajorVersionService().create(jparec);
 			return( created );
 		}
 		else {
@@ -129,7 +127,7 @@ public class CFIntJpaMajorVersionTable implements ICFIntMajorVersionTable
 		}
 		else if (rec instanceof CFIntJpaMajorVersion) {
 			CFIntJpaMajorVersion jparec = (CFIntJpaMajorVersion)rec;
-			CFIntJpaMajorVersion updated = jpaHooksSchema.getMajorVersionService().update(jparec);
+			CFIntJpaMajorVersion updated = schema.getJpaHooksSchema().getMajorVersionService().update(jparec);
 			return( updated );
 		}
 		else {
@@ -153,7 +151,7 @@ public class CFIntJpaMajorVersionTable implements ICFIntMajorVersionTable
 		}
 		if (rec instanceof CFIntJpaMajorVersion) {
 			CFIntJpaMajorVersion jparec = (CFIntJpaMajorVersion)rec;
-			jpaHooksSchema.getMajorVersionService().deleteByIdIdx(jparec.getPKey());
+			schema.getJpaHooksSchema().getMajorVersionService().deleteByIdIdx(jparec.getPKey());
 		}
 		else {
 			throw new CFLibUnsupportedClassException(getClass(), "deleteMajorVersion", "rec", rec, "CFIntJpaMajorVersion");
@@ -173,7 +171,7 @@ public class CFIntJpaMajorVersionTable implements ICFIntMajorVersionTable
 	public void deleteMajorVersionByIdIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 argKey )
 	{
-		jpaHooksSchema.getMajorVersionService().deleteByIdIdx(argKey);
+		schema.getJpaHooksSchema().getMajorVersionService().deleteByIdIdx(argKey);
 	}
 
 	/**
@@ -187,7 +185,7 @@ public class CFIntJpaMajorVersionTable implements ICFIntMajorVersionTable
 	public void deleteMajorVersionByTenantIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 argTenantId )
 	{
-		jpaHooksSchema.getMajorVersionService().deleteByTenantIdx(argTenantId);
+		schema.getJpaHooksSchema().getMajorVersionService().deleteByTenantIdx(argTenantId);
 	}
 
 
@@ -202,7 +200,7 @@ public class CFIntJpaMajorVersionTable implements ICFIntMajorVersionTable
 	public void deleteMajorVersionByTenantIdx( ICFSecAuthorization Authorization,
 		ICFIntMajorVersionByTenantIdxKey argKey )
 	{
-		jpaHooksSchema.getMajorVersionService().deleteByTenantIdx(argKey.getRequiredTenantId());
+		schema.getJpaHooksSchema().getMajorVersionService().deleteByTenantIdx(argKey.getRequiredTenantId());
 	}
 
 	/**
@@ -216,7 +214,7 @@ public class CFIntJpaMajorVersionTable implements ICFIntMajorVersionTable
 	public void deleteMajorVersionBySubProjectIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 argSubProjectId )
 	{
-		jpaHooksSchema.getMajorVersionService().deleteBySubProjectIdx(argSubProjectId);
+		schema.getJpaHooksSchema().getMajorVersionService().deleteBySubProjectIdx(argSubProjectId);
 	}
 
 
@@ -231,7 +229,7 @@ public class CFIntJpaMajorVersionTable implements ICFIntMajorVersionTable
 	public void deleteMajorVersionBySubProjectIdx( ICFSecAuthorization Authorization,
 		ICFIntMajorVersionBySubProjectIdxKey argKey )
 	{
-		jpaHooksSchema.getMajorVersionService().deleteBySubProjectIdx(argKey.getRequiredSubProjectId());
+		schema.getJpaHooksSchema().getMajorVersionService().deleteBySubProjectIdx(argKey.getRequiredSubProjectId());
 	}
 
 	/**
@@ -248,7 +246,7 @@ public class CFIntJpaMajorVersionTable implements ICFIntMajorVersionTable
 		CFLibDbKeyHash256 argSubProjectId,
 		String argName )
 	{
-		jpaHooksSchema.getMajorVersionService().deleteByNameIdx(argSubProjectId,
+		schema.getJpaHooksSchema().getMajorVersionService().deleteByNameIdx(argSubProjectId,
 		argName);
 	}
 
@@ -264,7 +262,7 @@ public class CFIntJpaMajorVersionTable implements ICFIntMajorVersionTable
 	public void deleteMajorVersionByNameIdx( ICFSecAuthorization Authorization,
 		ICFIntMajorVersionByNameIdxKey argKey )
 	{
-		jpaHooksSchema.getMajorVersionService().deleteByNameIdx(argKey.getRequiredSubProjectId(),
+		schema.getJpaHooksSchema().getMajorVersionService().deleteByNameIdx(argKey.getRequiredSubProjectId(),
 			argKey.getRequiredName());
 	}
 
@@ -283,7 +281,7 @@ public class CFIntJpaMajorVersionTable implements ICFIntMajorVersionTable
 	public ICFIntMajorVersion readDerived( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 PKey )
 	{
-		return( jpaHooksSchema.getMajorVersionService().find(PKey) );
+		return( schema.getJpaHooksSchema().getMajorVersionService().find(PKey) );
 	}
 
 	/**
@@ -300,7 +298,7 @@ public class CFIntJpaMajorVersionTable implements ICFIntMajorVersionTable
 	public ICFIntMajorVersion lockDerived( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 PKey )
 	{
-		return( jpaHooksSchema.getMajorVersionService().lockByIdIdx(PKey) );
+		return( schema.getJpaHooksSchema().getMajorVersionService().lockByIdIdx(PKey) );
 	}
 
 	/**
@@ -312,7 +310,7 @@ public class CFIntJpaMajorVersionTable implements ICFIntMajorVersionTable
 	 */
 	@Override
 	public ICFIntMajorVersion[] readAllDerived( ICFSecAuthorization Authorization ) {
-		List<CFIntJpaMajorVersion> results = jpaHooksSchema.getMajorVersionService().findAll();
+		List<CFIntJpaMajorVersion> results = schema.getJpaHooksSchema().getMajorVersionService().findAll();
 		ICFIntMajorVersion[] retset = new ICFIntMajorVersion[results.size()];
 		int idx = 0;
 		for (CFIntJpaMajorVersion cur: results) {
@@ -335,7 +333,7 @@ public class CFIntJpaMajorVersionTable implements ICFIntMajorVersionTable
 	public ICFIntMajorVersion readDerivedByIdIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 argId )
 	{
-		return( jpaHooksSchema.getMajorVersionService().find(argId) );
+		return( schema.getJpaHooksSchema().getMajorVersionService().find(argId) );
 	}
 
 	/**
@@ -351,7 +349,7 @@ public class CFIntJpaMajorVersionTable implements ICFIntMajorVersionTable
 	public ICFIntMajorVersion[] readDerivedByTenantIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 argTenantId )
 	{
-		List<CFIntJpaMajorVersion> results = jpaHooksSchema.getMajorVersionService().findByTenantIdx(argTenantId);
+		List<CFIntJpaMajorVersion> results = schema.getJpaHooksSchema().getMajorVersionService().findByTenantIdx(argTenantId);
 		ICFIntMajorVersion[] retset = new ICFIntMajorVersion[results.size()];
 		int idx = 0;
 		for (CFIntJpaMajorVersion cur: results) {
@@ -373,7 +371,7 @@ public class CFIntJpaMajorVersionTable implements ICFIntMajorVersionTable
 	public ICFIntMajorVersion[] readDerivedBySubProjectIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 argSubProjectId )
 	{
-		List<CFIntJpaMajorVersion> results = jpaHooksSchema.getMajorVersionService().findBySubProjectIdx(argSubProjectId);
+		List<CFIntJpaMajorVersion> results = schema.getJpaHooksSchema().getMajorVersionService().findBySubProjectIdx(argSubProjectId);
 		ICFIntMajorVersion[] retset = new ICFIntMajorVersion[results.size()];
 		int idx = 0;
 		for (CFIntJpaMajorVersion cur: results) {
@@ -399,7 +397,7 @@ public class CFIntJpaMajorVersionTable implements ICFIntMajorVersionTable
 		CFLibDbKeyHash256 argSubProjectId,
 		String argName )
 	{
-		return( jpaHooksSchema.getMajorVersionService().findByNameIdx(argSubProjectId,
+		return( schema.getJpaHooksSchema().getMajorVersionService().findByNameIdx(argSubProjectId,
 		argName) );
 	}
 

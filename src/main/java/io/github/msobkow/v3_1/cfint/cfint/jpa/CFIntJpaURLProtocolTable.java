@@ -63,7 +63,7 @@ import io.github.msobkow.v3_1.cfsec.cfsec.*;
 import io.github.msobkow.v3_1.cfint.cfint.*;
 import io.github.msobkow.v3_1.cfsec.cfsecobj.*;
 import io.github.msobkow.v3_1.cfint.cfintobj.*;
-import io.github.msobkow.v3_1.cfint.cfintjpahooks.CFIntJpaHooksSchema;
+import io.github.msobkow.v3_1.cfint.cfint.jpa.CFIntJpaHooksSchema;
 
 /*
  *	CFIntJpaURLProtocolTable database implementation for URLProtocol
@@ -71,7 +71,6 @@ import io.github.msobkow.v3_1.cfint.cfintjpahooks.CFIntJpaHooksSchema;
 public class CFIntJpaURLProtocolTable implements ICFIntURLProtocolTable
 {
 	protected CFIntJpaSchema schema;
-	protected CFIntJpaHooksSchema jpaHooksSchema;
 
 
 	public CFIntJpaURLProtocolTable(ICFIntSchema schema) {
@@ -80,7 +79,6 @@ public class CFIntJpaURLProtocolTable implements ICFIntURLProtocolTable
 		}
 		if (schema instanceof CFIntJpaSchema) {
 			this.schema = (CFIntJpaSchema)schema;
-			this.jpaHooksSchema = this.schema.getJpaHooksSchema();
 		}
 		else {
 			throw new CFLibUnsupportedClassException(getClass(), "constructor", "schema", schema, "CFIntJpaSchema");
@@ -104,7 +102,7 @@ public class CFIntJpaURLProtocolTable implements ICFIntURLProtocolTable
 		}
 		else if (rec instanceof CFIntJpaURLProtocol) {
 			CFIntJpaURLProtocol jparec = (CFIntJpaURLProtocol)rec;
-			CFIntJpaURLProtocol created = jpaHooksSchema.getURLProtocolService().create(jparec);
+			CFIntJpaURLProtocol created = schema.getJpaHooksSchema().getURLProtocolService().create(jparec);
 			return( created );
 		}
 		else {
@@ -129,7 +127,7 @@ public class CFIntJpaURLProtocolTable implements ICFIntURLProtocolTable
 		}
 		else if (rec instanceof CFIntJpaURLProtocol) {
 			CFIntJpaURLProtocol jparec = (CFIntJpaURLProtocol)rec;
-			CFIntJpaURLProtocol updated = jpaHooksSchema.getURLProtocolService().update(jparec);
+			CFIntJpaURLProtocol updated = schema.getJpaHooksSchema().getURLProtocolService().update(jparec);
 			return( updated );
 		}
 		else {
@@ -153,7 +151,7 @@ public class CFIntJpaURLProtocolTable implements ICFIntURLProtocolTable
 		}
 		if (rec instanceof CFIntJpaURLProtocol) {
 			CFIntJpaURLProtocol jparec = (CFIntJpaURLProtocol)rec;
-			jpaHooksSchema.getURLProtocolService().deleteByIdIdx(jparec.getPKey());
+			schema.getJpaHooksSchema().getURLProtocolService().deleteByIdIdx(jparec.getPKey());
 		}
 		else {
 			throw new CFLibUnsupportedClassException(getClass(), "deleteURLProtocol", "rec", rec, "CFIntJpaURLProtocol");
@@ -173,7 +171,7 @@ public class CFIntJpaURLProtocolTable implements ICFIntURLProtocolTable
 	public void deleteURLProtocolByIdIdx( ICFSecAuthorization Authorization,
 		Integer argKey )
 	{
-		jpaHooksSchema.getURLProtocolService().deleteByIdIdx(argKey);
+		schema.getJpaHooksSchema().getURLProtocolService().deleteByIdIdx(argKey);
 	}
 
 	/**
@@ -187,7 +185,7 @@ public class CFIntJpaURLProtocolTable implements ICFIntURLProtocolTable
 	public void deleteURLProtocolByUNameIdx( ICFSecAuthorization Authorization,
 		String argName )
 	{
-		jpaHooksSchema.getURLProtocolService().deleteByUNameIdx(argName);
+		schema.getJpaHooksSchema().getURLProtocolService().deleteByUNameIdx(argName);
 	}
 
 
@@ -202,7 +200,7 @@ public class CFIntJpaURLProtocolTable implements ICFIntURLProtocolTable
 	public void deleteURLProtocolByUNameIdx( ICFSecAuthorization Authorization,
 		ICFIntURLProtocolByUNameIdxKey argKey )
 	{
-		jpaHooksSchema.getURLProtocolService().deleteByUNameIdx(argKey.getRequiredName());
+		schema.getJpaHooksSchema().getURLProtocolService().deleteByUNameIdx(argKey.getRequiredName());
 	}
 
 	/**
@@ -216,7 +214,7 @@ public class CFIntJpaURLProtocolTable implements ICFIntURLProtocolTable
 	public void deleteURLProtocolByIsSecureIdx( ICFSecAuthorization Authorization,
 		boolean argIsSecure )
 	{
-		jpaHooksSchema.getURLProtocolService().deleteByIsSecureIdx(argIsSecure);
+		schema.getJpaHooksSchema().getURLProtocolService().deleteByIsSecureIdx(argIsSecure);
 	}
 
 
@@ -231,7 +229,7 @@ public class CFIntJpaURLProtocolTable implements ICFIntURLProtocolTable
 	public void deleteURLProtocolByIsSecureIdx( ICFSecAuthorization Authorization,
 		ICFIntURLProtocolByIsSecureIdxKey argKey )
 	{
-		jpaHooksSchema.getURLProtocolService().deleteByIsSecureIdx(argKey.getRequiredIsSecure());
+		schema.getJpaHooksSchema().getURLProtocolService().deleteByIsSecureIdx(argKey.getRequiredIsSecure());
 	}
 
 
@@ -249,7 +247,7 @@ public class CFIntJpaURLProtocolTable implements ICFIntURLProtocolTable
 	public ICFIntURLProtocol readDerived( ICFSecAuthorization Authorization,
 		Integer PKey )
 	{
-		return( jpaHooksSchema.getURLProtocolService().find(PKey) );
+		return( schema.getJpaHooksSchema().getURLProtocolService().find(PKey) );
 	}
 
 	/**
@@ -266,7 +264,7 @@ public class CFIntJpaURLProtocolTable implements ICFIntURLProtocolTable
 	public ICFIntURLProtocol lockDerived( ICFSecAuthorization Authorization,
 		Integer PKey )
 	{
-		return( jpaHooksSchema.getURLProtocolService().lockByIdIdx(PKey) );
+		return( schema.getJpaHooksSchema().getURLProtocolService().lockByIdIdx(PKey) );
 	}
 
 	/**
@@ -278,7 +276,7 @@ public class CFIntJpaURLProtocolTable implements ICFIntURLProtocolTable
 	 */
 	@Override
 	public ICFIntURLProtocol[] readAllDerived( ICFSecAuthorization Authorization ) {
-		List<CFIntJpaURLProtocol> results = jpaHooksSchema.getURLProtocolService().findAll();
+		List<CFIntJpaURLProtocol> results = schema.getJpaHooksSchema().getURLProtocolService().findAll();
 		ICFIntURLProtocol[] retset = new ICFIntURLProtocol[results.size()];
 		int idx = 0;
 		for (CFIntJpaURLProtocol cur: results) {
@@ -301,7 +299,7 @@ public class CFIntJpaURLProtocolTable implements ICFIntURLProtocolTable
 	public ICFIntURLProtocol readDerivedByIdIdx( ICFSecAuthorization Authorization,
 		int argURLProtocolId )
 	{
-		return( jpaHooksSchema.getURLProtocolService().find(argURLProtocolId) );
+		return( schema.getJpaHooksSchema().getURLProtocolService().find(argURLProtocolId) );
 	}
 
 	/**
@@ -318,7 +316,7 @@ public class CFIntJpaURLProtocolTable implements ICFIntURLProtocolTable
 	public ICFIntURLProtocol readDerivedByUNameIdx( ICFSecAuthorization Authorization,
 		String argName )
 	{
-		return( jpaHooksSchema.getURLProtocolService().findByUNameIdx(argName) );
+		return( schema.getJpaHooksSchema().getURLProtocolService().findByUNameIdx(argName) );
 	}
 
 	/**
@@ -334,7 +332,7 @@ public class CFIntJpaURLProtocolTable implements ICFIntURLProtocolTable
 	public ICFIntURLProtocol[] readDerivedByIsSecureIdx( ICFSecAuthorization Authorization,
 		boolean argIsSecure )
 	{
-		List<CFIntJpaURLProtocol> results = jpaHooksSchema.getURLProtocolService().findByIsSecureIdx(argIsSecure);
+		List<CFIntJpaURLProtocol> results = schema.getJpaHooksSchema().getURLProtocolService().findByIsSecureIdx(argIsSecure);
 		ICFIntURLProtocol[] retset = new ICFIntURLProtocol[results.size()];
 		int idx = 0;
 		for (CFIntJpaURLProtocol cur: results) {

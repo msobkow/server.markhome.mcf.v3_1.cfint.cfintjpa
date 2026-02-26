@@ -63,7 +63,7 @@ import io.github.msobkow.v3_1.cfsec.cfsec.*;
 import io.github.msobkow.v3_1.cfint.cfint.*;
 import io.github.msobkow.v3_1.cfsec.cfsecobj.*;
 import io.github.msobkow.v3_1.cfint.cfintobj.*;
-import io.github.msobkow.v3_1.cfint.cfintjpahooks.CFIntJpaHooksSchema;
+import io.github.msobkow.v3_1.cfint.cfint.jpa.CFIntJpaHooksSchema;
 
 /*
  *	CFIntJpaLicenseTable database implementation for License
@@ -71,7 +71,6 @@ import io.github.msobkow.v3_1.cfint.cfintjpahooks.CFIntJpaHooksSchema;
 public class CFIntJpaLicenseTable implements ICFIntLicenseTable
 {
 	protected CFIntJpaSchema schema;
-	protected CFIntJpaHooksSchema jpaHooksSchema;
 
 
 	public CFIntJpaLicenseTable(ICFIntSchema schema) {
@@ -80,7 +79,6 @@ public class CFIntJpaLicenseTable implements ICFIntLicenseTable
 		}
 		if (schema instanceof CFIntJpaSchema) {
 			this.schema = (CFIntJpaSchema)schema;
-			this.jpaHooksSchema = this.schema.getJpaHooksSchema();
 		}
 		else {
 			throw new CFLibUnsupportedClassException(getClass(), "constructor", "schema", schema, "CFIntJpaSchema");
@@ -104,7 +102,7 @@ public class CFIntJpaLicenseTable implements ICFIntLicenseTable
 		}
 		else if (rec instanceof CFIntJpaLicense) {
 			CFIntJpaLicense jparec = (CFIntJpaLicense)rec;
-			CFIntJpaLicense created = jpaHooksSchema.getLicenseService().create(jparec);
+			CFIntJpaLicense created = schema.getJpaHooksSchema().getLicenseService().create(jparec);
 			return( created );
 		}
 		else {
@@ -129,7 +127,7 @@ public class CFIntJpaLicenseTable implements ICFIntLicenseTable
 		}
 		else if (rec instanceof CFIntJpaLicense) {
 			CFIntJpaLicense jparec = (CFIntJpaLicense)rec;
-			CFIntJpaLicense updated = jpaHooksSchema.getLicenseService().update(jparec);
+			CFIntJpaLicense updated = schema.getJpaHooksSchema().getLicenseService().update(jparec);
 			return( updated );
 		}
 		else {
@@ -153,7 +151,7 @@ public class CFIntJpaLicenseTable implements ICFIntLicenseTable
 		}
 		if (rec instanceof CFIntJpaLicense) {
 			CFIntJpaLicense jparec = (CFIntJpaLicense)rec;
-			jpaHooksSchema.getLicenseService().deleteByIdIdx(jparec.getPKey());
+			schema.getJpaHooksSchema().getLicenseService().deleteByIdIdx(jparec.getPKey());
 		}
 		else {
 			throw new CFLibUnsupportedClassException(getClass(), "deleteLicense", "rec", rec, "CFIntJpaLicense");
@@ -173,7 +171,7 @@ public class CFIntJpaLicenseTable implements ICFIntLicenseTable
 	public void deleteLicenseByIdIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 argKey )
 	{
-		jpaHooksSchema.getLicenseService().deleteByIdIdx(argKey);
+		schema.getJpaHooksSchema().getLicenseService().deleteByIdIdx(argKey);
 	}
 
 	/**
@@ -187,7 +185,7 @@ public class CFIntJpaLicenseTable implements ICFIntLicenseTable
 	public void deleteLicenseByLicnTenantIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 argTenantId )
 	{
-		jpaHooksSchema.getLicenseService().deleteByLicnTenantIdx(argTenantId);
+		schema.getJpaHooksSchema().getLicenseService().deleteByLicnTenantIdx(argTenantId);
 	}
 
 
@@ -202,7 +200,7 @@ public class CFIntJpaLicenseTable implements ICFIntLicenseTable
 	public void deleteLicenseByLicnTenantIdx( ICFSecAuthorization Authorization,
 		ICFIntLicenseByLicnTenantIdxKey argKey )
 	{
-		jpaHooksSchema.getLicenseService().deleteByLicnTenantIdx(argKey.getRequiredTenantId());
+		schema.getJpaHooksSchema().getLicenseService().deleteByLicnTenantIdx(argKey.getRequiredTenantId());
 	}
 
 	/**
@@ -216,7 +214,7 @@ public class CFIntJpaLicenseTable implements ICFIntLicenseTable
 	public void deleteLicenseByDomainIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 argTopDomainId )
 	{
-		jpaHooksSchema.getLicenseService().deleteByDomainIdx(argTopDomainId);
+		schema.getJpaHooksSchema().getLicenseService().deleteByDomainIdx(argTopDomainId);
 	}
 
 
@@ -231,7 +229,7 @@ public class CFIntJpaLicenseTable implements ICFIntLicenseTable
 	public void deleteLicenseByDomainIdx( ICFSecAuthorization Authorization,
 		ICFIntLicenseByDomainIdxKey argKey )
 	{
-		jpaHooksSchema.getLicenseService().deleteByDomainIdx(argKey.getRequiredTopDomainId());
+		schema.getJpaHooksSchema().getLicenseService().deleteByDomainIdx(argKey.getRequiredTopDomainId());
 	}
 
 	/**
@@ -248,7 +246,7 @@ public class CFIntJpaLicenseTable implements ICFIntLicenseTable
 		CFLibDbKeyHash256 argTopDomainId,
 		String argName )
 	{
-		jpaHooksSchema.getLicenseService().deleteByUNameIdx(argTopDomainId,
+		schema.getJpaHooksSchema().getLicenseService().deleteByUNameIdx(argTopDomainId,
 		argName);
 	}
 
@@ -264,7 +262,7 @@ public class CFIntJpaLicenseTable implements ICFIntLicenseTable
 	public void deleteLicenseByUNameIdx( ICFSecAuthorization Authorization,
 		ICFIntLicenseByUNameIdxKey argKey )
 	{
-		jpaHooksSchema.getLicenseService().deleteByUNameIdx(argKey.getRequiredTopDomainId(),
+		schema.getJpaHooksSchema().getLicenseService().deleteByUNameIdx(argKey.getRequiredTopDomainId(),
 			argKey.getRequiredName());
 	}
 
@@ -283,7 +281,7 @@ public class CFIntJpaLicenseTable implements ICFIntLicenseTable
 	public ICFIntLicense readDerived( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 PKey )
 	{
-		return( jpaHooksSchema.getLicenseService().find(PKey) );
+		return( schema.getJpaHooksSchema().getLicenseService().find(PKey) );
 	}
 
 	/**
@@ -300,7 +298,7 @@ public class CFIntJpaLicenseTable implements ICFIntLicenseTable
 	public ICFIntLicense lockDerived( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 PKey )
 	{
-		return( jpaHooksSchema.getLicenseService().lockByIdIdx(PKey) );
+		return( schema.getJpaHooksSchema().getLicenseService().lockByIdIdx(PKey) );
 	}
 
 	/**
@@ -312,7 +310,7 @@ public class CFIntJpaLicenseTable implements ICFIntLicenseTable
 	 */
 	@Override
 	public ICFIntLicense[] readAllDerived( ICFSecAuthorization Authorization ) {
-		List<CFIntJpaLicense> results = jpaHooksSchema.getLicenseService().findAll();
+		List<CFIntJpaLicense> results = schema.getJpaHooksSchema().getLicenseService().findAll();
 		ICFIntLicense[] retset = new ICFIntLicense[results.size()];
 		int idx = 0;
 		for (CFIntJpaLicense cur: results) {
@@ -335,7 +333,7 @@ public class CFIntJpaLicenseTable implements ICFIntLicenseTable
 	public ICFIntLicense readDerivedByIdIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 argId )
 	{
-		return( jpaHooksSchema.getLicenseService().find(argId) );
+		return( schema.getJpaHooksSchema().getLicenseService().find(argId) );
 	}
 
 	/**
@@ -351,7 +349,7 @@ public class CFIntJpaLicenseTable implements ICFIntLicenseTable
 	public ICFIntLicense[] readDerivedByLicnTenantIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 argTenantId )
 	{
-		List<CFIntJpaLicense> results = jpaHooksSchema.getLicenseService().findByLicnTenantIdx(argTenantId);
+		List<CFIntJpaLicense> results = schema.getJpaHooksSchema().getLicenseService().findByLicnTenantIdx(argTenantId);
 		ICFIntLicense[] retset = new ICFIntLicense[results.size()];
 		int idx = 0;
 		for (CFIntJpaLicense cur: results) {
@@ -373,7 +371,7 @@ public class CFIntJpaLicenseTable implements ICFIntLicenseTable
 	public ICFIntLicense[] readDerivedByDomainIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 argTopDomainId )
 	{
-		List<CFIntJpaLicense> results = jpaHooksSchema.getLicenseService().findByDomainIdx(argTopDomainId);
+		List<CFIntJpaLicense> results = schema.getJpaHooksSchema().getLicenseService().findByDomainIdx(argTopDomainId);
 		ICFIntLicense[] retset = new ICFIntLicense[results.size()];
 		int idx = 0;
 		for (CFIntJpaLicense cur: results) {
@@ -399,7 +397,7 @@ public class CFIntJpaLicenseTable implements ICFIntLicenseTable
 		CFLibDbKeyHash256 argTopDomainId,
 		String argName )
 	{
-		return( jpaHooksSchema.getLicenseService().findByUNameIdx(argTopDomainId,
+		return( schema.getJpaHooksSchema().getLicenseService().findByUNameIdx(argTopDomainId,
 		argName) );
 	}
 

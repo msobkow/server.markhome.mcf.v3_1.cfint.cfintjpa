@@ -63,7 +63,7 @@ import io.github.msobkow.v3_1.cfsec.cfsec.*;
 import io.github.msobkow.v3_1.cfint.cfint.*;
 import io.github.msobkow.v3_1.cfsec.cfsecobj.*;
 import io.github.msobkow.v3_1.cfint.cfintobj.*;
-import io.github.msobkow.v3_1.cfint.cfintjpahooks.CFIntJpaHooksSchema;
+import io.github.msobkow.v3_1.cfint.cfint.jpa.CFIntJpaHooksSchema;
 
 /*
  *	CFIntJpaMimeTypeTable database implementation for MimeType
@@ -71,7 +71,6 @@ import io.github.msobkow.v3_1.cfint.cfintjpahooks.CFIntJpaHooksSchema;
 public class CFIntJpaMimeTypeTable implements ICFIntMimeTypeTable
 {
 	protected CFIntJpaSchema schema;
-	protected CFIntJpaHooksSchema jpaHooksSchema;
 
 
 	public CFIntJpaMimeTypeTable(ICFIntSchema schema) {
@@ -80,7 +79,6 @@ public class CFIntJpaMimeTypeTable implements ICFIntMimeTypeTable
 		}
 		if (schema instanceof CFIntJpaSchema) {
 			this.schema = (CFIntJpaSchema)schema;
-			this.jpaHooksSchema = this.schema.getJpaHooksSchema();
 		}
 		else {
 			throw new CFLibUnsupportedClassException(getClass(), "constructor", "schema", schema, "CFIntJpaSchema");
@@ -104,7 +102,7 @@ public class CFIntJpaMimeTypeTable implements ICFIntMimeTypeTable
 		}
 		else if (rec instanceof CFIntJpaMimeType) {
 			CFIntJpaMimeType jparec = (CFIntJpaMimeType)rec;
-			CFIntJpaMimeType created = jpaHooksSchema.getMimeTypeService().create(jparec);
+			CFIntJpaMimeType created = schema.getJpaHooksSchema().getMimeTypeService().create(jparec);
 			return( created );
 		}
 		else {
@@ -129,7 +127,7 @@ public class CFIntJpaMimeTypeTable implements ICFIntMimeTypeTable
 		}
 		else if (rec instanceof CFIntJpaMimeType) {
 			CFIntJpaMimeType jparec = (CFIntJpaMimeType)rec;
-			CFIntJpaMimeType updated = jpaHooksSchema.getMimeTypeService().update(jparec);
+			CFIntJpaMimeType updated = schema.getJpaHooksSchema().getMimeTypeService().update(jparec);
 			return( updated );
 		}
 		else {
@@ -153,7 +151,7 @@ public class CFIntJpaMimeTypeTable implements ICFIntMimeTypeTable
 		}
 		if (rec instanceof CFIntJpaMimeType) {
 			CFIntJpaMimeType jparec = (CFIntJpaMimeType)rec;
-			jpaHooksSchema.getMimeTypeService().deleteByIdIdx(jparec.getPKey());
+			schema.getJpaHooksSchema().getMimeTypeService().deleteByIdIdx(jparec.getPKey());
 		}
 		else {
 			throw new CFLibUnsupportedClassException(getClass(), "deleteMimeType", "rec", rec, "CFIntJpaMimeType");
@@ -173,7 +171,7 @@ public class CFIntJpaMimeTypeTable implements ICFIntMimeTypeTable
 	public void deleteMimeTypeByIdIdx( ICFSecAuthorization Authorization,
 		Integer argKey )
 	{
-		jpaHooksSchema.getMimeTypeService().deleteByIdIdx(argKey);
+		schema.getJpaHooksSchema().getMimeTypeService().deleteByIdIdx(argKey);
 	}
 
 	/**
@@ -187,7 +185,7 @@ public class CFIntJpaMimeTypeTable implements ICFIntMimeTypeTable
 	public void deleteMimeTypeByUNameIdx( ICFSecAuthorization Authorization,
 		String argName )
 	{
-		jpaHooksSchema.getMimeTypeService().deleteByUNameIdx(argName);
+		schema.getJpaHooksSchema().getMimeTypeService().deleteByUNameIdx(argName);
 	}
 
 
@@ -202,7 +200,7 @@ public class CFIntJpaMimeTypeTable implements ICFIntMimeTypeTable
 	public void deleteMimeTypeByUNameIdx( ICFSecAuthorization Authorization,
 		ICFIntMimeTypeByUNameIdxKey argKey )
 	{
-		jpaHooksSchema.getMimeTypeService().deleteByUNameIdx(argKey.getRequiredName());
+		schema.getJpaHooksSchema().getMimeTypeService().deleteByUNameIdx(argKey.getRequiredName());
 	}
 
 
@@ -220,7 +218,7 @@ public class CFIntJpaMimeTypeTable implements ICFIntMimeTypeTable
 	public ICFIntMimeType readDerived( ICFSecAuthorization Authorization,
 		Integer PKey )
 	{
-		return( jpaHooksSchema.getMimeTypeService().find(PKey) );
+		return( schema.getJpaHooksSchema().getMimeTypeService().find(PKey) );
 	}
 
 	/**
@@ -237,7 +235,7 @@ public class CFIntJpaMimeTypeTable implements ICFIntMimeTypeTable
 	public ICFIntMimeType lockDerived( ICFSecAuthorization Authorization,
 		Integer PKey )
 	{
-		return( jpaHooksSchema.getMimeTypeService().lockByIdIdx(PKey) );
+		return( schema.getJpaHooksSchema().getMimeTypeService().lockByIdIdx(PKey) );
 	}
 
 	/**
@@ -249,7 +247,7 @@ public class CFIntJpaMimeTypeTable implements ICFIntMimeTypeTable
 	 */
 	@Override
 	public ICFIntMimeType[] readAllDerived( ICFSecAuthorization Authorization ) {
-		List<CFIntJpaMimeType> results = jpaHooksSchema.getMimeTypeService().findAll();
+		List<CFIntJpaMimeType> results = schema.getJpaHooksSchema().getMimeTypeService().findAll();
 		ICFIntMimeType[] retset = new ICFIntMimeType[results.size()];
 		int idx = 0;
 		for (CFIntJpaMimeType cur: results) {
@@ -272,7 +270,7 @@ public class CFIntJpaMimeTypeTable implements ICFIntMimeTypeTable
 	public ICFIntMimeType readDerivedByIdIdx( ICFSecAuthorization Authorization,
 		int argMimeTypeId )
 	{
-		return( jpaHooksSchema.getMimeTypeService().find(argMimeTypeId) );
+		return( schema.getJpaHooksSchema().getMimeTypeService().find(argMimeTypeId) );
 	}
 
 	/**
@@ -289,7 +287,7 @@ public class CFIntJpaMimeTypeTable implements ICFIntMimeTypeTable
 	public ICFIntMimeType readDerivedByUNameIdx( ICFSecAuthorization Authorization,
 		String argName )
 	{
-		return( jpaHooksSchema.getMimeTypeService().findByUNameIdx(argName) );
+		return( schema.getJpaHooksSchema().getMimeTypeService().findByUNameIdx(argName) );
 	}
 
 	/**

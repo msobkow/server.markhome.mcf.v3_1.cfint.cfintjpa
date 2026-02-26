@@ -63,7 +63,7 @@ import io.github.msobkow.v3_1.cfsec.cfsec.*;
 import io.github.msobkow.v3_1.cfint.cfint.*;
 import io.github.msobkow.v3_1.cfsec.cfsecobj.*;
 import io.github.msobkow.v3_1.cfint.cfintobj.*;
-import io.github.msobkow.v3_1.cfint.cfintjpahooks.CFIntJpaHooksSchema;
+import io.github.msobkow.v3_1.cfint.cfint.jpa.CFIntJpaHooksSchema;
 
 /*
  *	CFIntJpaTldTable database implementation for Tld
@@ -71,7 +71,6 @@ import io.github.msobkow.v3_1.cfint.cfintjpahooks.CFIntJpaHooksSchema;
 public class CFIntJpaTldTable implements ICFIntTldTable
 {
 	protected CFIntJpaSchema schema;
-	protected CFIntJpaHooksSchema jpaHooksSchema;
 
 
 	public CFIntJpaTldTable(ICFIntSchema schema) {
@@ -80,7 +79,6 @@ public class CFIntJpaTldTable implements ICFIntTldTable
 		}
 		if (schema instanceof CFIntJpaSchema) {
 			this.schema = (CFIntJpaSchema)schema;
-			this.jpaHooksSchema = this.schema.getJpaHooksSchema();
 		}
 		else {
 			throw new CFLibUnsupportedClassException(getClass(), "constructor", "schema", schema, "CFIntJpaSchema");
@@ -104,7 +102,7 @@ public class CFIntJpaTldTable implements ICFIntTldTable
 		}
 		else if (rec instanceof CFIntJpaTld) {
 			CFIntJpaTld jparec = (CFIntJpaTld)rec;
-			CFIntJpaTld created = jpaHooksSchema.getTldService().create(jparec);
+			CFIntJpaTld created = schema.getJpaHooksSchema().getTldService().create(jparec);
 			return( created );
 		}
 		else {
@@ -129,7 +127,7 @@ public class CFIntJpaTldTable implements ICFIntTldTable
 		}
 		else if (rec instanceof CFIntJpaTld) {
 			CFIntJpaTld jparec = (CFIntJpaTld)rec;
-			CFIntJpaTld updated = jpaHooksSchema.getTldService().update(jparec);
+			CFIntJpaTld updated = schema.getJpaHooksSchema().getTldService().update(jparec);
 			return( updated );
 		}
 		else {
@@ -153,7 +151,7 @@ public class CFIntJpaTldTable implements ICFIntTldTable
 		}
 		if (rec instanceof CFIntJpaTld) {
 			CFIntJpaTld jparec = (CFIntJpaTld)rec;
-			jpaHooksSchema.getTldService().deleteByIdIdx(jparec.getPKey());
+			schema.getJpaHooksSchema().getTldService().deleteByIdIdx(jparec.getPKey());
 		}
 		else {
 			throw new CFLibUnsupportedClassException(getClass(), "deleteTld", "rec", rec, "CFIntJpaTld");
@@ -173,7 +171,7 @@ public class CFIntJpaTldTable implements ICFIntTldTable
 	public void deleteTldByIdIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 argKey )
 	{
-		jpaHooksSchema.getTldService().deleteByIdIdx(argKey);
+		schema.getJpaHooksSchema().getTldService().deleteByIdIdx(argKey);
 	}
 
 	/**
@@ -187,7 +185,7 @@ public class CFIntJpaTldTable implements ICFIntTldTable
 	public void deleteTldByTenantIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 argTenantId )
 	{
-		jpaHooksSchema.getTldService().deleteByTenantIdx(argTenantId);
+		schema.getJpaHooksSchema().getTldService().deleteByTenantIdx(argTenantId);
 	}
 
 
@@ -202,7 +200,7 @@ public class CFIntJpaTldTable implements ICFIntTldTable
 	public void deleteTldByTenantIdx( ICFSecAuthorization Authorization,
 		ICFIntTldByTenantIdxKey argKey )
 	{
-		jpaHooksSchema.getTldService().deleteByTenantIdx(argKey.getRequiredTenantId());
+		schema.getJpaHooksSchema().getTldService().deleteByTenantIdx(argKey.getRequiredTenantId());
 	}
 
 	/**
@@ -216,7 +214,7 @@ public class CFIntJpaTldTable implements ICFIntTldTable
 	public void deleteTldByNameIdx( ICFSecAuthorization Authorization,
 		String argName )
 	{
-		jpaHooksSchema.getTldService().deleteByNameIdx(argName);
+		schema.getJpaHooksSchema().getTldService().deleteByNameIdx(argName);
 	}
 
 
@@ -231,7 +229,7 @@ public class CFIntJpaTldTable implements ICFIntTldTable
 	public void deleteTldByNameIdx( ICFSecAuthorization Authorization,
 		ICFIntTldByNameIdxKey argKey )
 	{
-		jpaHooksSchema.getTldService().deleteByNameIdx(argKey.getRequiredName());
+		schema.getJpaHooksSchema().getTldService().deleteByNameIdx(argKey.getRequiredName());
 	}
 
 
@@ -249,7 +247,7 @@ public class CFIntJpaTldTable implements ICFIntTldTable
 	public ICFIntTld readDerived( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 PKey )
 	{
-		return( jpaHooksSchema.getTldService().find(PKey) );
+		return( schema.getJpaHooksSchema().getTldService().find(PKey) );
 	}
 
 	/**
@@ -266,7 +264,7 @@ public class CFIntJpaTldTable implements ICFIntTldTable
 	public ICFIntTld lockDerived( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 PKey )
 	{
-		return( jpaHooksSchema.getTldService().lockByIdIdx(PKey) );
+		return( schema.getJpaHooksSchema().getTldService().lockByIdIdx(PKey) );
 	}
 
 	/**
@@ -278,7 +276,7 @@ public class CFIntJpaTldTable implements ICFIntTldTable
 	 */
 	@Override
 	public ICFIntTld[] readAllDerived( ICFSecAuthorization Authorization ) {
-		List<CFIntJpaTld> results = jpaHooksSchema.getTldService().findAll();
+		List<CFIntJpaTld> results = schema.getJpaHooksSchema().getTldService().findAll();
 		ICFIntTld[] retset = new ICFIntTld[results.size()];
 		int idx = 0;
 		for (CFIntJpaTld cur: results) {
@@ -301,7 +299,7 @@ public class CFIntJpaTldTable implements ICFIntTldTable
 	public ICFIntTld readDerivedByIdIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 argId )
 	{
-		return( jpaHooksSchema.getTldService().find(argId) );
+		return( schema.getJpaHooksSchema().getTldService().find(argId) );
 	}
 
 	/**
@@ -317,7 +315,7 @@ public class CFIntJpaTldTable implements ICFIntTldTable
 	public ICFIntTld[] readDerivedByTenantIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 argTenantId )
 	{
-		List<CFIntJpaTld> results = jpaHooksSchema.getTldService().findByTenantIdx(argTenantId);
+		List<CFIntJpaTld> results = schema.getJpaHooksSchema().getTldService().findByTenantIdx(argTenantId);
 		ICFIntTld[] retset = new ICFIntTld[results.size()];
 		int idx = 0;
 		for (CFIntJpaTld cur: results) {
@@ -340,7 +338,7 @@ public class CFIntJpaTldTable implements ICFIntTldTable
 	public ICFIntTld readDerivedByNameIdx( ICFSecAuthorization Authorization,
 		String argName )
 	{
-		return( jpaHooksSchema.getTldService().findByNameIdx(argName) );
+		return( schema.getJpaHooksSchema().getTldService().findByNameIdx(argName) );
 	}
 
 	/**

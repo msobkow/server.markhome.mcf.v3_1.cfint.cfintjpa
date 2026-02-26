@@ -63,7 +63,7 @@ import io.github.msobkow.v3_1.cfsec.cfsec.*;
 import io.github.msobkow.v3_1.cfint.cfint.*;
 import io.github.msobkow.v3_1.cfsec.cfsecobj.*;
 import io.github.msobkow.v3_1.cfint.cfintobj.*;
-import io.github.msobkow.v3_1.cfint.cfintjpahooks.CFIntJpaHooksSchema;
+import io.github.msobkow.v3_1.cfint.cfint.jpa.CFIntJpaHooksSchema;
 
 /*
  *	CFIntJpaSubProjectTable database implementation for SubProject
@@ -71,7 +71,6 @@ import io.github.msobkow.v3_1.cfint.cfintjpahooks.CFIntJpaHooksSchema;
 public class CFIntJpaSubProjectTable implements ICFIntSubProjectTable
 {
 	protected CFIntJpaSchema schema;
-	protected CFIntJpaHooksSchema jpaHooksSchema;
 
 
 	public CFIntJpaSubProjectTable(ICFIntSchema schema) {
@@ -80,7 +79,6 @@ public class CFIntJpaSubProjectTable implements ICFIntSubProjectTable
 		}
 		if (schema instanceof CFIntJpaSchema) {
 			this.schema = (CFIntJpaSchema)schema;
-			this.jpaHooksSchema = this.schema.getJpaHooksSchema();
 		}
 		else {
 			throw new CFLibUnsupportedClassException(getClass(), "constructor", "schema", schema, "CFIntJpaSchema");
@@ -104,7 +102,7 @@ public class CFIntJpaSubProjectTable implements ICFIntSubProjectTable
 		}
 		else if (rec instanceof CFIntJpaSubProject) {
 			CFIntJpaSubProject jparec = (CFIntJpaSubProject)rec;
-			CFIntJpaSubProject created = jpaHooksSchema.getSubProjectService().create(jparec);
+			CFIntJpaSubProject created = schema.getJpaHooksSchema().getSubProjectService().create(jparec);
 			return( created );
 		}
 		else {
@@ -129,7 +127,7 @@ public class CFIntJpaSubProjectTable implements ICFIntSubProjectTable
 		}
 		else if (rec instanceof CFIntJpaSubProject) {
 			CFIntJpaSubProject jparec = (CFIntJpaSubProject)rec;
-			CFIntJpaSubProject updated = jpaHooksSchema.getSubProjectService().update(jparec);
+			CFIntJpaSubProject updated = schema.getJpaHooksSchema().getSubProjectService().update(jparec);
 			return( updated );
 		}
 		else {
@@ -153,7 +151,7 @@ public class CFIntJpaSubProjectTable implements ICFIntSubProjectTable
 		}
 		if (rec instanceof CFIntJpaSubProject) {
 			CFIntJpaSubProject jparec = (CFIntJpaSubProject)rec;
-			jpaHooksSchema.getSubProjectService().deleteByIdIdx(jparec.getPKey());
+			schema.getJpaHooksSchema().getSubProjectService().deleteByIdIdx(jparec.getPKey());
 		}
 		else {
 			throw new CFLibUnsupportedClassException(getClass(), "deleteSubProject", "rec", rec, "CFIntJpaSubProject");
@@ -173,7 +171,7 @@ public class CFIntJpaSubProjectTable implements ICFIntSubProjectTable
 	public void deleteSubProjectByIdIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 argKey )
 	{
-		jpaHooksSchema.getSubProjectService().deleteByIdIdx(argKey);
+		schema.getJpaHooksSchema().getSubProjectService().deleteByIdIdx(argKey);
 	}
 
 	/**
@@ -187,7 +185,7 @@ public class CFIntJpaSubProjectTable implements ICFIntSubProjectTable
 	public void deleteSubProjectByTenantIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 argTenantId )
 	{
-		jpaHooksSchema.getSubProjectService().deleteByTenantIdx(argTenantId);
+		schema.getJpaHooksSchema().getSubProjectService().deleteByTenantIdx(argTenantId);
 	}
 
 
@@ -202,7 +200,7 @@ public class CFIntJpaSubProjectTable implements ICFIntSubProjectTable
 	public void deleteSubProjectByTenantIdx( ICFSecAuthorization Authorization,
 		ICFIntSubProjectByTenantIdxKey argKey )
 	{
-		jpaHooksSchema.getSubProjectService().deleteByTenantIdx(argKey.getRequiredTenantId());
+		schema.getJpaHooksSchema().getSubProjectService().deleteByTenantIdx(argKey.getRequiredTenantId());
 	}
 
 	/**
@@ -216,7 +214,7 @@ public class CFIntJpaSubProjectTable implements ICFIntSubProjectTable
 	public void deleteSubProjectByTopProjectIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 argTopProjectId )
 	{
-		jpaHooksSchema.getSubProjectService().deleteByTopProjectIdx(argTopProjectId);
+		schema.getJpaHooksSchema().getSubProjectService().deleteByTopProjectIdx(argTopProjectId);
 	}
 
 
@@ -231,7 +229,7 @@ public class CFIntJpaSubProjectTable implements ICFIntSubProjectTable
 	public void deleteSubProjectByTopProjectIdx( ICFSecAuthorization Authorization,
 		ICFIntSubProjectByTopProjectIdxKey argKey )
 	{
-		jpaHooksSchema.getSubProjectService().deleteByTopProjectIdx(argKey.getRequiredTopProjectId());
+		schema.getJpaHooksSchema().getSubProjectService().deleteByTopProjectIdx(argKey.getRequiredTopProjectId());
 	}
 
 	/**
@@ -248,7 +246,7 @@ public class CFIntJpaSubProjectTable implements ICFIntSubProjectTable
 		CFLibDbKeyHash256 argTopProjectId,
 		String argName )
 	{
-		jpaHooksSchema.getSubProjectService().deleteByNameIdx(argTopProjectId,
+		schema.getJpaHooksSchema().getSubProjectService().deleteByNameIdx(argTopProjectId,
 		argName);
 	}
 
@@ -264,7 +262,7 @@ public class CFIntJpaSubProjectTable implements ICFIntSubProjectTable
 	public void deleteSubProjectByNameIdx( ICFSecAuthorization Authorization,
 		ICFIntSubProjectByNameIdxKey argKey )
 	{
-		jpaHooksSchema.getSubProjectService().deleteByNameIdx(argKey.getRequiredTopProjectId(),
+		schema.getJpaHooksSchema().getSubProjectService().deleteByNameIdx(argKey.getRequiredTopProjectId(),
 			argKey.getRequiredName());
 	}
 
@@ -283,7 +281,7 @@ public class CFIntJpaSubProjectTable implements ICFIntSubProjectTable
 	public ICFIntSubProject readDerived( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 PKey )
 	{
-		return( jpaHooksSchema.getSubProjectService().find(PKey) );
+		return( schema.getJpaHooksSchema().getSubProjectService().find(PKey) );
 	}
 
 	/**
@@ -300,7 +298,7 @@ public class CFIntJpaSubProjectTable implements ICFIntSubProjectTable
 	public ICFIntSubProject lockDerived( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 PKey )
 	{
-		return( jpaHooksSchema.getSubProjectService().lockByIdIdx(PKey) );
+		return( schema.getJpaHooksSchema().getSubProjectService().lockByIdIdx(PKey) );
 	}
 
 	/**
@@ -312,7 +310,7 @@ public class CFIntJpaSubProjectTable implements ICFIntSubProjectTable
 	 */
 	@Override
 	public ICFIntSubProject[] readAllDerived( ICFSecAuthorization Authorization ) {
-		List<CFIntJpaSubProject> results = jpaHooksSchema.getSubProjectService().findAll();
+		List<CFIntJpaSubProject> results = schema.getJpaHooksSchema().getSubProjectService().findAll();
 		ICFIntSubProject[] retset = new ICFIntSubProject[results.size()];
 		int idx = 0;
 		for (CFIntJpaSubProject cur: results) {
@@ -335,7 +333,7 @@ public class CFIntJpaSubProjectTable implements ICFIntSubProjectTable
 	public ICFIntSubProject readDerivedByIdIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 argId )
 	{
-		return( jpaHooksSchema.getSubProjectService().find(argId) );
+		return( schema.getJpaHooksSchema().getSubProjectService().find(argId) );
 	}
 
 	/**
@@ -351,7 +349,7 @@ public class CFIntJpaSubProjectTable implements ICFIntSubProjectTable
 	public ICFIntSubProject[] readDerivedByTenantIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 argTenantId )
 	{
-		List<CFIntJpaSubProject> results = jpaHooksSchema.getSubProjectService().findByTenantIdx(argTenantId);
+		List<CFIntJpaSubProject> results = schema.getJpaHooksSchema().getSubProjectService().findByTenantIdx(argTenantId);
 		ICFIntSubProject[] retset = new ICFIntSubProject[results.size()];
 		int idx = 0;
 		for (CFIntJpaSubProject cur: results) {
@@ -373,7 +371,7 @@ public class CFIntJpaSubProjectTable implements ICFIntSubProjectTable
 	public ICFIntSubProject[] readDerivedByTopProjectIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 argTopProjectId )
 	{
-		List<CFIntJpaSubProject> results = jpaHooksSchema.getSubProjectService().findByTopProjectIdx(argTopProjectId);
+		List<CFIntJpaSubProject> results = schema.getJpaHooksSchema().getSubProjectService().findByTopProjectIdx(argTopProjectId);
 		ICFIntSubProject[] retset = new ICFIntSubProject[results.size()];
 		int idx = 0;
 		for (CFIntJpaSubProject cur: results) {
@@ -399,7 +397,7 @@ public class CFIntJpaSubProjectTable implements ICFIntSubProjectTable
 		CFLibDbKeyHash256 argTopProjectId,
 		String argName )
 	{
-		return( jpaHooksSchema.getSubProjectService().findByNameIdx(argTopProjectId,
+		return( schema.getJpaHooksSchema().getSubProjectService().findByNameIdx(argTopProjectId,
 		argName) );
 	}
 

@@ -63,7 +63,7 @@ import io.github.msobkow.v3_1.cfsec.cfsec.*;
 import io.github.msobkow.v3_1.cfint.cfint.*;
 import io.github.msobkow.v3_1.cfsec.cfsecobj.*;
 import io.github.msobkow.v3_1.cfint.cfintobj.*;
-import io.github.msobkow.v3_1.cfint.cfintjpahooks.CFIntJpaHooksSchema;
+import io.github.msobkow.v3_1.cfint.cfint.jpa.CFIntJpaHooksSchema;
 
 /*
  *	CFIntJpaMinorVersionTable database implementation for MinorVersion
@@ -71,7 +71,6 @@ import io.github.msobkow.v3_1.cfint.cfintjpahooks.CFIntJpaHooksSchema;
 public class CFIntJpaMinorVersionTable implements ICFIntMinorVersionTable
 {
 	protected CFIntJpaSchema schema;
-	protected CFIntJpaHooksSchema jpaHooksSchema;
 
 
 	public CFIntJpaMinorVersionTable(ICFIntSchema schema) {
@@ -80,7 +79,6 @@ public class CFIntJpaMinorVersionTable implements ICFIntMinorVersionTable
 		}
 		if (schema instanceof CFIntJpaSchema) {
 			this.schema = (CFIntJpaSchema)schema;
-			this.jpaHooksSchema = this.schema.getJpaHooksSchema();
 		}
 		else {
 			throw new CFLibUnsupportedClassException(getClass(), "constructor", "schema", schema, "CFIntJpaSchema");
@@ -104,7 +102,7 @@ public class CFIntJpaMinorVersionTable implements ICFIntMinorVersionTable
 		}
 		else if (rec instanceof CFIntJpaMinorVersion) {
 			CFIntJpaMinorVersion jparec = (CFIntJpaMinorVersion)rec;
-			CFIntJpaMinorVersion created = jpaHooksSchema.getMinorVersionService().create(jparec);
+			CFIntJpaMinorVersion created = schema.getJpaHooksSchema().getMinorVersionService().create(jparec);
 			return( created );
 		}
 		else {
@@ -129,7 +127,7 @@ public class CFIntJpaMinorVersionTable implements ICFIntMinorVersionTable
 		}
 		else if (rec instanceof CFIntJpaMinorVersion) {
 			CFIntJpaMinorVersion jparec = (CFIntJpaMinorVersion)rec;
-			CFIntJpaMinorVersion updated = jpaHooksSchema.getMinorVersionService().update(jparec);
+			CFIntJpaMinorVersion updated = schema.getJpaHooksSchema().getMinorVersionService().update(jparec);
 			return( updated );
 		}
 		else {
@@ -153,7 +151,7 @@ public class CFIntJpaMinorVersionTable implements ICFIntMinorVersionTable
 		}
 		if (rec instanceof CFIntJpaMinorVersion) {
 			CFIntJpaMinorVersion jparec = (CFIntJpaMinorVersion)rec;
-			jpaHooksSchema.getMinorVersionService().deleteByIdIdx(jparec.getPKey());
+			schema.getJpaHooksSchema().getMinorVersionService().deleteByIdIdx(jparec.getPKey());
 		}
 		else {
 			throw new CFLibUnsupportedClassException(getClass(), "deleteMinorVersion", "rec", rec, "CFIntJpaMinorVersion");
@@ -173,7 +171,7 @@ public class CFIntJpaMinorVersionTable implements ICFIntMinorVersionTable
 	public void deleteMinorVersionByIdIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 argKey )
 	{
-		jpaHooksSchema.getMinorVersionService().deleteByIdIdx(argKey);
+		schema.getJpaHooksSchema().getMinorVersionService().deleteByIdIdx(argKey);
 	}
 
 	/**
@@ -187,7 +185,7 @@ public class CFIntJpaMinorVersionTable implements ICFIntMinorVersionTable
 	public void deleteMinorVersionByTenantIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 argTenantId )
 	{
-		jpaHooksSchema.getMinorVersionService().deleteByTenantIdx(argTenantId);
+		schema.getJpaHooksSchema().getMinorVersionService().deleteByTenantIdx(argTenantId);
 	}
 
 
@@ -202,7 +200,7 @@ public class CFIntJpaMinorVersionTable implements ICFIntMinorVersionTable
 	public void deleteMinorVersionByTenantIdx( ICFSecAuthorization Authorization,
 		ICFIntMinorVersionByTenantIdxKey argKey )
 	{
-		jpaHooksSchema.getMinorVersionService().deleteByTenantIdx(argKey.getRequiredTenantId());
+		schema.getJpaHooksSchema().getMinorVersionService().deleteByTenantIdx(argKey.getRequiredTenantId());
 	}
 
 	/**
@@ -216,7 +214,7 @@ public class CFIntJpaMinorVersionTable implements ICFIntMinorVersionTable
 	public void deleteMinorVersionByMajorVerIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 argMajorVersionId )
 	{
-		jpaHooksSchema.getMinorVersionService().deleteByMajorVerIdx(argMajorVersionId);
+		schema.getJpaHooksSchema().getMinorVersionService().deleteByMajorVerIdx(argMajorVersionId);
 	}
 
 
@@ -231,7 +229,7 @@ public class CFIntJpaMinorVersionTable implements ICFIntMinorVersionTable
 	public void deleteMinorVersionByMajorVerIdx( ICFSecAuthorization Authorization,
 		ICFIntMinorVersionByMajorVerIdxKey argKey )
 	{
-		jpaHooksSchema.getMinorVersionService().deleteByMajorVerIdx(argKey.getRequiredMajorVersionId());
+		schema.getJpaHooksSchema().getMinorVersionService().deleteByMajorVerIdx(argKey.getRequiredMajorVersionId());
 	}
 
 	/**
@@ -248,7 +246,7 @@ public class CFIntJpaMinorVersionTable implements ICFIntMinorVersionTable
 		CFLibDbKeyHash256 argMajorVersionId,
 		String argName )
 	{
-		jpaHooksSchema.getMinorVersionService().deleteByNameIdx(argMajorVersionId,
+		schema.getJpaHooksSchema().getMinorVersionService().deleteByNameIdx(argMajorVersionId,
 		argName);
 	}
 
@@ -264,7 +262,7 @@ public class CFIntJpaMinorVersionTable implements ICFIntMinorVersionTable
 	public void deleteMinorVersionByNameIdx( ICFSecAuthorization Authorization,
 		ICFIntMinorVersionByNameIdxKey argKey )
 	{
-		jpaHooksSchema.getMinorVersionService().deleteByNameIdx(argKey.getRequiredMajorVersionId(),
+		schema.getJpaHooksSchema().getMinorVersionService().deleteByNameIdx(argKey.getRequiredMajorVersionId(),
 			argKey.getRequiredName());
 	}
 
@@ -283,7 +281,7 @@ public class CFIntJpaMinorVersionTable implements ICFIntMinorVersionTable
 	public ICFIntMinorVersion readDerived( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 PKey )
 	{
-		return( jpaHooksSchema.getMinorVersionService().find(PKey) );
+		return( schema.getJpaHooksSchema().getMinorVersionService().find(PKey) );
 	}
 
 	/**
@@ -300,7 +298,7 @@ public class CFIntJpaMinorVersionTable implements ICFIntMinorVersionTable
 	public ICFIntMinorVersion lockDerived( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 PKey )
 	{
-		return( jpaHooksSchema.getMinorVersionService().lockByIdIdx(PKey) );
+		return( schema.getJpaHooksSchema().getMinorVersionService().lockByIdIdx(PKey) );
 	}
 
 	/**
@@ -312,7 +310,7 @@ public class CFIntJpaMinorVersionTable implements ICFIntMinorVersionTable
 	 */
 	@Override
 	public ICFIntMinorVersion[] readAllDerived( ICFSecAuthorization Authorization ) {
-		List<CFIntJpaMinorVersion> results = jpaHooksSchema.getMinorVersionService().findAll();
+		List<CFIntJpaMinorVersion> results = schema.getJpaHooksSchema().getMinorVersionService().findAll();
 		ICFIntMinorVersion[] retset = new ICFIntMinorVersion[results.size()];
 		int idx = 0;
 		for (CFIntJpaMinorVersion cur: results) {
@@ -335,7 +333,7 @@ public class CFIntJpaMinorVersionTable implements ICFIntMinorVersionTable
 	public ICFIntMinorVersion readDerivedByIdIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 argId )
 	{
-		return( jpaHooksSchema.getMinorVersionService().find(argId) );
+		return( schema.getJpaHooksSchema().getMinorVersionService().find(argId) );
 	}
 
 	/**
@@ -351,7 +349,7 @@ public class CFIntJpaMinorVersionTable implements ICFIntMinorVersionTable
 	public ICFIntMinorVersion[] readDerivedByTenantIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 argTenantId )
 	{
-		List<CFIntJpaMinorVersion> results = jpaHooksSchema.getMinorVersionService().findByTenantIdx(argTenantId);
+		List<CFIntJpaMinorVersion> results = schema.getJpaHooksSchema().getMinorVersionService().findByTenantIdx(argTenantId);
 		ICFIntMinorVersion[] retset = new ICFIntMinorVersion[results.size()];
 		int idx = 0;
 		for (CFIntJpaMinorVersion cur: results) {
@@ -373,7 +371,7 @@ public class CFIntJpaMinorVersionTable implements ICFIntMinorVersionTable
 	public ICFIntMinorVersion[] readDerivedByMajorVerIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 argMajorVersionId )
 	{
-		List<CFIntJpaMinorVersion> results = jpaHooksSchema.getMinorVersionService().findByMajorVerIdx(argMajorVersionId);
+		List<CFIntJpaMinorVersion> results = schema.getJpaHooksSchema().getMinorVersionService().findByMajorVerIdx(argMajorVersionId);
 		ICFIntMinorVersion[] retset = new ICFIntMinorVersion[results.size()];
 		int idx = 0;
 		for (CFIntJpaMinorVersion cur: results) {
@@ -399,7 +397,7 @@ public class CFIntJpaMinorVersionTable implements ICFIntMinorVersionTable
 		CFLibDbKeyHash256 argMajorVersionId,
 		String argName )
 	{
-		return( jpaHooksSchema.getMinorVersionService().findByNameIdx(argMajorVersionId,
+		return( schema.getJpaHooksSchema().getMinorVersionService().findByNameIdx(argMajorVersionId,
 		argName) );
 	}
 

@@ -32,7 +32,7 @@
  *	
  */
 
-package io.github.msobkow.v3_1.cfint.cfintjpahooks;
+package io.github.msobkow.v3_1.cfint.cfint.jpa;
 
 import java.io.Serializable;
 import java.math.*;
