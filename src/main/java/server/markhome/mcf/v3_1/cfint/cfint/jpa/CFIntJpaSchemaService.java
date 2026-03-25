@@ -130,6 +130,7 @@ public class CFIntJpaSchemaService {
 
 	@Transactional(propagation = Propagation.REQUIRED, noRollbackFor = NoResultException.class, transactionManager = "$secdbschemaname$TransactionManager")
 	public void bootstrapTableSecurity(ICFSecAuthorization auth, String tableName, boolean hasHistory, boolean isMutable, boolean isTenantScoped) {
+/**
 		LocalDateTime now = LocalDateTime.now();
 		String lowerTableName = tableName.toLowerCase();
 		String createPermName = "create" + lowerTableName;
@@ -779,6 +780,7 @@ public class CFIntJpaSchemaService {
 				}
 			}
 		}
+**/
 	}		
 
 
