@@ -106,21 +106,20 @@ public class CFIntJpaSchemaService {
 		bootstrapSession.setRequiredSecSessionId(bootstrapSessionID);
 		bootstrapSession.setRequiredSecUserId(ICFSecSchema.getSysAdminId());
 		bootstrapSession.setOptionalSecProxyId(ICFSecSchema.getSysAdminId());
-		bootstrapSession.setOptionalSecDevName(null);
 		bootstrapSession.setRequiredStart(now);
 		bootstrapSession.setOptionalFinish(null);
 		bootstrapSession = ICFSecSchema.getBackingCFSec().getTableSecSession().createSecSession(auth, bootstrapSession);
 		bootstrapSessionID = bootstrapSession.getRequiredSecSessionId();
 
-		bootstrapTableSecurity(auth, "License", false, false);
-		bootstrapTableSecurity(auth, "MajorVersion", true, false);
-		bootstrapTableSecurity(auth, "MimeType", true, false);
-		bootstrapTableSecurity(auth, "MinorVersion", true, false);
-		bootstrapTableSecurity(auth, "SubProject", true, false);
-		bootstrapTableSecurity(auth, "Tld", true, false);
-		bootstrapTableSecurity(auth, "TopDomain", true, false);
-		bootstrapTableSecurity(auth, "TopProject", true, false);
-		bootstrapTableSecurity(auth, "URLProtocol", true, false);
+		bootstrapTableSecurity(auth, "License", false, false, "Tenant");
+		bootstrapTableSecurity(auth, "MajorVersion", true, false, "Tenant");
+		bootstrapTableSecurity(auth, "MimeType", true, false, "System");
+		bootstrapTableSecurity(auth, "MinorVersion", true, false, "Tenant");
+		bootstrapTableSecurity(auth, "SubProject", true, false, "Tenant");
+		bootstrapTableSecurity(auth, "Tld", true, false, "Tenant");
+		bootstrapTableSecurity(auth, "TopDomain", true, false, "Tenant");
+		bootstrapTableSecurity(auth, "TopProject", true, false, "Tenant");
+		bootstrapTableSecurity(auth, "URLProtocol", true, false, "System");
 
 		if (bootstrapSession != null && bootstrapSessionID != null && !bootstrapSessionID.isNull() && bootstrapSession.getOptionalFinish() == null) {
 			bootstrapSession.setOptionalFinish(LocalDateTime.now());
@@ -129,7 +128,7 @@ public class CFIntJpaSchemaService {
 	}
 
 	@Transactional(propagation = Propagation.REQUIRED, noRollbackFor = NoResultException.class, transactionManager = "$secdbschemaname$TransactionManager")
-	public void bootstrapTableSecurity(ICFSecAuthorization auth, String tableName, boolean hasHistory, boolean isMutable, boolean isTenantScoped) {
+	public void bootstrapTableSecurity(ICFSecAuthorization auth, String tableName, boolean hasHistory, boolean isMutable, String secScope) {
 /**
 		LocalDateTime now = LocalDateTime.now();
 		String lowerTableName = tableName.toLowerCase();
