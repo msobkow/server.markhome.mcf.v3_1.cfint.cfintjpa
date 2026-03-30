@@ -77,7 +77,9 @@ public class CFIntJpaSchema
 	protected ICFSecSecTentGrpIncTable tableSecTentGrpInc;
 	protected ICFSecSecTentGrpMembTable tableSecTentGrpMemb;
 	protected ICFSecSecUserTable tableSecUser;
+	protected ICFSecSecUserEMConfTable tableSecUserEMConf;
 	protected ICFSecSecUserPWHistoryTable tableSecUserPWHistory;
+	protected ICFSecSecUserPWResetTable tableSecUserPWReset;
 	protected ICFSecSecUserPasswordTable tableSecUserPassword;
 	protected ICFIntSubProjectTable tableSubProject;
 	protected ICFSecSysClusterTable tableSysCluster;
@@ -109,7 +111,9 @@ public class CFIntJpaSchema
 	protected ICFSecSecTentGrpIncFactory factorySecTentGrpInc;
 	protected ICFSecSecTentGrpMembFactory factorySecTentGrpMemb;
 	protected ICFSecSecUserFactory factorySecUser;
+	protected ICFSecSecUserEMConfFactory factorySecUserEMConf;
 	protected ICFSecSecUserPWHistoryFactory factorySecUserPWHistory;
+	protected ICFSecSecUserPWResetFactory factorySecUserPWReset;
 	protected ICFSecSecUserPasswordFactory factorySecUserPassword;
 	protected ICFIntSubProjectFactory factorySubProject;
 	protected ICFSecSysClusterFactory factorySysCluster;
@@ -345,7 +349,9 @@ public class CFIntJpaSchema
 		tableSecTentGrpInc = null;
 		tableSecTentGrpMemb = null;
 		tableSecUser = null;
+		tableSecUserEMConf = null;
 		tableSecUserPWHistory = null;
+		tableSecUserPWReset = null;
 		tableSecUserPassword = null;
 		tableSubProject = null;
 		tableSysCluster = null;
@@ -377,7 +383,9 @@ public class CFIntJpaSchema
 		factorySecTentGrpInc = new CFSecJpaSecTentGrpIncDefaultFactory();
 		factorySecTentGrpMemb = new CFSecJpaSecTentGrpMembDefaultFactory();
 		factorySecUser = new CFSecJpaSecUserDefaultFactory();
+		factorySecUserEMConf = new CFSecJpaSecUserEMConfDefaultFactory();
 		factorySecUserPWHistory = new CFSecJpaSecUserPWHistoryDefaultFactory();
+		factorySecUserPWReset = new CFSecJpaSecUserPWResetDefaultFactory();
 		factorySecUserPassword = new CFSecJpaSecUserPasswordDefaultFactory();
 		factorySubProject = new CFIntJpaSubProjectDefaultFactory();
 		factorySysCluster = new CFSecJpaSysClusterDefaultFactory();
@@ -858,6 +866,22 @@ public class CFIntJpaSchema
 		factorySecUser = value;
 	}
 
+	public ICFSecSecUserEMConfTable getTableSecUserEMConf() {
+		return( tableSecUserEMConf );
+	}
+
+	public void setTableSecUserEMConf( ICFSecSecUserEMConfTable value ) {
+		tableSecUserEMConf = value;
+	}
+
+	public ICFSecSecUserEMConfFactory getFactorySecUserEMConf() {
+		return( factorySecUserEMConf );
+	}
+
+	public void setFactorySecUserEMConf( ICFSecSecUserEMConfFactory value ) {
+		factorySecUserEMConf = value;
+	}
+
 	public ICFSecSecUserPWHistoryTable getTableSecUserPWHistory() {
 		return( tableSecUserPWHistory );
 	}
@@ -872,6 +896,22 @@ public class CFIntJpaSchema
 
 	public void setFactorySecUserPWHistory( ICFSecSecUserPWHistoryFactory value ) {
 		factorySecUserPWHistory = value;
+	}
+
+	public ICFSecSecUserPWResetTable getTableSecUserPWReset() {
+		return( tableSecUserPWReset );
+	}
+
+	public void setTableSecUserPWReset( ICFSecSecUserPWResetTable value ) {
+		tableSecUserPWReset = value;
+	}
+
+	public ICFSecSecUserPWResetFactory getFactorySecUserPWReset() {
+		return( factorySecUserPWReset );
+	}
+
+	public void setFactorySecUserPWReset( ICFSecSecUserPWResetFactory value ) {
+		factorySecUserPWReset = value;
 	}
 
 	public ICFSecSecUserPasswordTable getTableSecUserPassword() {
