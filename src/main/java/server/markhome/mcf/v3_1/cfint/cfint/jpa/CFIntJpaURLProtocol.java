@@ -157,9 +157,7 @@ public class CFIntJpaURLProtocol
 
 	@Override
 	public void setPKey(Integer requiredURLProtocolId) {
-		if (requiredURLProtocolId != null) {
-			setRequiredURLProtocolId(requiredURLProtocolId);
-		}
+		this.requiredURLProtocolId = requiredURLProtocolId;
 	}
 	
 	@Override

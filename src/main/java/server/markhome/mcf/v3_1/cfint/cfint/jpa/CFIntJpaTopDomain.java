@@ -242,9 +242,7 @@ public class CFIntJpaTopDomain
 
 	@Override
 	public void setPKey(CFLibDbKeyHash256 requiredId) {
-		if (requiredId != null) {
-			setRequiredId(requiredId);
-		}
+		this.requiredId = requiredId;
 	}
 	
 	@Override
