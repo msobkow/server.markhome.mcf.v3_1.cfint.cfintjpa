@@ -117,6 +117,11 @@ public class CFIntJpaSchemaService {
 			throw new CFLibNullArgumentException(getClass(), "bootstrapAllTablesSecurity", 0, "secSysGroupSysAdmin");
 		}
 
+		ICFSecSecSysGrp secSysGroupPublic = ICFSecSchema.getBackingCFSec().getTableSecSysGrp().readDerivedByUNameIdx( auth, "public");
+		if (secSysGroupPublic == null) {
+			throw new CFLibNullArgumentException(getClass(), "bootstrapAllTablesSecurity", 0, "secSysGroupPublic");
+		}
+		
 		ICFSecSecClusGrp secSysClusGroupSysAdmin = ICFSecSchema.getBackingCFSec().getTableSecClusGrp().readDerivedByUNameIdx(auth, ICFSecSchema.getSysClusterId(), "sysclusteradmin");
 		if (secSysClusGroupSysAdmin == null) {
 			throw new CFLibNullArgumentException(getClass(), "bootstrapAllTablesSecurity", 0, "secSysClusGroupSysAdmin");
@@ -127,15 +132,15 @@ public class CFIntJpaSchemaService {
 			throw new CFLibNullArgumentException(getClass(), "bootstrapAllTablesSecurity", 0, "secSysTentGroupSysAdmin");
 		}
 
-		bootstrapTableSecurity(auth, now, "License", false, false, "Tenant", secSysGroupSysAdmin, secSysClusGroupSysAdmin, secSysTentGroupSysAdmin);
-		bootstrapTableSecurity(auth, now, "MajorVersion", true, false, "Tenant", secSysGroupSysAdmin, secSysClusGroupSysAdmin, secSysTentGroupSysAdmin);
-		bootstrapTableSecurity(auth, now, "MimeType", true, false, "System", secSysGroupSysAdmin, secSysClusGroupSysAdmin, secSysTentGroupSysAdmin);
-		bootstrapTableSecurity(auth, now, "MinorVersion", true, false, "Tenant", secSysGroupSysAdmin, secSysClusGroupSysAdmin, secSysTentGroupSysAdmin);
-		bootstrapTableSecurity(auth, now, "SubProject", true, false, "Tenant", secSysGroupSysAdmin, secSysClusGroupSysAdmin, secSysTentGroupSysAdmin);
-		bootstrapTableSecurity(auth, now, "Tld", true, false, "Tenant", secSysGroupSysAdmin, secSysClusGroupSysAdmin, secSysTentGroupSysAdmin);
-		bootstrapTableSecurity(auth, now, "TopDomain", true, false, "Tenant", secSysGroupSysAdmin, secSysClusGroupSysAdmin, secSysTentGroupSysAdmin);
-		bootstrapTableSecurity(auth, now, "TopProject", true, false, "Tenant", secSysGroupSysAdmin, secSysClusGroupSysAdmin, secSysTentGroupSysAdmin);
-		bootstrapTableSecurity(auth, now, "URLProtocol", true, false, "System", secSysGroupSysAdmin, secSysClusGroupSysAdmin, secSysTentGroupSysAdmin);
+		bootstrapTableSecurity(auth, now, "License", false, false, "Tenant", secSysGroupPublic, secSysGroupSysAdmin, secSysClusGroupSysAdmin, secSysTentGroupSysAdmin);
+		bootstrapTableSecurity(auth, now, "MajorVersion", true, false, "Tenant", secSysGroupPublic, secSysGroupSysAdmin, secSysClusGroupSysAdmin, secSysTentGroupSysAdmin);
+		bootstrapTableSecurity(auth, now, "MimeType", true, false, "System", secSysGroupPublic, secSysGroupSysAdmin, secSysClusGroupSysAdmin, secSysTentGroupSysAdmin);
+		bootstrapTableSecurity(auth, now, "MinorVersion", true, false, "Tenant", secSysGroupPublic, secSysGroupSysAdmin, secSysClusGroupSysAdmin, secSysTentGroupSysAdmin);
+		bootstrapTableSecurity(auth, now, "SubProject", true, false, "Tenant", secSysGroupPublic, secSysGroupSysAdmin, secSysClusGroupSysAdmin, secSysTentGroupSysAdmin);
+		bootstrapTableSecurity(auth, now, "Tld", true, false, "Tenant", secSysGroupPublic, secSysGroupSysAdmin, secSysClusGroupSysAdmin, secSysTentGroupSysAdmin);
+		bootstrapTableSecurity(auth, now, "TopDomain", true, false, "Tenant", secSysGroupPublic, secSysGroupSysAdmin, secSysClusGroupSysAdmin, secSysTentGroupSysAdmin);
+		bootstrapTableSecurity(auth, now, "TopProject", true, false, "Tenant", secSysGroupPublic, secSysGroupSysAdmin, secSysClusGroupSysAdmin, secSysTentGroupSysAdmin);
+		bootstrapTableSecurity(auth, now, "URLProtocol", true, false, "System", secSysGroupPublic, secSysGroupSysAdmin, secSysClusGroupSysAdmin, secSysTentGroupSysAdmin);
 		if (bootstrapSession != null && bootstrapSessionID != null && !bootstrapSessionID.isNull() && bootstrapSession.getOptionalFinish() == null) {
 			bootstrapSession.setOptionalFinish(LocalDateTime.now());
 			bootstrapSession = ICFSecSchema.getBackingCFSec().getTableSecSession().updateSecSession(auth, bootstrapSession);
@@ -149,6 +154,7 @@ public class CFIntJpaSchemaService {
 		boolean hasHistory,
 		boolean isMutable,
 		String secScope,
+		ICFSecSecSysGrp secSysGroupPublic,
 		ICFSecSecSysGrp secSysGroupSysAdmin,
 		ICFSecSecClusGrp secSysClusGroupSysAdmin,
 		ICFSecSecTentGrp secSysTentGroupSysAdmin )
@@ -177,13 +183,15 @@ public class CFIntJpaSchemaService {
 		String sysadminGroup = secSysGroupSysAdmin.getRequiredName();
 		String sysclusadminGroup = secSysClusGroupSysAdmin.getRequiredName();
 		String systentadminGroup = secSysTentGroupSysAdmin.getRequiredName();
-
+		String publicGroup = secSysGroupPublic.getRequiredName();
+		
 		ICFSecSecSysGrp secGroupCreate;
 		CFLibDbKeyHash256 secGroupCreateID;
 		ICFSecSecSysGrpInc secGroupCreateIncSysadmin;
 		ICFSecSecSysGrp secGroupRead;
 		CFLibDbKeyHash256 secGroupReadID;
 		ICFSecSecSysGrpInc secGroupReadIncSysadmin;
+		ICFSecSecSysGrpInc secGroupReadIncPublic;
 		ICFSecSecSysGrp secGroupUpdate;
 		CFLibDbKeyHash256 secGroupUpdateID;
 		ICFSecSecSysGrpInc secGroupUpdateIncSysadmin;
@@ -255,6 +263,13 @@ public class CFIntJpaSchemaService {
 			secGroupReadIncSysadmin = null;
 		}
 
+		if (secGroupRead != null && level == ICFSecSchema.SecLevelEnum.Global) {
+			secGroupReadIncPublic = ICFSecSchema.getBackingCFSec().getTableSecSysGrpInc().readDerived(auth, secGroupReadID, publicGroup);
+		}
+		else {
+			secGroupReadIncPublic = null;
+		}
+		
 		secGroupUpdate = ICFSecSchema.getBackingCFSec().getTableSecSysGrp().readDerivedByUNameIdx(auth, updatePermName);
 		if (secGroupUpdate != null) {
 			secGroupUpdateID = secGroupUpdate.getRequiredSecSysGrpId();
@@ -382,6 +397,21 @@ public class CFIntJpaSchemaService {
 			secGroupReadIncSysadmin.setRequiredContainerGroup(secGroupReadID);
 			secGroupReadIncSysadmin.setRequiredParentSubGroup(sysadminGroup);
 			secGroupReadIncSysadmin = ICFSecSchema.getBackingCFSec().getTableSecSysGrpInc().createSecSysGrpInc(auth, secGroupReadIncSysadmin);
+		}
+
+		if (secGroupRead != null && level == ICFSecSchema.SecLevelEnum.Global && secGroupReadIncPublic == null) {
+			secGroupReadIncPublic = ICFSecSchema.getBackingCFSec().getFactorySecSysGrpInc().newRec();
+			secGroupReadIncPublic.setRequiredRevision(1);
+			secGroupReadIncPublic.setCreatedAt(now);
+			secGroupReadIncPublic.setCreatedByUserId(auth.getSecUserId());
+			secGroupReadIncPublic.setUpdatedAt(now);
+			secGroupReadIncPublic.setUpdatedByUserId(auth.getSecUserId());
+			secGroupReadIncPublic.setRequiredContainerGroup(secGroupReadID);
+			secGroupReadIncPublic.setRequiredParentSubGroup(publicGroup);
+			secGroupReadIncPublic = ICFSecSchema.getBackingCFSec().getTableSecSysGrpInc().createSecSysGrpInc(auth, secGroupReadIncPublic);
+		}
+		else {
+			secGroupReadIncPublic = null;
 		}
 
 		if (secGroupUpdate == null) {
