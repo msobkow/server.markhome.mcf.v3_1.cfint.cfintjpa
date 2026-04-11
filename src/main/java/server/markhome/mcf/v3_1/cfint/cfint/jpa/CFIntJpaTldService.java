@@ -342,4 +342,5 @@ public class CFIntJpaTldService {
 	public void deleteByNameIdx(ICFIntTldByNameIdxKey key) {
 		cfint31TldRepository.deleteByNameIdx(key.getRequiredName());
 	}
+
 }

@@ -429,4 +429,5 @@ public class CFIntJpaLicenseService {
 	public void deleteByUNameIdx(ICFIntLicenseByUNameIdxKey key) {
 		cfint31LicenseRepository.deleteByUNameIdx(key.getRequiredTopDomainId(), key.getRequiredName());
 	}
+
 }

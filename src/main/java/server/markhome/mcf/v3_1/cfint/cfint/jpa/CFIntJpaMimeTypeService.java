@@ -257,4 +257,5 @@ public class CFIntJpaMimeTypeService {
 	public void deleteByUNameIdx(ICFIntMimeTypeByUNameIdxKey key) {
 		cfint31MimeTypeRepository.deleteByUNameIdx(key.getRequiredName());
 	}
+
 }

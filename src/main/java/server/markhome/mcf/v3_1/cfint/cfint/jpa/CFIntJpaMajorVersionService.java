@@ -432,4 +432,5 @@ public class CFIntJpaMajorVersionService {
 	public void deleteByNameIdx(ICFIntMajorVersionByNameIdxKey key) {
 		cfint31MajorVersionRepository.deleteByNameIdx(key.getRequiredSubProjectId(), key.getRequiredName());
 	}
+
 }

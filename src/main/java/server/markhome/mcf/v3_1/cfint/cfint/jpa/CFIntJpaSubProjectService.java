@@ -432,4 +432,5 @@ public class CFIntJpaSubProjectService {
 	public void deleteByNameIdx(ICFIntSubProjectByNameIdxKey key) {
 		cfint31SubProjectRepository.deleteByNameIdx(key.getRequiredTopProjectId(), key.getRequiredName());
 	}
+
 }

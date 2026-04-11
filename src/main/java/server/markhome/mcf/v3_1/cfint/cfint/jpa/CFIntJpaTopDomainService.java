@@ -432,4 +432,5 @@ public class CFIntJpaTopDomainService {
 	public void deleteByNameIdx(ICFIntTopDomainByNameIdxKey key) {
 		cfint31TopDomainRepository.deleteByNameIdx(key.getRequiredTldId(), key.getRequiredName());
 	}
+
 }
