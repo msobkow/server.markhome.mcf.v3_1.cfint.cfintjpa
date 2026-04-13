@@ -1075,7 +1075,11 @@ public class CFIntJpaSchema
 		CFSecJpaSchema.setTablePerms(value);
 	}
 
-	public void bootstrapSchema() {
-		getSchemaService().bootstrapSchema();
+	public void bootstrapSchema(CFSecTableInfo tableInfo[]) {
+		ICFSecSchema.getBackingCFSec().bootstrapSchema(tableInfo);
+	}
+
+	public void bootstrapAllTablesSecurity(CFLibDbKeyHash256 clusterId, CFLibDbKeyHash256 tenantId, CFSecTableInfo tableInfo[]) {
+		ICFSecSchema.getBackingCFSec().bootstrapAllTablesSecurity(clusterId, tenantId, tableInfo);
 	}
 }
