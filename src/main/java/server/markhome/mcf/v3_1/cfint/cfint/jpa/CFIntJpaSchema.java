@@ -401,6 +401,21 @@ public class CFIntJpaSchema
 	}
 
 	@Override
+	public boolean isMemberOfTenantGroup(CFLibDbKeyHash256 userId, CFLibDbKeyHash256 tenantId, String permissionName) {
+		return ICFSecSchema.getBackingCFSec().isMemberOfTenantGroup(userId, tenantId, permissionName);
+	}
+
+	@Override
+	public boolean isMemberOfClusterGroup(CFLibDbKeyHash256 userId, CFLibDbKeyHash256 clusterId, String permissionName) {
+		return ICFSecSchema.getBackingCFSec().isMemberOfClusterGroup(userId, clusterId, permissionName);
+	}
+
+	@Override
+	public boolean isMemberOfSystemGroup(CFLibDbKeyHash256 userId, String permissionName) {
+		return ICFSecSchema.getBackingCFSec().isMemberOfSystemGroup(userId, permissionName);
+	}
+
+	@Override
 	public short nextISOCcyIdGen() {
 		throw new CFLibNotImplementedYetException( getClass(), "nextISOCcyIdGen" );
 	}
