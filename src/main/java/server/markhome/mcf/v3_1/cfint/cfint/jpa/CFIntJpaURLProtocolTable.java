@@ -88,13 +88,37 @@ public class CFIntJpaURLProtocolTable implements ICFIntURLProtocolTable
 	public ICFIntURLProtocol createURLProtocol( ICFSecAuthorization Authorization,
 		ICFIntURLProtocol rec )
 	{
+		final String S_ProcName = "createURLProtocol";
+		if (Authorization == null) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization");
+		}
+		boolean permissionGranted = false;
+		CFLibDbKeyHash256 authUserId = Authorization.getSecUserId();
+		if ((!permissionGranted) && (authUserId == null || authUserId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization.getSecUserId()");
+		}
+		// Check for "system" user
+		CFLibDbKeyHash256 sysAdminId = ICFSecSchema.getSysAdminId();
+		if ((!permissionGranted) && (sysAdminId != null && !sysAdminId.isNull() && sysAdminId.equals(authUserId))) {
+			permissionGranted = true;
+		}
+		else if ((!permissionGranted) && (sysAdminId == null || sysAdminId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "ICFSecSchema.getSysAdminId()");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfSystemGroup(Authorization.getSecUserId(), "createurlprotocol");
+		}
+		if (!permissionGranted) {
+			throw new CFLibPermissionDeniedException(getClass(), S_ProcName, ICFIntSchema.SCHEMA_NAME, ICFIntURLProtocolTable.TABLE_NAME, "createurlprotocol", authUserId.toString());//"Permission '%4$s' denied attempting to access %1$s.%2$s for user id %3$s"
+		}
+
 		if (rec == null) {
 			throw new CFLibNullArgumentException(getClass(), "createURLProtocol", 1, "rec");
 		}
 		else if (rec instanceof CFIntJpaURLProtocol) {
 			CFIntJpaURLProtocol jparec = (CFIntJpaURLProtocol)rec;
-			CFIntJpaURLProtocol created = schema.getJpaHooksSchema().getURLProtocolService().create(jparec);
-			return( created );
+			CFIntJpaURLProtocol retval = schema.getJpaHooksSchema().getURLProtocolService().create(jparec);
+		return( retval );
 		}
 		else {
 			throw new CFLibUnsupportedClassException(getClass(), "createURLProtocol", "rec", rec, "CFIntJpaURLProtocol");
@@ -113,13 +137,37 @@ public class CFIntJpaURLProtocolTable implements ICFIntURLProtocolTable
 	public ICFIntURLProtocol updateURLProtocol( ICFSecAuthorization Authorization,
 		ICFIntURLProtocol rec )
 	{
+		final String S_ProcName = "updateURLProtocol";
+		if (Authorization == null) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization");
+		}
+		boolean permissionGranted = false;
+		CFLibDbKeyHash256 authUserId = Authorization.getSecUserId();
+		if ((!permissionGranted) && (authUserId == null || authUserId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization.getSecUserId()");
+		}
+		// Check for "system" user
+		CFLibDbKeyHash256 sysAdminId = ICFSecSchema.getSysAdminId();
+		if ((!permissionGranted) && (sysAdminId != null && !sysAdminId.isNull() && sysAdminId.equals(authUserId))) {
+			permissionGranted = true;
+		}
+		else if ((!permissionGranted) && (sysAdminId == null || sysAdminId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "ICFSecSchema.getSysAdminId()");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfSystemGroup(Authorization.getSecUserId(), "updateurlprotocol");
+		}
+		if (!permissionGranted) {
+			throw new CFLibPermissionDeniedException(getClass(), S_ProcName, ICFIntSchema.SCHEMA_NAME, ICFIntURLProtocolTable.TABLE_NAME, "updateurlprotocol", authUserId.toString());//"Permission '%4$s' denied attempting to access %1$s.%2$s for user id %3$s"
+		}
+
 		if (rec == null) {
 			throw new CFLibNullArgumentException(getClass(), "updateURLProtocol", 1, "rec");
 		}
 		else if (rec instanceof CFIntJpaURLProtocol) {
 			CFIntJpaURLProtocol jparec = (CFIntJpaURLProtocol)rec;
-			CFIntJpaURLProtocol updated = schema.getJpaHooksSchema().getURLProtocolService().update(jparec);
-			return( updated );
+			CFIntJpaURLProtocol retval = schema.getJpaHooksSchema().getURLProtocolService().update(jparec);
+		return( retval );
 		}
 		else {
 			throw new CFLibUnsupportedClassException(getClass(), "updateURLProtocol", "rec", rec, "CFIntJpaURLProtocol");
@@ -137,6 +185,30 @@ public class CFIntJpaURLProtocolTable implements ICFIntURLProtocolTable
 	public void deleteURLProtocol( ICFSecAuthorization Authorization,
 		ICFIntURLProtocol rec )
 	{
+		final String S_ProcName = "deleteURLProtocol";
+		if (Authorization == null) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization");
+		}
+		boolean permissionGranted = false;
+		CFLibDbKeyHash256 authUserId = Authorization.getSecUserId();
+		if ((!permissionGranted) && (authUserId == null || authUserId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization.getSecUserId()");
+		}
+		// Check for "system" user
+		CFLibDbKeyHash256 sysAdminId = ICFSecSchema.getSysAdminId();
+		if ((!permissionGranted) && (sysAdminId != null && !sysAdminId.isNull() && sysAdminId.equals(authUserId))) {
+			permissionGranted = true;
+		}
+		else if ((!permissionGranted) && (sysAdminId == null || sysAdminId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "ICFSecSchema.getSysAdminId()");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfSystemGroup(Authorization.getSecUserId(), "deleteurlprotocol");
+		}
+		if (!permissionGranted) {
+			throw new CFLibPermissionDeniedException(getClass(), S_ProcName, ICFIntSchema.SCHEMA_NAME, ICFIntURLProtocolTable.TABLE_NAME, "deleteurlprotocol", authUserId.toString());//"Permission '%4$s' denied attempting to access %1$s.%2$s for user id %3$s"
+		}
+
 		if (rec == null) {
 			return;
 		}
@@ -162,6 +234,30 @@ public class CFIntJpaURLProtocolTable implements ICFIntURLProtocolTable
 	public void deleteURLProtocolByIdIdx( ICFSecAuthorization Authorization,
 		Integer argKey )
 	{
+		final String S_ProcName = "deleteURLProtocolByIdIdx";
+		if (Authorization == null) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization");
+		}
+		boolean permissionGranted = false;
+		CFLibDbKeyHash256 authUserId = Authorization.getSecUserId();
+		if ((!permissionGranted) && (authUserId == null || authUserId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization.getSecUserId()");
+		}
+		// Check for "system" user
+		CFLibDbKeyHash256 sysAdminId = ICFSecSchema.getSysAdminId();
+		if ((!permissionGranted) && (sysAdminId != null && !sysAdminId.isNull() && sysAdminId.equals(authUserId))) {
+			permissionGranted = true;
+		}
+		else if ((!permissionGranted) && (sysAdminId == null || sysAdminId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "ICFSecSchema.getSysAdminId()");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfSystemGroup(Authorization.getSecUserId(), "deleteurlprotocol");
+		}
+		if (!permissionGranted) {
+			throw new CFLibPermissionDeniedException(getClass(), S_ProcName, ICFIntSchema.SCHEMA_NAME, ICFIntURLProtocolTable.TABLE_NAME, "deleteurlprotocol", authUserId.toString());//"Permission '%4$s' denied attempting to access %1$s.%2$s for user id %3$s"
+		}
+
 		schema.getJpaHooksSchema().getURLProtocolService().deleteByIdIdx(argKey);
 	}
 
@@ -176,6 +272,30 @@ public class CFIntJpaURLProtocolTable implements ICFIntURLProtocolTable
 	public void deleteURLProtocolByUNameIdx( ICFSecAuthorization Authorization,
 		String argName )
 	{
+		final String S_ProcName = "deleteURLProtocolByUNameIdx";
+		if (Authorization == null) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization");
+		}
+		boolean permissionGranted = false;
+		CFLibDbKeyHash256 authUserId = Authorization.getSecUserId();
+		if ((!permissionGranted) && (authUserId == null || authUserId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization.getSecUserId()");
+		}
+		// Check for "system" user
+		CFLibDbKeyHash256 sysAdminId = ICFSecSchema.getSysAdminId();
+		if ((!permissionGranted) && (sysAdminId != null && !sysAdminId.isNull() && sysAdminId.equals(authUserId))) {
+			permissionGranted = true;
+		}
+		else if ((!permissionGranted) && (sysAdminId == null || sysAdminId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "ICFSecSchema.getSysAdminId()");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfSystemGroup(Authorization.getSecUserId(), "deleteurlprotocol");
+		}
+		if (!permissionGranted) {
+			throw new CFLibPermissionDeniedException(getClass(), S_ProcName, ICFIntSchema.SCHEMA_NAME, ICFIntURLProtocolTable.TABLE_NAME, "deleteurlprotocol", authUserId.toString());//"Permission '%4$s' denied attempting to access %1$s.%2$s for user id %3$s"
+		}
+
 		schema.getJpaHooksSchema().getURLProtocolService().deleteByUNameIdx(argName);
 	}
 
@@ -191,6 +311,30 @@ public class CFIntJpaURLProtocolTable implements ICFIntURLProtocolTable
 	public void deleteURLProtocolByUNameIdx( ICFSecAuthorization Authorization,
 		ICFIntURLProtocolByUNameIdxKey argKey )
 	{
+		final String S_ProcName = "deleteURLProtocolByUNameIdx";
+		if (Authorization == null) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization");
+		}
+		boolean permissionGranted = false;
+		CFLibDbKeyHash256 authUserId = Authorization.getSecUserId();
+		if ((!permissionGranted) && (authUserId == null || authUserId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization.getSecUserId()");
+		}
+		// Check for "system" user
+		CFLibDbKeyHash256 sysAdminId = ICFSecSchema.getSysAdminId();
+		if ((!permissionGranted) && (sysAdminId != null && !sysAdminId.isNull() && sysAdminId.equals(authUserId))) {
+			permissionGranted = true;
+		}
+		else if ((!permissionGranted) && (sysAdminId == null || sysAdminId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "ICFSecSchema.getSysAdminId()");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfSystemGroup(Authorization.getSecUserId(), "deleteurlprotocol");
+		}
+		if (!permissionGranted) {
+			throw new CFLibPermissionDeniedException(getClass(), S_ProcName, ICFIntSchema.SCHEMA_NAME, ICFIntURLProtocolTable.TABLE_NAME, "deleteurlprotocol", authUserId.toString());//"Permission '%4$s' denied attempting to access %1$s.%2$s for user id %3$s"
+		}
+
 		schema.getJpaHooksSchema().getURLProtocolService().deleteByUNameIdx(argKey.getRequiredName());
 	}
 
@@ -205,6 +349,30 @@ public class CFIntJpaURLProtocolTable implements ICFIntURLProtocolTable
 	public void deleteURLProtocolByIsSecureIdx( ICFSecAuthorization Authorization,
 		boolean argIsSecure )
 	{
+		final String S_ProcName = "deleteURLProtocolByIsSecureIdx";
+		if (Authorization == null) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization");
+		}
+		boolean permissionGranted = false;
+		CFLibDbKeyHash256 authUserId = Authorization.getSecUserId();
+		if ((!permissionGranted) && (authUserId == null || authUserId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization.getSecUserId()");
+		}
+		// Check for "system" user
+		CFLibDbKeyHash256 sysAdminId = ICFSecSchema.getSysAdminId();
+		if ((!permissionGranted) && (sysAdminId != null && !sysAdminId.isNull() && sysAdminId.equals(authUserId))) {
+			permissionGranted = true;
+		}
+		else if ((!permissionGranted) && (sysAdminId == null || sysAdminId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "ICFSecSchema.getSysAdminId()");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfSystemGroup(Authorization.getSecUserId(), "deleteurlprotocol");
+		}
+		if (!permissionGranted) {
+			throw new CFLibPermissionDeniedException(getClass(), S_ProcName, ICFIntSchema.SCHEMA_NAME, ICFIntURLProtocolTable.TABLE_NAME, "deleteurlprotocol", authUserId.toString());//"Permission '%4$s' denied attempting to access %1$s.%2$s for user id %3$s"
+		}
+
 		schema.getJpaHooksSchema().getURLProtocolService().deleteByIsSecureIdx(argIsSecure);
 	}
 
@@ -220,6 +388,30 @@ public class CFIntJpaURLProtocolTable implements ICFIntURLProtocolTable
 	public void deleteURLProtocolByIsSecureIdx( ICFSecAuthorization Authorization,
 		ICFIntURLProtocolByIsSecureIdxKey argKey )
 	{
+		final String S_ProcName = "deleteURLProtocolByIsSecureIdx";
+		if (Authorization == null) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization");
+		}
+		boolean permissionGranted = false;
+		CFLibDbKeyHash256 authUserId = Authorization.getSecUserId();
+		if ((!permissionGranted) && (authUserId == null || authUserId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization.getSecUserId()");
+		}
+		// Check for "system" user
+		CFLibDbKeyHash256 sysAdminId = ICFSecSchema.getSysAdminId();
+		if ((!permissionGranted) && (sysAdminId != null && !sysAdminId.isNull() && sysAdminId.equals(authUserId))) {
+			permissionGranted = true;
+		}
+		else if ((!permissionGranted) && (sysAdminId == null || sysAdminId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "ICFSecSchema.getSysAdminId()");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfSystemGroup(Authorization.getSecUserId(), "deleteurlprotocol");
+		}
+		if (!permissionGranted) {
+			throw new CFLibPermissionDeniedException(getClass(), S_ProcName, ICFIntSchema.SCHEMA_NAME, ICFIntURLProtocolTable.TABLE_NAME, "deleteurlprotocol", authUserId.toString());//"Permission '%4$s' denied attempting to access %1$s.%2$s for user id %3$s"
+		}
+
 		schema.getJpaHooksSchema().getURLProtocolService().deleteByIsSecureIdx(argKey.getRequiredIsSecure());
 	}
 
@@ -317,10 +509,34 @@ public class CFIntJpaURLProtocolTable implements ICFIntURLProtocolTable
 	 */
 	@Override
 	public ICFIntURLProtocol[] readAllDerived( ICFSecAuthorization Authorization ) {
-		List<CFIntJpaURLProtocol> results = schema.getJpaHooksSchema().getURLProtocolService().findAll();
-		ICFIntURLProtocol[] retset = new ICFIntURLProtocol[results.size()];
+		final String S_ProcName = "readAllDerived";
+		if (Authorization == null) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization");
+		}
+		boolean permissionGranted = false;
+		CFLibDbKeyHash256 authUserId = Authorization.getSecUserId();
+		if ((!permissionGranted) && (authUserId == null || authUserId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization.getSecUserId()");
+		}
+		// Check for "system" user
+		CFLibDbKeyHash256 sysAdminId = ICFSecSchema.getSysAdminId();
+		if ((!permissionGranted) && (sysAdminId != null && !sysAdminId.isNull() && sysAdminId.equals(authUserId))) {
+			permissionGranted = true;
+		}
+		else if ((!permissionGranted) && (sysAdminId == null || sysAdminId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "ICFSecSchema.getSysAdminId()");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfSystemGroup(Authorization.getSecUserId(), "readurlprotocol");
+		}
+		if (!permissionGranted) {
+			throw new CFLibPermissionDeniedException(getClass(), S_ProcName, ICFIntSchema.SCHEMA_NAME, ICFIntURLProtocolTable.TABLE_NAME, "readurlprotocol", authUserId.toString());//"Permission '%4$s' denied attempting to access %1$s.%2$s for user id %3$s"
+		}
+
+		List<CFIntJpaURLProtocol> retlist = schema.getJpaHooksSchema().getURLProtocolService().findAll();
+		ICFIntURLProtocol[] retset = new ICFIntURLProtocol[retlist.size()];
 		int idx = 0;
-		for (CFIntJpaURLProtocol cur: results) {
+		for (CFIntJpaURLProtocol cur: retlist) {
 			retset[idx++] = cur;
 		}
 		return( retset );
@@ -340,7 +556,32 @@ public class CFIntJpaURLProtocolTable implements ICFIntURLProtocolTable
 	public ICFIntURLProtocol readDerivedByIdIdx( ICFSecAuthorization Authorization,
 		int argURLProtocolId )
 	{
-		return( schema.getJpaHooksSchema().getURLProtocolService().find(argURLProtocolId) );
+		final String S_ProcName = "readDerivedByIdIdx";
+		if (Authorization == null) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization");
+		}
+		boolean permissionGranted = false;
+		CFLibDbKeyHash256 authUserId = Authorization.getSecUserId();
+		if ((!permissionGranted) && (authUserId == null || authUserId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization.getSecUserId()");
+		}
+		// Check for "system" user
+		CFLibDbKeyHash256 sysAdminId = ICFSecSchema.getSysAdminId();
+		if ((!permissionGranted) && (sysAdminId != null && !sysAdminId.isNull() && sysAdminId.equals(authUserId))) {
+			permissionGranted = true;
+		}
+		else if ((!permissionGranted) && (sysAdminId == null || sysAdminId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "ICFSecSchema.getSysAdminId()");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfSystemGroup(Authorization.getSecUserId(), "readurlprotocol");
+		}
+		if (!permissionGranted) {
+			throw new CFLibPermissionDeniedException(getClass(), S_ProcName, ICFIntSchema.SCHEMA_NAME, ICFIntURLProtocolTable.TABLE_NAME, "readurlprotocol", authUserId.toString());//"Permission '%4$s' denied attempting to access %1$s.%2$s for user id %3$s"
+		}
+
+		ICFIntURLProtocol retval = schema.getJpaHooksSchema().getURLProtocolService().find(argURLProtocolId);
+		return( retval );
 	}
 
 	/**
@@ -357,7 +598,32 @@ public class CFIntJpaURLProtocolTable implements ICFIntURLProtocolTable
 	public ICFIntURLProtocol readDerivedByUNameIdx( ICFSecAuthorization Authorization,
 		String argName )
 	{
-		return( schema.getJpaHooksSchema().getURLProtocolService().findByUNameIdx(argName) );
+		final String S_ProcName = "readDerivedByUNameIdx";
+		if (Authorization == null) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization");
+		}
+		boolean permissionGranted = false;
+		CFLibDbKeyHash256 authUserId = Authorization.getSecUserId();
+		if ((!permissionGranted) && (authUserId == null || authUserId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization.getSecUserId()");
+		}
+		// Check for "system" user
+		CFLibDbKeyHash256 sysAdminId = ICFSecSchema.getSysAdminId();
+		if ((!permissionGranted) && (sysAdminId != null && !sysAdminId.isNull() && sysAdminId.equals(authUserId))) {
+			permissionGranted = true;
+		}
+		else if ((!permissionGranted) && (sysAdminId == null || sysAdminId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "ICFSecSchema.getSysAdminId()");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfSystemGroup(Authorization.getSecUserId(), "readurlprotocol");
+		}
+		if (!permissionGranted) {
+			throw new CFLibPermissionDeniedException(getClass(), S_ProcName, ICFIntSchema.SCHEMA_NAME, ICFIntURLProtocolTable.TABLE_NAME, "readurlprotocol", authUserId.toString());//"Permission '%4$s' denied attempting to access %1$s.%2$s for user id %3$s"
+		}
+
+		ICFIntURLProtocol retval = schema.getJpaHooksSchema().getURLProtocolService().findByUNameIdx(argName);
+		return( retval );
 	}
 
 	/**
@@ -373,10 +639,34 @@ public class CFIntJpaURLProtocolTable implements ICFIntURLProtocolTable
 	public ICFIntURLProtocol[] readDerivedByIsSecureIdx( ICFSecAuthorization Authorization,
 		boolean argIsSecure )
 	{
-		List<CFIntJpaURLProtocol> results = schema.getJpaHooksSchema().getURLProtocolService().findByIsSecureIdx(argIsSecure);
-		ICFIntURLProtocol[] retset = new ICFIntURLProtocol[results.size()];
+		final String S_ProcName = "readDerivedByIsSecureIdx";
+		if (Authorization == null) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization");
+		}
+		boolean permissionGranted = false;
+		CFLibDbKeyHash256 authUserId = Authorization.getSecUserId();
+		if ((!permissionGranted) && (authUserId == null || authUserId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization.getSecUserId()");
+		}
+		// Check for "system" user
+		CFLibDbKeyHash256 sysAdminId = ICFSecSchema.getSysAdminId();
+		if ((!permissionGranted) && (sysAdminId != null && !sysAdminId.isNull() && sysAdminId.equals(authUserId))) {
+			permissionGranted = true;
+		}
+		else if ((!permissionGranted) && (sysAdminId == null || sysAdminId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "ICFSecSchema.getSysAdminId()");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfSystemGroup(Authorization.getSecUserId(), "readurlprotocol");
+		}
+		if (!permissionGranted) {
+			throw new CFLibPermissionDeniedException(getClass(), S_ProcName, ICFIntSchema.SCHEMA_NAME, ICFIntURLProtocolTable.TABLE_NAME, "readurlprotocol", authUserId.toString());//"Permission '%4$s' denied attempting to access %1$s.%2$s for user id %3$s"
+		}
+
+		List<CFIntJpaURLProtocol> retlist = schema.getJpaHooksSchema().getURLProtocolService().findByIsSecureIdx(argIsSecure);
+		ICFIntURLProtocol[] retset = new ICFIntURLProtocol[retlist.size()];
 		int idx = 0;
-		for (CFIntJpaURLProtocol cur: results) {
+		for (CFIntJpaURLProtocol cur: retlist) {
 			retset[idx++] = cur;
 		}
 		return( retset );
@@ -398,6 +688,30 @@ public class CFIntJpaURLProtocolTable implements ICFIntURLProtocolTable
 	public ICFIntURLProtocol readRec( ICFSecAuthorization Authorization,
 		Integer PKey )
 	{
+		final String S_ProcName = "readRec";
+		if (Authorization == null) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization");
+		}
+		boolean permissionGranted = false;
+		CFLibDbKeyHash256 authUserId = Authorization.getSecUserId();
+		if ((!permissionGranted) && (authUserId == null || authUserId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization.getSecUserId()");
+		}
+		// Check for "system" user
+		CFLibDbKeyHash256 sysAdminId = ICFSecSchema.getSysAdminId();
+		if ((!permissionGranted) && (sysAdminId != null && !sysAdminId.isNull() && sysAdminId.equals(authUserId))) {
+			permissionGranted = true;
+		}
+		else if ((!permissionGranted) && (sysAdminId == null || sysAdminId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "ICFSecSchema.getSysAdminId()");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfSystemGroup(Authorization.getSecUserId(), "readurlprotocol");
+		}
+		if (!permissionGranted) {
+			throw new CFLibPermissionDeniedException(getClass(), S_ProcName, ICFIntSchema.SCHEMA_NAME, ICFIntURLProtocolTable.TABLE_NAME, "readurlprotocol", authUserId.toString());//"Permission '%4$s' denied attempting to access %1$s.%2$s for user id %3$s"
+		}
+
 		throw new CFLibNotImplementedYetException(getClass(), "readRec");
 	}
 
@@ -417,6 +731,30 @@ public class CFIntJpaURLProtocolTable implements ICFIntURLProtocolTable
 	public ICFIntURLProtocol lockRec( ICFSecAuthorization Authorization,
 		Integer PKey )
 	{
+		final String S_ProcName = "lockRec";
+		if (Authorization == null) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization");
+		}
+		boolean permissionGranted = false;
+		CFLibDbKeyHash256 authUserId = Authorization.getSecUserId();
+		if ((!permissionGranted) && (authUserId == null || authUserId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization.getSecUserId()");
+		}
+		// Check for "system" user
+		CFLibDbKeyHash256 sysAdminId = ICFSecSchema.getSysAdminId();
+		if ((!permissionGranted) && (sysAdminId != null && !sysAdminId.isNull() && sysAdminId.equals(authUserId))) {
+			permissionGranted = true;
+		}
+		else if ((!permissionGranted) && (sysAdminId == null || sysAdminId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "ICFSecSchema.getSysAdminId()");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfSystemGroup(Authorization.getSecUserId(), "updateurlprotocol");
+		}
+		if (!permissionGranted) {
+			throw new CFLibPermissionDeniedException(getClass(), S_ProcName, ICFIntSchema.SCHEMA_NAME, ICFIntURLProtocolTable.TABLE_NAME, "updateurlprotocol", authUserId.toString());//"Permission '%4$s' denied attempting to access %1$s.%2$s for user id %3$s"
+		}
+
 		throw new CFLibNotImplementedYetException(getClass(), "lockRec");
 	}
 
@@ -429,6 +767,30 @@ public class CFIntJpaURLProtocolTable implements ICFIntURLProtocolTable
 	 */
 	@Override
 	public ICFIntURLProtocol[] readAllRec( ICFSecAuthorization Authorization ) {
+		final String S_ProcName = "readAllRec";
+		if (Authorization == null) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization");
+		}
+		boolean permissionGranted = false;
+		CFLibDbKeyHash256 authUserId = Authorization.getSecUserId();
+		if ((!permissionGranted) && (authUserId == null || authUserId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization.getSecUserId()");
+		}
+		// Check for "system" user
+		CFLibDbKeyHash256 sysAdminId = ICFSecSchema.getSysAdminId();
+		if ((!permissionGranted) && (sysAdminId != null && !sysAdminId.isNull() && sysAdminId.equals(authUserId))) {
+			permissionGranted = true;
+		}
+		else if ((!permissionGranted) && (sysAdminId == null || sysAdminId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "ICFSecSchema.getSysAdminId()");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfSystemGroup(Authorization.getSecUserId(), "readurlprotocol");
+		}
+		if (!permissionGranted) {
+			throw new CFLibPermissionDeniedException(getClass(), S_ProcName, ICFIntSchema.SCHEMA_NAME, ICFIntURLProtocolTable.TABLE_NAME, "readurlprotocol", authUserId.toString());//"Permission '%4$s' denied attempting to access %1$s.%2$s for user id %3$s"
+		}
+
 		throw new CFLibNotImplementedYetException(getClass(), "readAllRec");
 	}
 
@@ -449,6 +811,30 @@ public class CFIntJpaURLProtocolTable implements ICFIntURLProtocolTable
 	public ICFIntURLProtocol readRecByIdIdx( ICFSecAuthorization Authorization,
 		int argURLProtocolId )
 	{
+		final String S_ProcName = "readRecByIdIdx";
+		if (Authorization == null) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization");
+		}
+		boolean permissionGranted = false;
+		CFLibDbKeyHash256 authUserId = Authorization.getSecUserId();
+		if ((!permissionGranted) && (authUserId == null || authUserId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization.getSecUserId()");
+		}
+		// Check for "system" user
+		CFLibDbKeyHash256 sysAdminId = ICFSecSchema.getSysAdminId();
+		if ((!permissionGranted) && (sysAdminId != null && !sysAdminId.isNull() && sysAdminId.equals(authUserId))) {
+			permissionGranted = true;
+		}
+		else if ((!permissionGranted) && (sysAdminId == null || sysAdminId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "ICFSecSchema.getSysAdminId()");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfSystemGroup(Authorization.getSecUserId(), "readurlprotocol");
+		}
+		if (!permissionGranted) {
+			throw new CFLibPermissionDeniedException(getClass(), S_ProcName, ICFIntSchema.SCHEMA_NAME, ICFIntURLProtocolTable.TABLE_NAME, "readurlprotocol", authUserId.toString());//"Permission '%4$s' denied attempting to access %1$s.%2$s for user id %3$s"
+		}
+
 		throw new CFLibNotImplementedYetException(getClass(), "readRecByIdIdx");
 	}
 
@@ -468,6 +854,30 @@ public class CFIntJpaURLProtocolTable implements ICFIntURLProtocolTable
 	public ICFIntURLProtocol readRecByUNameIdx( ICFSecAuthorization Authorization,
 		String argName )
 	{
+		final String S_ProcName = "readRecByUNameIdx";
+		if (Authorization == null) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization");
+		}
+		boolean permissionGranted = false;
+		CFLibDbKeyHash256 authUserId = Authorization.getSecUserId();
+		if ((!permissionGranted) && (authUserId == null || authUserId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization.getSecUserId()");
+		}
+		// Check for "system" user
+		CFLibDbKeyHash256 sysAdminId = ICFSecSchema.getSysAdminId();
+		if ((!permissionGranted) && (sysAdminId != null && !sysAdminId.isNull() && sysAdminId.equals(authUserId))) {
+			permissionGranted = true;
+		}
+		else if ((!permissionGranted) && (sysAdminId == null || sysAdminId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "ICFSecSchema.getSysAdminId()");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfSystemGroup(Authorization.getSecUserId(), "readurlprotocol");
+		}
+		if (!permissionGranted) {
+			throw new CFLibPermissionDeniedException(getClass(), S_ProcName, ICFIntSchema.SCHEMA_NAME, ICFIntURLProtocolTable.TABLE_NAME, "readurlprotocol", authUserId.toString());//"Permission '%4$s' denied attempting to access %1$s.%2$s for user id %3$s"
+		}
+
 		throw new CFLibNotImplementedYetException(getClass(), "readRecByUNameIdx");
 	}
 
@@ -486,6 +896,30 @@ public class CFIntJpaURLProtocolTable implements ICFIntURLProtocolTable
 	public ICFIntURLProtocol[] readRecByIsSecureIdx( ICFSecAuthorization Authorization,
 		boolean argIsSecure )
 	{
+		final String S_ProcName = "readRecByIsSecureIdx";
+		if (Authorization == null) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization");
+		}
+		boolean permissionGranted = false;
+		CFLibDbKeyHash256 authUserId = Authorization.getSecUserId();
+		if ((!permissionGranted) && (authUserId == null || authUserId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization.getSecUserId()");
+		}
+		// Check for "system" user
+		CFLibDbKeyHash256 sysAdminId = ICFSecSchema.getSysAdminId();
+		if ((!permissionGranted) && (sysAdminId != null && !sysAdminId.isNull() && sysAdminId.equals(authUserId))) {
+			permissionGranted = true;
+		}
+		else if ((!permissionGranted) && (sysAdminId == null || sysAdminId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "ICFSecSchema.getSysAdminId()");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfSystemGroup(Authorization.getSecUserId(), "readurlprotocol");
+		}
+		if (!permissionGranted) {
+			throw new CFLibPermissionDeniedException(getClass(), S_ProcName, ICFIntSchema.SCHEMA_NAME, ICFIntURLProtocolTable.TABLE_NAME, "readurlprotocol", authUserId.toString());//"Permission '%4$s' denied attempting to access %1$s.%2$s for user id %3$s"
+		}
+
 		throw new CFLibNotImplementedYetException(getClass(), "readRecByIsSecureIdx");
 	}
 }

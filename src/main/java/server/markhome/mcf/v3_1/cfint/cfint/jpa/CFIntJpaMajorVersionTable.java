@@ -88,13 +88,50 @@ public class CFIntJpaMajorVersionTable implements ICFIntMajorVersionTable
 	public ICFIntMajorVersion createMajorVersion( ICFSecAuthorization Authorization,
 		ICFIntMajorVersion rec )
 	{
+		final String S_ProcName = "createMajorVersion";
+		if (Authorization == null) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization");
+		}
+		boolean permissionGranted = false;
+		CFLibDbKeyHash256 authUserId = Authorization.getSecUserId();
+		if ((!permissionGranted) && (authUserId == null || authUserId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization.getSecUserId()");
+		}
+		// Check for "system" user
+		CFLibDbKeyHash256 sysAdminId = ICFSecSchema.getSysAdminId();
+		if ((!permissionGranted) && (sysAdminId != null && !sysAdminId.isNull() && sysAdminId.equals(authUserId))) {
+			permissionGranted = true;
+		}
+		else if ((!permissionGranted) && (sysAdminId == null || sysAdminId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "ICFSecSchema.getSysAdminId()");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfTenantGroup(Authorization.getSecUserId(), Authorization.getSecTenantId(), "createmajorversion");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfClusterGroup(Authorization.getSecUserId(), Authorization.getSecClusterId(), "createmajorversion");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfSystemGroup(Authorization.getSecUserId(), "createmajorversion");
+		}
+		if (!permissionGranted) {
+			throw new CFLibPermissionDeniedException(getClass(), S_ProcName, ICFIntSchema.SCHEMA_NAME, ICFIntMajorVersionTable.TABLE_NAME, "createmajorversion", authUserId.toString());//"Permission '%4$s' denied attempting to access %1$s.%2$s for user id %3$s"
+		}
+
 		if (rec == null) {
 			throw new CFLibNullArgumentException(getClass(), "createMajorVersion", 1, "rec");
 		}
 		else if (rec instanceof CFIntJpaMajorVersion) {
 			CFIntJpaMajorVersion jparec = (CFIntJpaMajorVersion)rec;
-			CFIntJpaMajorVersion created = schema.getJpaHooksSchema().getMajorVersionService().create(jparec);
-			return( created );
+			CFIntJpaMajorVersion retval = schema.getJpaHooksSchema().getMajorVersionService().create(jparec);
+		if(retval != null) {
+			// Retrieve the TenantId from retval and check ICFSec.backingSchema().isMemberOfTenantGroup(auth,TenantId,'readmajorversion'), clear retval to null if not a member
+			CFLibDbKeyHash256 effTenantId = CFLibDbKeyHash256.nullGet();
+			if (!ICFSecSchema.getBackingCFSec().isMemberOfTenantGroup(Authorization.getSecUserId(), effTenantId, "readmajorversion")) {
+				retval = null;
+			}
+		}
+		return( retval );
 		}
 		else {
 			throw new CFLibUnsupportedClassException(getClass(), "createMajorVersion", "rec", rec, "CFIntJpaMajorVersion");
@@ -113,13 +150,50 @@ public class CFIntJpaMajorVersionTable implements ICFIntMajorVersionTable
 	public ICFIntMajorVersion updateMajorVersion( ICFSecAuthorization Authorization,
 		ICFIntMajorVersion rec )
 	{
+		final String S_ProcName = "updateMajorVersion";
+		if (Authorization == null) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization");
+		}
+		boolean permissionGranted = false;
+		CFLibDbKeyHash256 authUserId = Authorization.getSecUserId();
+		if ((!permissionGranted) && (authUserId == null || authUserId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization.getSecUserId()");
+		}
+		// Check for "system" user
+		CFLibDbKeyHash256 sysAdminId = ICFSecSchema.getSysAdminId();
+		if ((!permissionGranted) && (sysAdminId != null && !sysAdminId.isNull() && sysAdminId.equals(authUserId))) {
+			permissionGranted = true;
+		}
+		else if ((!permissionGranted) && (sysAdminId == null || sysAdminId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "ICFSecSchema.getSysAdminId()");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfTenantGroup(Authorization.getSecUserId(), ICFSecSchema.getSysTenantId(), "updatemajorversion");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfClusterGroup(Authorization.getSecUserId(), ICFSecSchema.getSysClusterId(), "updatemajorversion");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfSystemGroup(Authorization.getSecUserId(), "updatemajorversion");
+		}
+		if (!permissionGranted) {
+			throw new CFLibPermissionDeniedException(getClass(), S_ProcName, ICFIntSchema.SCHEMA_NAME, ICFIntMajorVersionTable.TABLE_NAME, "updatemajorversion", authUserId.toString());//"Permission '%4$s' denied attempting to access %1$s.%2$s for user id %3$s"
+		}
+
 		if (rec == null) {
 			throw new CFLibNullArgumentException(getClass(), "updateMajorVersion", 1, "rec");
 		}
 		else if (rec instanceof CFIntJpaMajorVersion) {
 			CFIntJpaMajorVersion jparec = (CFIntJpaMajorVersion)rec;
-			CFIntJpaMajorVersion updated = schema.getJpaHooksSchema().getMajorVersionService().update(jparec);
-			return( updated );
+			CFIntJpaMajorVersion retval = schema.getJpaHooksSchema().getMajorVersionService().update(jparec);
+		if(retval != null) {
+			// Retrieve the TenantId from retval and check ICFSec.backingSchema().isMemberOfTenantGroup(auth,TenantId,'readmajorversion'), clear retval to null if not a member
+			CFLibDbKeyHash256 effTenantId = CFLibDbKeyHash256.nullGet();
+			if (!ICFSecSchema.getBackingCFSec().isMemberOfTenantGroup(Authorization.getSecUserId(), effTenantId, "readmajorversion")) {
+				retval = null;
+			}
+		}
+		return( retval );
 		}
 		else {
 			throw new CFLibUnsupportedClassException(getClass(), "updateMajorVersion", "rec", rec, "CFIntJpaMajorVersion");
@@ -137,6 +211,36 @@ public class CFIntJpaMajorVersionTable implements ICFIntMajorVersionTable
 	public void deleteMajorVersion( ICFSecAuthorization Authorization,
 		ICFIntMajorVersion rec )
 	{
+		final String S_ProcName = "deleteMajorVersion";
+		if (Authorization == null) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization");
+		}
+		boolean permissionGranted = false;
+		CFLibDbKeyHash256 authUserId = Authorization.getSecUserId();
+		if ((!permissionGranted) && (authUserId == null || authUserId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization.getSecUserId()");
+		}
+		// Check for "system" user
+		CFLibDbKeyHash256 sysAdminId = ICFSecSchema.getSysAdminId();
+		if ((!permissionGranted) && (sysAdminId != null && !sysAdminId.isNull() && sysAdminId.equals(authUserId))) {
+			permissionGranted = true;
+		}
+		else if ((!permissionGranted) && (sysAdminId == null || sysAdminId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "ICFSecSchema.getSysAdminId()");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfTenantGroup(Authorization.getSecUserId(), ICFSecSchema.getSysTenantId(), "deletemajorversion");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfClusterGroup(Authorization.getSecUserId(), ICFSecSchema.getSysClusterId(), "deletemajorversion");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfSystemGroup(Authorization.getSecUserId(), "deletemajorversion");
+		}
+		if (!permissionGranted) {
+			throw new CFLibPermissionDeniedException(getClass(), S_ProcName, ICFIntSchema.SCHEMA_NAME, ICFIntMajorVersionTable.TABLE_NAME, "deletemajorversion", authUserId.toString());//"Permission '%4$s' denied attempting to access %1$s.%2$s for user id %3$s"
+		}
+
 		if (rec == null) {
 			return;
 		}
@@ -162,6 +266,36 @@ public class CFIntJpaMajorVersionTable implements ICFIntMajorVersionTable
 	public void deleteMajorVersionByIdIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 argKey )
 	{
+		final String S_ProcName = "deleteMajorVersionByIdIdx";
+		if (Authorization == null) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization");
+		}
+		boolean permissionGranted = false;
+		CFLibDbKeyHash256 authUserId = Authorization.getSecUserId();
+		if ((!permissionGranted) && (authUserId == null || authUserId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization.getSecUserId()");
+		}
+		// Check for "system" user
+		CFLibDbKeyHash256 sysAdminId = ICFSecSchema.getSysAdminId();
+		if ((!permissionGranted) && (sysAdminId != null && !sysAdminId.isNull() && sysAdminId.equals(authUserId))) {
+			permissionGranted = true;
+		}
+		else if ((!permissionGranted) && (sysAdminId == null || sysAdminId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "ICFSecSchema.getSysAdminId()");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfTenantGroup(Authorization.getSecUserId(), ICFSecSchema.getSysTenantId(), "deletemajorversion");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfClusterGroup(Authorization.getSecUserId(), ICFSecSchema.getSysClusterId(), "deletemajorversion");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfSystemGroup(Authorization.getSecUserId(), "deletemajorversion");
+		}
+		if (!permissionGranted) {
+			throw new CFLibPermissionDeniedException(getClass(), S_ProcName, ICFIntSchema.SCHEMA_NAME, ICFIntMajorVersionTable.TABLE_NAME, "deletemajorversion", authUserId.toString());//"Permission '%4$s' denied attempting to access %1$s.%2$s for user id %3$s"
+		}
+
 		schema.getJpaHooksSchema().getMajorVersionService().deleteByIdIdx(argKey);
 	}
 
@@ -176,6 +310,36 @@ public class CFIntJpaMajorVersionTable implements ICFIntMajorVersionTable
 	public void deleteMajorVersionByTenantIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 argTenantId )
 	{
+		final String S_ProcName = "deleteMajorVersionByTenantIdx";
+		if (Authorization == null) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization");
+		}
+		boolean permissionGranted = false;
+		CFLibDbKeyHash256 authUserId = Authorization.getSecUserId();
+		if ((!permissionGranted) && (authUserId == null || authUserId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization.getSecUserId()");
+		}
+		// Check for "system" user
+		CFLibDbKeyHash256 sysAdminId = ICFSecSchema.getSysAdminId();
+		if ((!permissionGranted) && (sysAdminId != null && !sysAdminId.isNull() && sysAdminId.equals(authUserId))) {
+			permissionGranted = true;
+		}
+		else if ((!permissionGranted) && (sysAdminId == null || sysAdminId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "ICFSecSchema.getSysAdminId()");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfTenantGroup(Authorization.getSecUserId(), ICFSecSchema.getSysTenantId(), "deletemajorversion");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfClusterGroup(Authorization.getSecUserId(), ICFSecSchema.getSysClusterId(), "deletemajorversion");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfSystemGroup(Authorization.getSecUserId(), "deletemajorversion");
+		}
+		if (!permissionGranted) {
+			throw new CFLibPermissionDeniedException(getClass(), S_ProcName, ICFIntSchema.SCHEMA_NAME, ICFIntMajorVersionTable.TABLE_NAME, "deletemajorversion", authUserId.toString());//"Permission '%4$s' denied attempting to access %1$s.%2$s for user id %3$s"
+		}
+
 		schema.getJpaHooksSchema().getMajorVersionService().deleteByTenantIdx(argTenantId);
 	}
 
@@ -191,6 +355,36 @@ public class CFIntJpaMajorVersionTable implements ICFIntMajorVersionTable
 	public void deleteMajorVersionByTenantIdx( ICFSecAuthorization Authorization,
 		ICFIntMajorVersionByTenantIdxKey argKey )
 	{
+		final String S_ProcName = "deleteMajorVersionByTenantIdx";
+		if (Authorization == null) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization");
+		}
+		boolean permissionGranted = false;
+		CFLibDbKeyHash256 authUserId = Authorization.getSecUserId();
+		if ((!permissionGranted) && (authUserId == null || authUserId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization.getSecUserId()");
+		}
+		// Check for "system" user
+		CFLibDbKeyHash256 sysAdminId = ICFSecSchema.getSysAdminId();
+		if ((!permissionGranted) && (sysAdminId != null && !sysAdminId.isNull() && sysAdminId.equals(authUserId))) {
+			permissionGranted = true;
+		}
+		else if ((!permissionGranted) && (sysAdminId == null || sysAdminId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "ICFSecSchema.getSysAdminId()");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfTenantGroup(Authorization.getSecUserId(), ICFSecSchema.getSysTenantId(), "deletemajorversion");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfClusterGroup(Authorization.getSecUserId(), ICFSecSchema.getSysClusterId(), "deletemajorversion");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfSystemGroup(Authorization.getSecUserId(), "deletemajorversion");
+		}
+		if (!permissionGranted) {
+			throw new CFLibPermissionDeniedException(getClass(), S_ProcName, ICFIntSchema.SCHEMA_NAME, ICFIntMajorVersionTable.TABLE_NAME, "deletemajorversion", authUserId.toString());//"Permission '%4$s' denied attempting to access %1$s.%2$s for user id %3$s"
+		}
+
 		schema.getJpaHooksSchema().getMajorVersionService().deleteByTenantIdx(argKey.getRequiredTenantId());
 	}
 
@@ -205,6 +399,36 @@ public class CFIntJpaMajorVersionTable implements ICFIntMajorVersionTable
 	public void deleteMajorVersionBySubProjectIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 argSubProjectId )
 	{
+		final String S_ProcName = "deleteMajorVersionBySubProjectIdx";
+		if (Authorization == null) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization");
+		}
+		boolean permissionGranted = false;
+		CFLibDbKeyHash256 authUserId = Authorization.getSecUserId();
+		if ((!permissionGranted) && (authUserId == null || authUserId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization.getSecUserId()");
+		}
+		// Check for "system" user
+		CFLibDbKeyHash256 sysAdminId = ICFSecSchema.getSysAdminId();
+		if ((!permissionGranted) && (sysAdminId != null && !sysAdminId.isNull() && sysAdminId.equals(authUserId))) {
+			permissionGranted = true;
+		}
+		else if ((!permissionGranted) && (sysAdminId == null || sysAdminId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "ICFSecSchema.getSysAdminId()");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfTenantGroup(Authorization.getSecUserId(), ICFSecSchema.getSysTenantId(), "deletemajorversion");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfClusterGroup(Authorization.getSecUserId(), ICFSecSchema.getSysClusterId(), "deletemajorversion");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfSystemGroup(Authorization.getSecUserId(), "deletemajorversion");
+		}
+		if (!permissionGranted) {
+			throw new CFLibPermissionDeniedException(getClass(), S_ProcName, ICFIntSchema.SCHEMA_NAME, ICFIntMajorVersionTable.TABLE_NAME, "deletemajorversion", authUserId.toString());//"Permission '%4$s' denied attempting to access %1$s.%2$s for user id %3$s"
+		}
+
 		schema.getJpaHooksSchema().getMajorVersionService().deleteBySubProjectIdx(argSubProjectId);
 	}
 
@@ -220,6 +444,36 @@ public class CFIntJpaMajorVersionTable implements ICFIntMajorVersionTable
 	public void deleteMajorVersionBySubProjectIdx( ICFSecAuthorization Authorization,
 		ICFIntMajorVersionBySubProjectIdxKey argKey )
 	{
+		final String S_ProcName = "deleteMajorVersionBySubProjectIdx";
+		if (Authorization == null) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization");
+		}
+		boolean permissionGranted = false;
+		CFLibDbKeyHash256 authUserId = Authorization.getSecUserId();
+		if ((!permissionGranted) && (authUserId == null || authUserId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization.getSecUserId()");
+		}
+		// Check for "system" user
+		CFLibDbKeyHash256 sysAdminId = ICFSecSchema.getSysAdminId();
+		if ((!permissionGranted) && (sysAdminId != null && !sysAdminId.isNull() && sysAdminId.equals(authUserId))) {
+			permissionGranted = true;
+		}
+		else if ((!permissionGranted) && (sysAdminId == null || sysAdminId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "ICFSecSchema.getSysAdminId()");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfTenantGroup(Authorization.getSecUserId(), ICFSecSchema.getSysTenantId(), "deletemajorversion");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfClusterGroup(Authorization.getSecUserId(), ICFSecSchema.getSysClusterId(), "deletemajorversion");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfSystemGroup(Authorization.getSecUserId(), "deletemajorversion");
+		}
+		if (!permissionGranted) {
+			throw new CFLibPermissionDeniedException(getClass(), S_ProcName, ICFIntSchema.SCHEMA_NAME, ICFIntMajorVersionTable.TABLE_NAME, "deletemajorversion", authUserId.toString());//"Permission '%4$s' denied attempting to access %1$s.%2$s for user id %3$s"
+		}
+
 		schema.getJpaHooksSchema().getMajorVersionService().deleteBySubProjectIdx(argKey.getRequiredSubProjectId());
 	}
 
@@ -237,6 +491,36 @@ public class CFIntJpaMajorVersionTable implements ICFIntMajorVersionTable
 		CFLibDbKeyHash256 argSubProjectId,
 		String argName )
 	{
+		final String S_ProcName = "deleteMajorVersionByNameIdx";
+		if (Authorization == null) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization");
+		}
+		boolean permissionGranted = false;
+		CFLibDbKeyHash256 authUserId = Authorization.getSecUserId();
+		if ((!permissionGranted) && (authUserId == null || authUserId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization.getSecUserId()");
+		}
+		// Check for "system" user
+		CFLibDbKeyHash256 sysAdminId = ICFSecSchema.getSysAdminId();
+		if ((!permissionGranted) && (sysAdminId != null && !sysAdminId.isNull() && sysAdminId.equals(authUserId))) {
+			permissionGranted = true;
+		}
+		else if ((!permissionGranted) && (sysAdminId == null || sysAdminId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "ICFSecSchema.getSysAdminId()");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfTenantGroup(Authorization.getSecUserId(), ICFSecSchema.getSysTenantId(), "deletemajorversion");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfClusterGroup(Authorization.getSecUserId(), ICFSecSchema.getSysClusterId(), "deletemajorversion");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfSystemGroup(Authorization.getSecUserId(), "deletemajorversion");
+		}
+		if (!permissionGranted) {
+			throw new CFLibPermissionDeniedException(getClass(), S_ProcName, ICFIntSchema.SCHEMA_NAME, ICFIntMajorVersionTable.TABLE_NAME, "deletemajorversion", authUserId.toString());//"Permission '%4$s' denied attempting to access %1$s.%2$s for user id %3$s"
+		}
+
 		schema.getJpaHooksSchema().getMajorVersionService().deleteByNameIdx(argSubProjectId,
 		argName);
 	}
@@ -253,6 +537,36 @@ public class CFIntJpaMajorVersionTable implements ICFIntMajorVersionTable
 	public void deleteMajorVersionByNameIdx( ICFSecAuthorization Authorization,
 		ICFIntMajorVersionByNameIdxKey argKey )
 	{
+		final String S_ProcName = "deleteMajorVersionByNameIdx";
+		if (Authorization == null) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization");
+		}
+		boolean permissionGranted = false;
+		CFLibDbKeyHash256 authUserId = Authorization.getSecUserId();
+		if ((!permissionGranted) && (authUserId == null || authUserId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization.getSecUserId()");
+		}
+		// Check for "system" user
+		CFLibDbKeyHash256 sysAdminId = ICFSecSchema.getSysAdminId();
+		if ((!permissionGranted) && (sysAdminId != null && !sysAdminId.isNull() && sysAdminId.equals(authUserId))) {
+			permissionGranted = true;
+		}
+		else if ((!permissionGranted) && (sysAdminId == null || sysAdminId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "ICFSecSchema.getSysAdminId()");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfTenantGroup(Authorization.getSecUserId(), ICFSecSchema.getSysTenantId(), "deletemajorversion");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfClusterGroup(Authorization.getSecUserId(), ICFSecSchema.getSysClusterId(), "deletemajorversion");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfSystemGroup(Authorization.getSecUserId(), "deletemajorversion");
+		}
+		if (!permissionGranted) {
+			throw new CFLibPermissionDeniedException(getClass(), S_ProcName, ICFIntSchema.SCHEMA_NAME, ICFIntMajorVersionTable.TABLE_NAME, "deletemajorversion", authUserId.toString());//"Permission '%4$s' denied attempting to access %1$s.%2$s for user id %3$s"
+		}
+
 		schema.getJpaHooksSchema().getMajorVersionService().deleteByNameIdx(argKey.getRequiredSubProjectId(),
 			argKey.getRequiredName());
 	}
@@ -377,10 +691,52 @@ public class CFIntJpaMajorVersionTable implements ICFIntMajorVersionTable
 	 */
 	@Override
 	public ICFIntMajorVersion[] readAllDerived( ICFSecAuthorization Authorization ) {
-		List<CFIntJpaMajorVersion> results = schema.getJpaHooksSchema().getMajorVersionService().findAll();
-		ICFIntMajorVersion[] retset = new ICFIntMajorVersion[results.size()];
+		final String S_ProcName = "readAllDerived";
+		if (Authorization == null) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization");
+		}
+		boolean permissionGranted = false;
+		CFLibDbKeyHash256 authUserId = Authorization.getSecUserId();
+		if ((!permissionGranted) && (authUserId == null || authUserId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization.getSecUserId()");
+		}
+		// Check for "system" user
+		CFLibDbKeyHash256 sysAdminId = ICFSecSchema.getSysAdminId();
+		if ((!permissionGranted) && (sysAdminId != null && !sysAdminId.isNull() && sysAdminId.equals(authUserId))) {
+			permissionGranted = true;
+		}
+		else if ((!permissionGranted) && (sysAdminId == null || sysAdminId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "ICFSecSchema.getSysAdminId()");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfTenantGroup(Authorization.getSecUserId(), Authorization.getSecTenantId(), "readmajorversion");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfClusterGroup(Authorization.getSecUserId(), Authorization.getSecClusterId(), "readmajorversion");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfSystemGroup(Authorization.getSecUserId(), "readmajorversion");
+		}
+		if (!permissionGranted) {
+			throw new CFLibPermissionDeniedException(getClass(), S_ProcName, ICFIntSchema.SCHEMA_NAME, ICFIntMajorVersionTable.TABLE_NAME, "readmajorversion", authUserId.toString());//"Permission '%4$s' denied attempting to access %1$s.%2$s for user id %3$s"
+		}
+
+		List<CFIntJpaMajorVersion> retlist = schema.getJpaHooksSchema().getMajorVersionService().findAll();
+		if(retlist != null) {
+			ArrayList<CFIntJpaMajorVersion> finallist = new ArrayList<>();
+			for (var retval: retlist) {
+				if(retval != null) {
+					CFLibDbKeyHash256 effTenantId = CFLibDbKeyHash256.nullGet();
+					if (ICFSecSchema.getBackingCFSec().isMemberOfTenantGroup(Authorization.getSecUserId(), effTenantId, "readmajorversion")) {
+						finallist.add(retval);
+					}
+				}
+			}
+			retlist = finallist;
+		}
+		ICFIntMajorVersion[] retset = new ICFIntMajorVersion[retlist.size()];
 		int idx = 0;
-		for (CFIntJpaMajorVersion cur: results) {
+		for (CFIntJpaMajorVersion cur: retlist) {
 			retset[idx++] = cur;
 		}
 		return( retset );
@@ -400,7 +756,45 @@ public class CFIntJpaMajorVersionTable implements ICFIntMajorVersionTable
 	public ICFIntMajorVersion readDerivedByIdIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 argId )
 	{
-		return( schema.getJpaHooksSchema().getMajorVersionService().find(argId) );
+		final String S_ProcName = "readDerivedByIdIdx";
+		if (Authorization == null) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization");
+		}
+		boolean permissionGranted = false;
+		CFLibDbKeyHash256 authUserId = Authorization.getSecUserId();
+		if ((!permissionGranted) && (authUserId == null || authUserId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization.getSecUserId()");
+		}
+		// Check for "system" user
+		CFLibDbKeyHash256 sysAdminId = ICFSecSchema.getSysAdminId();
+		if ((!permissionGranted) && (sysAdminId != null && !sysAdminId.isNull() && sysAdminId.equals(authUserId))) {
+			permissionGranted = true;
+		}
+		else if ((!permissionGranted) && (sysAdminId == null || sysAdminId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "ICFSecSchema.getSysAdminId()");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfTenantGroup(Authorization.getSecUserId(), Authorization.getSecTenantId(), "readmajorversion");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfClusterGroup(Authorization.getSecUserId(), Authorization.getSecClusterId(), "readmajorversion");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfSystemGroup(Authorization.getSecUserId(), "readmajorversion");
+		}
+		if (!permissionGranted) {
+			throw new CFLibPermissionDeniedException(getClass(), S_ProcName, ICFIntSchema.SCHEMA_NAME, ICFIntMajorVersionTable.TABLE_NAME, "readmajorversion", authUserId.toString());//"Permission '%4$s' denied attempting to access %1$s.%2$s for user id %3$s"
+		}
+
+		ICFIntMajorVersion retval = schema.getJpaHooksSchema().getMajorVersionService().find(argId);
+		if(retval != null) {
+			// Retrieve the TenantId from retval and check ICFSec.backingSchema().isMemberOfTenantGroup(auth,TenantId,'readmajorversion'), clear retval to null if not a member
+			CFLibDbKeyHash256 effTenantId = CFLibDbKeyHash256.nullGet();
+			if (!ICFSecSchema.getBackingCFSec().isMemberOfTenantGroup(Authorization.getSecUserId(), effTenantId, "readmajorversion")) {
+				retval = null;
+			}
+		}
+		return( retval );
 	}
 
 	/**
@@ -416,10 +810,52 @@ public class CFIntJpaMajorVersionTable implements ICFIntMajorVersionTable
 	public ICFIntMajorVersion[] readDerivedByTenantIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 argTenantId )
 	{
-		List<CFIntJpaMajorVersion> results = schema.getJpaHooksSchema().getMajorVersionService().findByTenantIdx(argTenantId);
-		ICFIntMajorVersion[] retset = new ICFIntMajorVersion[results.size()];
+		final String S_ProcName = "readDerivedByTenantIdx";
+		if (Authorization == null) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization");
+		}
+		boolean permissionGranted = false;
+		CFLibDbKeyHash256 authUserId = Authorization.getSecUserId();
+		if ((!permissionGranted) && (authUserId == null || authUserId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization.getSecUserId()");
+		}
+		// Check for "system" user
+		CFLibDbKeyHash256 sysAdminId = ICFSecSchema.getSysAdminId();
+		if ((!permissionGranted) && (sysAdminId != null && !sysAdminId.isNull() && sysAdminId.equals(authUserId))) {
+			permissionGranted = true;
+		}
+		else if ((!permissionGranted) && (sysAdminId == null || sysAdminId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "ICFSecSchema.getSysAdminId()");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfTenantGroup(Authorization.getSecUserId(), Authorization.getSecTenantId(), "readmajorversion");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfClusterGroup(Authorization.getSecUserId(), Authorization.getSecClusterId(), "readmajorversion");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfSystemGroup(Authorization.getSecUserId(), "readmajorversion");
+		}
+		if (!permissionGranted) {
+			throw new CFLibPermissionDeniedException(getClass(), S_ProcName, ICFIntSchema.SCHEMA_NAME, ICFIntMajorVersionTable.TABLE_NAME, "readmajorversion", authUserId.toString());//"Permission '%4$s' denied attempting to access %1$s.%2$s for user id %3$s"
+		}
+
+		List<CFIntJpaMajorVersion> retlist = schema.getJpaHooksSchema().getMajorVersionService().findByTenantIdx(argTenantId);
+		if(retlist != null) {
+			ArrayList<CFIntJpaMajorVersion> finallist = new ArrayList<>();
+			for (var retval: retlist) {
+				if(retval != null) {
+					CFLibDbKeyHash256 effTenantId = CFLibDbKeyHash256.nullGet();
+					if (ICFSecSchema.getBackingCFSec().isMemberOfTenantGroup(Authorization.getSecUserId(), effTenantId, "readmajorversion")) {
+						finallist.add(retval);
+					}
+				}
+			}
+			retlist = finallist;
+		}
+		ICFIntMajorVersion[] retset = new ICFIntMajorVersion[retlist.size()];
 		int idx = 0;
-		for (CFIntJpaMajorVersion cur: results) {
+		for (CFIntJpaMajorVersion cur: retlist) {
 			retset[idx++] = cur;
 		}
 		return( retset );
@@ -438,10 +874,52 @@ public class CFIntJpaMajorVersionTable implements ICFIntMajorVersionTable
 	public ICFIntMajorVersion[] readDerivedBySubProjectIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 argSubProjectId )
 	{
-		List<CFIntJpaMajorVersion> results = schema.getJpaHooksSchema().getMajorVersionService().findBySubProjectIdx(argSubProjectId);
-		ICFIntMajorVersion[] retset = new ICFIntMajorVersion[results.size()];
+		final String S_ProcName = "readDerivedBySubProjectIdx";
+		if (Authorization == null) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization");
+		}
+		boolean permissionGranted = false;
+		CFLibDbKeyHash256 authUserId = Authorization.getSecUserId();
+		if ((!permissionGranted) && (authUserId == null || authUserId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization.getSecUserId()");
+		}
+		// Check for "system" user
+		CFLibDbKeyHash256 sysAdminId = ICFSecSchema.getSysAdminId();
+		if ((!permissionGranted) && (sysAdminId != null && !sysAdminId.isNull() && sysAdminId.equals(authUserId))) {
+			permissionGranted = true;
+		}
+		else if ((!permissionGranted) && (sysAdminId == null || sysAdminId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "ICFSecSchema.getSysAdminId()");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfTenantGroup(Authorization.getSecUserId(), Authorization.getSecTenantId(), "readmajorversion");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfClusterGroup(Authorization.getSecUserId(), Authorization.getSecClusterId(), "readmajorversion");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfSystemGroup(Authorization.getSecUserId(), "readmajorversion");
+		}
+		if (!permissionGranted) {
+			throw new CFLibPermissionDeniedException(getClass(), S_ProcName, ICFIntSchema.SCHEMA_NAME, ICFIntMajorVersionTable.TABLE_NAME, "readmajorversion", authUserId.toString());//"Permission '%4$s' denied attempting to access %1$s.%2$s for user id %3$s"
+		}
+
+		List<CFIntJpaMajorVersion> retlist = schema.getJpaHooksSchema().getMajorVersionService().findBySubProjectIdx(argSubProjectId);
+		if(retlist != null) {
+			ArrayList<CFIntJpaMajorVersion> finallist = new ArrayList<>();
+			for (var retval: retlist) {
+				if(retval != null) {
+					CFLibDbKeyHash256 effTenantId = CFLibDbKeyHash256.nullGet();
+					if (ICFSecSchema.getBackingCFSec().isMemberOfTenantGroup(Authorization.getSecUserId(), effTenantId, "readmajorversion")) {
+						finallist.add(retval);
+					}
+				}
+			}
+			retlist = finallist;
+		}
+		ICFIntMajorVersion[] retset = new ICFIntMajorVersion[retlist.size()];
 		int idx = 0;
-		for (CFIntJpaMajorVersion cur: results) {
+		for (CFIntJpaMajorVersion cur: retlist) {
 			retset[idx++] = cur;
 		}
 		return( retset );
@@ -464,8 +942,46 @@ public class CFIntJpaMajorVersionTable implements ICFIntMajorVersionTable
 		CFLibDbKeyHash256 argSubProjectId,
 		String argName )
 	{
-		return( schema.getJpaHooksSchema().getMajorVersionService().findByNameIdx(argSubProjectId,
-		argName) );
+		final String S_ProcName = "readDerivedByNameIdx";
+		if (Authorization == null) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization");
+		}
+		boolean permissionGranted = false;
+		CFLibDbKeyHash256 authUserId = Authorization.getSecUserId();
+		if ((!permissionGranted) && (authUserId == null || authUserId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization.getSecUserId()");
+		}
+		// Check for "system" user
+		CFLibDbKeyHash256 sysAdminId = ICFSecSchema.getSysAdminId();
+		if ((!permissionGranted) && (sysAdminId != null && !sysAdminId.isNull() && sysAdminId.equals(authUserId))) {
+			permissionGranted = true;
+		}
+		else if ((!permissionGranted) && (sysAdminId == null || sysAdminId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "ICFSecSchema.getSysAdminId()");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfTenantGroup(Authorization.getSecUserId(), Authorization.getSecTenantId(), "readmajorversion");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfClusterGroup(Authorization.getSecUserId(), Authorization.getSecClusterId(), "readmajorversion");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfSystemGroup(Authorization.getSecUserId(), "readmajorversion");
+		}
+		if (!permissionGranted) {
+			throw new CFLibPermissionDeniedException(getClass(), S_ProcName, ICFIntSchema.SCHEMA_NAME, ICFIntMajorVersionTable.TABLE_NAME, "readmajorversion", authUserId.toString());//"Permission '%4$s' denied attempting to access %1$s.%2$s for user id %3$s"
+		}
+
+		ICFIntMajorVersion retval = schema.getJpaHooksSchema().getMajorVersionService().findByNameIdx(argSubProjectId,
+		argName);
+		if(retval != null) {
+			// Retrieve the TenantId from retval and check ICFSec.backingSchema().isMemberOfTenantGroup(auth,TenantId,'readmajorversion'), clear retval to null if not a member
+			CFLibDbKeyHash256 effTenantId = CFLibDbKeyHash256.nullGet();
+			if (!ICFSecSchema.getBackingCFSec().isMemberOfTenantGroup(Authorization.getSecUserId(), effTenantId, "readmajorversion")) {
+				retval = null;
+			}
+		}
+		return( retval );
 	}
 
 	/**
@@ -484,6 +1000,36 @@ public class CFIntJpaMajorVersionTable implements ICFIntMajorVersionTable
 	public ICFIntMajorVersion readRec( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 PKey )
 	{
+		final String S_ProcName = "readRec";
+		if (Authorization == null) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization");
+		}
+		boolean permissionGranted = false;
+		CFLibDbKeyHash256 authUserId = Authorization.getSecUserId();
+		if ((!permissionGranted) && (authUserId == null || authUserId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization.getSecUserId()");
+		}
+		// Check for "system" user
+		CFLibDbKeyHash256 sysAdminId = ICFSecSchema.getSysAdminId();
+		if ((!permissionGranted) && (sysAdminId != null && !sysAdminId.isNull() && sysAdminId.equals(authUserId))) {
+			permissionGranted = true;
+		}
+		else if ((!permissionGranted) && (sysAdminId == null || sysAdminId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "ICFSecSchema.getSysAdminId()");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfTenantGroup(Authorization.getSecUserId(), Authorization.getSecTenantId(), "readmajorversion");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfClusterGroup(Authorization.getSecUserId(), Authorization.getSecClusterId(), "readmajorversion");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfSystemGroup(Authorization.getSecUserId(), "readmajorversion");
+		}
+		if (!permissionGranted) {
+			throw new CFLibPermissionDeniedException(getClass(), S_ProcName, ICFIntSchema.SCHEMA_NAME, ICFIntMajorVersionTable.TABLE_NAME, "readmajorversion", authUserId.toString());//"Permission '%4$s' denied attempting to access %1$s.%2$s for user id %3$s"
+		}
+
 		throw new CFLibNotImplementedYetException(getClass(), "readRec");
 	}
 
@@ -503,6 +1049,36 @@ public class CFIntJpaMajorVersionTable implements ICFIntMajorVersionTable
 	public ICFIntMajorVersion lockRec( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 PKey )
 	{
+		final String S_ProcName = "lockRec";
+		if (Authorization == null) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization");
+		}
+		boolean permissionGranted = false;
+		CFLibDbKeyHash256 authUserId = Authorization.getSecUserId();
+		if ((!permissionGranted) && (authUserId == null || authUserId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization.getSecUserId()");
+		}
+		// Check for "system" user
+		CFLibDbKeyHash256 sysAdminId = ICFSecSchema.getSysAdminId();
+		if ((!permissionGranted) && (sysAdminId != null && !sysAdminId.isNull() && sysAdminId.equals(authUserId))) {
+			permissionGranted = true;
+		}
+		else if ((!permissionGranted) && (sysAdminId == null || sysAdminId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "ICFSecSchema.getSysAdminId()");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfTenantGroup(Authorization.getSecUserId(), ICFSecSchema.getSysTenantId(), "updatemajorversion");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfClusterGroup(Authorization.getSecUserId(), ICFSecSchema.getSysClusterId(), "updatemajorversion");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfSystemGroup(Authorization.getSecUserId(), "updatemajorversion");
+		}
+		if (!permissionGranted) {
+			throw new CFLibPermissionDeniedException(getClass(), S_ProcName, ICFIntSchema.SCHEMA_NAME, ICFIntMajorVersionTable.TABLE_NAME, "updatemajorversion", authUserId.toString());//"Permission '%4$s' denied attempting to access %1$s.%2$s for user id %3$s"
+		}
+
 		throw new CFLibNotImplementedYetException(getClass(), "lockRec");
 	}
 
@@ -515,6 +1091,36 @@ public class CFIntJpaMajorVersionTable implements ICFIntMajorVersionTable
 	 */
 	@Override
 	public ICFIntMajorVersion[] readAllRec( ICFSecAuthorization Authorization ) {
+		final String S_ProcName = "readAllRec";
+		if (Authorization == null) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization");
+		}
+		boolean permissionGranted = false;
+		CFLibDbKeyHash256 authUserId = Authorization.getSecUserId();
+		if ((!permissionGranted) && (authUserId == null || authUserId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization.getSecUserId()");
+		}
+		// Check for "system" user
+		CFLibDbKeyHash256 sysAdminId = ICFSecSchema.getSysAdminId();
+		if ((!permissionGranted) && (sysAdminId != null && !sysAdminId.isNull() && sysAdminId.equals(authUserId))) {
+			permissionGranted = true;
+		}
+		else if ((!permissionGranted) && (sysAdminId == null || sysAdminId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "ICFSecSchema.getSysAdminId()");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfTenantGroup(Authorization.getSecUserId(), Authorization.getSecTenantId(), "readmajorversion");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfClusterGroup(Authorization.getSecUserId(), Authorization.getSecClusterId(), "readmajorversion");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfSystemGroup(Authorization.getSecUserId(), "readmajorversion");
+		}
+		if (!permissionGranted) {
+			throw new CFLibPermissionDeniedException(getClass(), S_ProcName, ICFIntSchema.SCHEMA_NAME, ICFIntMajorVersionTable.TABLE_NAME, "readmajorversion", authUserId.toString());//"Permission '%4$s' denied attempting to access %1$s.%2$s for user id %3$s"
+		}
+
 		throw new CFLibNotImplementedYetException(getClass(), "readAllRec");
 	}
 
@@ -535,6 +1141,36 @@ public class CFIntJpaMajorVersionTable implements ICFIntMajorVersionTable
 	public ICFIntMajorVersion readRecByIdIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 argId )
 	{
+		final String S_ProcName = "readRecByIdIdx";
+		if (Authorization == null) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization");
+		}
+		boolean permissionGranted = false;
+		CFLibDbKeyHash256 authUserId = Authorization.getSecUserId();
+		if ((!permissionGranted) && (authUserId == null || authUserId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization.getSecUserId()");
+		}
+		// Check for "system" user
+		CFLibDbKeyHash256 sysAdminId = ICFSecSchema.getSysAdminId();
+		if ((!permissionGranted) && (sysAdminId != null && !sysAdminId.isNull() && sysAdminId.equals(authUserId))) {
+			permissionGranted = true;
+		}
+		else if ((!permissionGranted) && (sysAdminId == null || sysAdminId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "ICFSecSchema.getSysAdminId()");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfTenantGroup(Authorization.getSecUserId(), Authorization.getSecTenantId(), "readmajorversion");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfClusterGroup(Authorization.getSecUserId(), Authorization.getSecClusterId(), "readmajorversion");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfSystemGroup(Authorization.getSecUserId(), "readmajorversion");
+		}
+		if (!permissionGranted) {
+			throw new CFLibPermissionDeniedException(getClass(), S_ProcName, ICFIntSchema.SCHEMA_NAME, ICFIntMajorVersionTable.TABLE_NAME, "readmajorversion", authUserId.toString());//"Permission '%4$s' denied attempting to access %1$s.%2$s for user id %3$s"
+		}
+
 		throw new CFLibNotImplementedYetException(getClass(), "readRecByIdIdx");
 	}
 
@@ -553,6 +1189,36 @@ public class CFIntJpaMajorVersionTable implements ICFIntMajorVersionTable
 	public ICFIntMajorVersion[] readRecByTenantIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 argTenantId )
 	{
+		final String S_ProcName = "readRecByTenantIdx";
+		if (Authorization == null) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization");
+		}
+		boolean permissionGranted = false;
+		CFLibDbKeyHash256 authUserId = Authorization.getSecUserId();
+		if ((!permissionGranted) && (authUserId == null || authUserId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization.getSecUserId()");
+		}
+		// Check for "system" user
+		CFLibDbKeyHash256 sysAdminId = ICFSecSchema.getSysAdminId();
+		if ((!permissionGranted) && (sysAdminId != null && !sysAdminId.isNull() && sysAdminId.equals(authUserId))) {
+			permissionGranted = true;
+		}
+		else if ((!permissionGranted) && (sysAdminId == null || sysAdminId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "ICFSecSchema.getSysAdminId()");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfTenantGroup(Authorization.getSecUserId(), Authorization.getSecTenantId(), "readmajorversion");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfClusterGroup(Authorization.getSecUserId(), Authorization.getSecClusterId(), "readmajorversion");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfSystemGroup(Authorization.getSecUserId(), "readmajorversion");
+		}
+		if (!permissionGranted) {
+			throw new CFLibPermissionDeniedException(getClass(), S_ProcName, ICFIntSchema.SCHEMA_NAME, ICFIntMajorVersionTable.TABLE_NAME, "readmajorversion", authUserId.toString());//"Permission '%4$s' denied attempting to access %1$s.%2$s for user id %3$s"
+		}
+
 		throw new CFLibNotImplementedYetException(getClass(), "readRecByTenantIdx");
 	}
 
@@ -571,6 +1237,36 @@ public class CFIntJpaMajorVersionTable implements ICFIntMajorVersionTable
 	public ICFIntMajorVersion[] readRecBySubProjectIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 argSubProjectId )
 	{
+		final String S_ProcName = "readRecBySubProjectIdx";
+		if (Authorization == null) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization");
+		}
+		boolean permissionGranted = false;
+		CFLibDbKeyHash256 authUserId = Authorization.getSecUserId();
+		if ((!permissionGranted) && (authUserId == null || authUserId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization.getSecUserId()");
+		}
+		// Check for "system" user
+		CFLibDbKeyHash256 sysAdminId = ICFSecSchema.getSysAdminId();
+		if ((!permissionGranted) && (sysAdminId != null && !sysAdminId.isNull() && sysAdminId.equals(authUserId))) {
+			permissionGranted = true;
+		}
+		else if ((!permissionGranted) && (sysAdminId == null || sysAdminId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "ICFSecSchema.getSysAdminId()");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfTenantGroup(Authorization.getSecUserId(), Authorization.getSecTenantId(), "readmajorversion");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfClusterGroup(Authorization.getSecUserId(), Authorization.getSecClusterId(), "readmajorversion");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfSystemGroup(Authorization.getSecUserId(), "readmajorversion");
+		}
+		if (!permissionGranted) {
+			throw new CFLibPermissionDeniedException(getClass(), S_ProcName, ICFIntSchema.SCHEMA_NAME, ICFIntMajorVersionTable.TABLE_NAME, "readmajorversion", authUserId.toString());//"Permission '%4$s' denied attempting to access %1$s.%2$s for user id %3$s"
+		}
+
 		throw new CFLibNotImplementedYetException(getClass(), "readRecBySubProjectIdx");
 	}
 
@@ -593,6 +1289,36 @@ public class CFIntJpaMajorVersionTable implements ICFIntMajorVersionTable
 		CFLibDbKeyHash256 argSubProjectId,
 		String argName )
 	{
+		final String S_ProcName = "readRecByNameIdx";
+		if (Authorization == null) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization");
+		}
+		boolean permissionGranted = false;
+		CFLibDbKeyHash256 authUserId = Authorization.getSecUserId();
+		if ((!permissionGranted) && (authUserId == null || authUserId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization.getSecUserId()");
+		}
+		// Check for "system" user
+		CFLibDbKeyHash256 sysAdminId = ICFSecSchema.getSysAdminId();
+		if ((!permissionGranted) && (sysAdminId != null && !sysAdminId.isNull() && sysAdminId.equals(authUserId))) {
+			permissionGranted = true;
+		}
+		else if ((!permissionGranted) && (sysAdminId == null || sysAdminId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "ICFSecSchema.getSysAdminId()");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfTenantGroup(Authorization.getSecUserId(), Authorization.getSecTenantId(), "readmajorversion");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfClusterGroup(Authorization.getSecUserId(), Authorization.getSecClusterId(), "readmajorversion");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfSystemGroup(Authorization.getSecUserId(), "readmajorversion");
+		}
+		if (!permissionGranted) {
+			throw new CFLibPermissionDeniedException(getClass(), S_ProcName, ICFIntSchema.SCHEMA_NAME, ICFIntMajorVersionTable.TABLE_NAME, "readmajorversion", authUserId.toString());//"Permission '%4$s' denied attempting to access %1$s.%2$s for user id %3$s"
+		}
+
 		throw new CFLibNotImplementedYetException(getClass(), "readRecByNameIdx");
 	}
 }

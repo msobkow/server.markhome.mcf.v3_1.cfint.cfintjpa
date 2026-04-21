@@ -88,13 +88,50 @@ public class CFIntJpaTopDomainTable implements ICFIntTopDomainTable
 	public ICFIntTopDomain createTopDomain( ICFSecAuthorization Authorization,
 		ICFIntTopDomain rec )
 	{
+		final String S_ProcName = "createTopDomain";
+		if (Authorization == null) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization");
+		}
+		boolean permissionGranted = false;
+		CFLibDbKeyHash256 authUserId = Authorization.getSecUserId();
+		if ((!permissionGranted) && (authUserId == null || authUserId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization.getSecUserId()");
+		}
+		// Check for "system" user
+		CFLibDbKeyHash256 sysAdminId = ICFSecSchema.getSysAdminId();
+		if ((!permissionGranted) && (sysAdminId != null && !sysAdminId.isNull() && sysAdminId.equals(authUserId))) {
+			permissionGranted = true;
+		}
+		else if ((!permissionGranted) && (sysAdminId == null || sysAdminId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "ICFSecSchema.getSysAdminId()");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfTenantGroup(Authorization.getSecUserId(), Authorization.getSecTenantId(), "createtopdomain");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfClusterGroup(Authorization.getSecUserId(), Authorization.getSecClusterId(), "createtopdomain");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfSystemGroup(Authorization.getSecUserId(), "createtopdomain");
+		}
+		if (!permissionGranted) {
+			throw new CFLibPermissionDeniedException(getClass(), S_ProcName, ICFIntSchema.SCHEMA_NAME, ICFIntTopDomainTable.TABLE_NAME, "createtopdomain", authUserId.toString());//"Permission '%4$s' denied attempting to access %1$s.%2$s for user id %3$s"
+		}
+
 		if (rec == null) {
 			throw new CFLibNullArgumentException(getClass(), "createTopDomain", 1, "rec");
 		}
 		else if (rec instanceof CFIntJpaTopDomain) {
 			CFIntJpaTopDomain jparec = (CFIntJpaTopDomain)rec;
-			CFIntJpaTopDomain created = schema.getJpaHooksSchema().getTopDomainService().create(jparec);
-			return( created );
+			CFIntJpaTopDomain retval = schema.getJpaHooksSchema().getTopDomainService().create(jparec);
+		if(retval != null) {
+			// Retrieve the TenantId from retval and check ICFSec.backingSchema().isMemberOfTenantGroup(auth,TenantId,'readtopdomain'), clear retval to null if not a member
+			CFLibDbKeyHash256 effTenantId = CFLibDbKeyHash256.nullGet();
+			if (!ICFSecSchema.getBackingCFSec().isMemberOfTenantGroup(Authorization.getSecUserId(), effTenantId, "readtopdomain")) {
+				retval = null;
+			}
+		}
+		return( retval );
 		}
 		else {
 			throw new CFLibUnsupportedClassException(getClass(), "createTopDomain", "rec", rec, "CFIntJpaTopDomain");
@@ -113,13 +150,50 @@ public class CFIntJpaTopDomainTable implements ICFIntTopDomainTable
 	public ICFIntTopDomain updateTopDomain( ICFSecAuthorization Authorization,
 		ICFIntTopDomain rec )
 	{
+		final String S_ProcName = "updateTopDomain";
+		if (Authorization == null) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization");
+		}
+		boolean permissionGranted = false;
+		CFLibDbKeyHash256 authUserId = Authorization.getSecUserId();
+		if ((!permissionGranted) && (authUserId == null || authUserId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization.getSecUserId()");
+		}
+		// Check for "system" user
+		CFLibDbKeyHash256 sysAdminId = ICFSecSchema.getSysAdminId();
+		if ((!permissionGranted) && (sysAdminId != null && !sysAdminId.isNull() && sysAdminId.equals(authUserId))) {
+			permissionGranted = true;
+		}
+		else if ((!permissionGranted) && (sysAdminId == null || sysAdminId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "ICFSecSchema.getSysAdminId()");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfTenantGroup(Authorization.getSecUserId(), ICFSecSchema.getSysTenantId(), "updatetopdomain");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfClusterGroup(Authorization.getSecUserId(), ICFSecSchema.getSysClusterId(), "updatetopdomain");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfSystemGroup(Authorization.getSecUserId(), "updatetopdomain");
+		}
+		if (!permissionGranted) {
+			throw new CFLibPermissionDeniedException(getClass(), S_ProcName, ICFIntSchema.SCHEMA_NAME, ICFIntTopDomainTable.TABLE_NAME, "updatetopdomain", authUserId.toString());//"Permission '%4$s' denied attempting to access %1$s.%2$s for user id %3$s"
+		}
+
 		if (rec == null) {
 			throw new CFLibNullArgumentException(getClass(), "updateTopDomain", 1, "rec");
 		}
 		else if (rec instanceof CFIntJpaTopDomain) {
 			CFIntJpaTopDomain jparec = (CFIntJpaTopDomain)rec;
-			CFIntJpaTopDomain updated = schema.getJpaHooksSchema().getTopDomainService().update(jparec);
-			return( updated );
+			CFIntJpaTopDomain retval = schema.getJpaHooksSchema().getTopDomainService().update(jparec);
+		if(retval != null) {
+			// Retrieve the TenantId from retval and check ICFSec.backingSchema().isMemberOfTenantGroup(auth,TenantId,'readtopdomain'), clear retval to null if not a member
+			CFLibDbKeyHash256 effTenantId = CFLibDbKeyHash256.nullGet();
+			if (!ICFSecSchema.getBackingCFSec().isMemberOfTenantGroup(Authorization.getSecUserId(), effTenantId, "readtopdomain")) {
+				retval = null;
+			}
+		}
+		return( retval );
 		}
 		else {
 			throw new CFLibUnsupportedClassException(getClass(), "updateTopDomain", "rec", rec, "CFIntJpaTopDomain");
@@ -137,6 +211,36 @@ public class CFIntJpaTopDomainTable implements ICFIntTopDomainTable
 	public void deleteTopDomain( ICFSecAuthorization Authorization,
 		ICFIntTopDomain rec )
 	{
+		final String S_ProcName = "deleteTopDomain";
+		if (Authorization == null) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization");
+		}
+		boolean permissionGranted = false;
+		CFLibDbKeyHash256 authUserId = Authorization.getSecUserId();
+		if ((!permissionGranted) && (authUserId == null || authUserId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization.getSecUserId()");
+		}
+		// Check for "system" user
+		CFLibDbKeyHash256 sysAdminId = ICFSecSchema.getSysAdminId();
+		if ((!permissionGranted) && (sysAdminId != null && !sysAdminId.isNull() && sysAdminId.equals(authUserId))) {
+			permissionGranted = true;
+		}
+		else if ((!permissionGranted) && (sysAdminId == null || sysAdminId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "ICFSecSchema.getSysAdminId()");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfTenantGroup(Authorization.getSecUserId(), ICFSecSchema.getSysTenantId(), "deletetopdomain");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfClusterGroup(Authorization.getSecUserId(), ICFSecSchema.getSysClusterId(), "deletetopdomain");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfSystemGroup(Authorization.getSecUserId(), "deletetopdomain");
+		}
+		if (!permissionGranted) {
+			throw new CFLibPermissionDeniedException(getClass(), S_ProcName, ICFIntSchema.SCHEMA_NAME, ICFIntTopDomainTable.TABLE_NAME, "deletetopdomain", authUserId.toString());//"Permission '%4$s' denied attempting to access %1$s.%2$s for user id %3$s"
+		}
+
 		if (rec == null) {
 			return;
 		}
@@ -162,6 +266,36 @@ public class CFIntJpaTopDomainTable implements ICFIntTopDomainTable
 	public void deleteTopDomainByIdIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 argKey )
 	{
+		final String S_ProcName = "deleteTopDomainByIdIdx";
+		if (Authorization == null) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization");
+		}
+		boolean permissionGranted = false;
+		CFLibDbKeyHash256 authUserId = Authorization.getSecUserId();
+		if ((!permissionGranted) && (authUserId == null || authUserId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization.getSecUserId()");
+		}
+		// Check for "system" user
+		CFLibDbKeyHash256 sysAdminId = ICFSecSchema.getSysAdminId();
+		if ((!permissionGranted) && (sysAdminId != null && !sysAdminId.isNull() && sysAdminId.equals(authUserId))) {
+			permissionGranted = true;
+		}
+		else if ((!permissionGranted) && (sysAdminId == null || sysAdminId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "ICFSecSchema.getSysAdminId()");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfTenantGroup(Authorization.getSecUserId(), ICFSecSchema.getSysTenantId(), "deletetopdomain");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfClusterGroup(Authorization.getSecUserId(), ICFSecSchema.getSysClusterId(), "deletetopdomain");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfSystemGroup(Authorization.getSecUserId(), "deletetopdomain");
+		}
+		if (!permissionGranted) {
+			throw new CFLibPermissionDeniedException(getClass(), S_ProcName, ICFIntSchema.SCHEMA_NAME, ICFIntTopDomainTable.TABLE_NAME, "deletetopdomain", authUserId.toString());//"Permission '%4$s' denied attempting to access %1$s.%2$s for user id %3$s"
+		}
+
 		schema.getJpaHooksSchema().getTopDomainService().deleteByIdIdx(argKey);
 	}
 
@@ -176,6 +310,36 @@ public class CFIntJpaTopDomainTable implements ICFIntTopDomainTable
 	public void deleteTopDomainByTenantIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 argTenantId )
 	{
+		final String S_ProcName = "deleteTopDomainByTenantIdx";
+		if (Authorization == null) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization");
+		}
+		boolean permissionGranted = false;
+		CFLibDbKeyHash256 authUserId = Authorization.getSecUserId();
+		if ((!permissionGranted) && (authUserId == null || authUserId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization.getSecUserId()");
+		}
+		// Check for "system" user
+		CFLibDbKeyHash256 sysAdminId = ICFSecSchema.getSysAdminId();
+		if ((!permissionGranted) && (sysAdminId != null && !sysAdminId.isNull() && sysAdminId.equals(authUserId))) {
+			permissionGranted = true;
+		}
+		else if ((!permissionGranted) && (sysAdminId == null || sysAdminId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "ICFSecSchema.getSysAdminId()");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfTenantGroup(Authorization.getSecUserId(), ICFSecSchema.getSysTenantId(), "deletetopdomain");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfClusterGroup(Authorization.getSecUserId(), ICFSecSchema.getSysClusterId(), "deletetopdomain");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfSystemGroup(Authorization.getSecUserId(), "deletetopdomain");
+		}
+		if (!permissionGranted) {
+			throw new CFLibPermissionDeniedException(getClass(), S_ProcName, ICFIntSchema.SCHEMA_NAME, ICFIntTopDomainTable.TABLE_NAME, "deletetopdomain", authUserId.toString());//"Permission '%4$s' denied attempting to access %1$s.%2$s for user id %3$s"
+		}
+
 		schema.getJpaHooksSchema().getTopDomainService().deleteByTenantIdx(argTenantId);
 	}
 
@@ -191,6 +355,36 @@ public class CFIntJpaTopDomainTable implements ICFIntTopDomainTable
 	public void deleteTopDomainByTenantIdx( ICFSecAuthorization Authorization,
 		ICFIntTopDomainByTenantIdxKey argKey )
 	{
+		final String S_ProcName = "deleteTopDomainByTenantIdx";
+		if (Authorization == null) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization");
+		}
+		boolean permissionGranted = false;
+		CFLibDbKeyHash256 authUserId = Authorization.getSecUserId();
+		if ((!permissionGranted) && (authUserId == null || authUserId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization.getSecUserId()");
+		}
+		// Check for "system" user
+		CFLibDbKeyHash256 sysAdminId = ICFSecSchema.getSysAdminId();
+		if ((!permissionGranted) && (sysAdminId != null && !sysAdminId.isNull() && sysAdminId.equals(authUserId))) {
+			permissionGranted = true;
+		}
+		else if ((!permissionGranted) && (sysAdminId == null || sysAdminId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "ICFSecSchema.getSysAdminId()");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfTenantGroup(Authorization.getSecUserId(), ICFSecSchema.getSysTenantId(), "deletetopdomain");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfClusterGroup(Authorization.getSecUserId(), ICFSecSchema.getSysClusterId(), "deletetopdomain");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfSystemGroup(Authorization.getSecUserId(), "deletetopdomain");
+		}
+		if (!permissionGranted) {
+			throw new CFLibPermissionDeniedException(getClass(), S_ProcName, ICFIntSchema.SCHEMA_NAME, ICFIntTopDomainTable.TABLE_NAME, "deletetopdomain", authUserId.toString());//"Permission '%4$s' denied attempting to access %1$s.%2$s for user id %3$s"
+		}
+
 		schema.getJpaHooksSchema().getTopDomainService().deleteByTenantIdx(argKey.getRequiredTenantId());
 	}
 
@@ -205,6 +399,36 @@ public class CFIntJpaTopDomainTable implements ICFIntTopDomainTable
 	public void deleteTopDomainByTldIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 argTldId )
 	{
+		final String S_ProcName = "deleteTopDomainByTldIdx";
+		if (Authorization == null) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization");
+		}
+		boolean permissionGranted = false;
+		CFLibDbKeyHash256 authUserId = Authorization.getSecUserId();
+		if ((!permissionGranted) && (authUserId == null || authUserId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization.getSecUserId()");
+		}
+		// Check for "system" user
+		CFLibDbKeyHash256 sysAdminId = ICFSecSchema.getSysAdminId();
+		if ((!permissionGranted) && (sysAdminId != null && !sysAdminId.isNull() && sysAdminId.equals(authUserId))) {
+			permissionGranted = true;
+		}
+		else if ((!permissionGranted) && (sysAdminId == null || sysAdminId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "ICFSecSchema.getSysAdminId()");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfTenantGroup(Authorization.getSecUserId(), ICFSecSchema.getSysTenantId(), "deletetopdomain");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfClusterGroup(Authorization.getSecUserId(), ICFSecSchema.getSysClusterId(), "deletetopdomain");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfSystemGroup(Authorization.getSecUserId(), "deletetopdomain");
+		}
+		if (!permissionGranted) {
+			throw new CFLibPermissionDeniedException(getClass(), S_ProcName, ICFIntSchema.SCHEMA_NAME, ICFIntTopDomainTable.TABLE_NAME, "deletetopdomain", authUserId.toString());//"Permission '%4$s' denied attempting to access %1$s.%2$s for user id %3$s"
+		}
+
 		schema.getJpaHooksSchema().getTopDomainService().deleteByTldIdx(argTldId);
 	}
 
@@ -220,6 +444,36 @@ public class CFIntJpaTopDomainTable implements ICFIntTopDomainTable
 	public void deleteTopDomainByTldIdx( ICFSecAuthorization Authorization,
 		ICFIntTopDomainByTldIdxKey argKey )
 	{
+		final String S_ProcName = "deleteTopDomainByTldIdx";
+		if (Authorization == null) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization");
+		}
+		boolean permissionGranted = false;
+		CFLibDbKeyHash256 authUserId = Authorization.getSecUserId();
+		if ((!permissionGranted) && (authUserId == null || authUserId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization.getSecUserId()");
+		}
+		// Check for "system" user
+		CFLibDbKeyHash256 sysAdminId = ICFSecSchema.getSysAdminId();
+		if ((!permissionGranted) && (sysAdminId != null && !sysAdminId.isNull() && sysAdminId.equals(authUserId))) {
+			permissionGranted = true;
+		}
+		else if ((!permissionGranted) && (sysAdminId == null || sysAdminId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "ICFSecSchema.getSysAdminId()");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfTenantGroup(Authorization.getSecUserId(), ICFSecSchema.getSysTenantId(), "deletetopdomain");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfClusterGroup(Authorization.getSecUserId(), ICFSecSchema.getSysClusterId(), "deletetopdomain");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfSystemGroup(Authorization.getSecUserId(), "deletetopdomain");
+		}
+		if (!permissionGranted) {
+			throw new CFLibPermissionDeniedException(getClass(), S_ProcName, ICFIntSchema.SCHEMA_NAME, ICFIntTopDomainTable.TABLE_NAME, "deletetopdomain", authUserId.toString());//"Permission '%4$s' denied attempting to access %1$s.%2$s for user id %3$s"
+		}
+
 		schema.getJpaHooksSchema().getTopDomainService().deleteByTldIdx(argKey.getRequiredTldId());
 	}
 
@@ -237,6 +491,36 @@ public class CFIntJpaTopDomainTable implements ICFIntTopDomainTable
 		CFLibDbKeyHash256 argTldId,
 		String argName )
 	{
+		final String S_ProcName = "deleteTopDomainByNameIdx";
+		if (Authorization == null) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization");
+		}
+		boolean permissionGranted = false;
+		CFLibDbKeyHash256 authUserId = Authorization.getSecUserId();
+		if ((!permissionGranted) && (authUserId == null || authUserId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization.getSecUserId()");
+		}
+		// Check for "system" user
+		CFLibDbKeyHash256 sysAdminId = ICFSecSchema.getSysAdminId();
+		if ((!permissionGranted) && (sysAdminId != null && !sysAdminId.isNull() && sysAdminId.equals(authUserId))) {
+			permissionGranted = true;
+		}
+		else if ((!permissionGranted) && (sysAdminId == null || sysAdminId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "ICFSecSchema.getSysAdminId()");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfTenantGroup(Authorization.getSecUserId(), ICFSecSchema.getSysTenantId(), "deletetopdomain");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfClusterGroup(Authorization.getSecUserId(), ICFSecSchema.getSysClusterId(), "deletetopdomain");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfSystemGroup(Authorization.getSecUserId(), "deletetopdomain");
+		}
+		if (!permissionGranted) {
+			throw new CFLibPermissionDeniedException(getClass(), S_ProcName, ICFIntSchema.SCHEMA_NAME, ICFIntTopDomainTable.TABLE_NAME, "deletetopdomain", authUserId.toString());//"Permission '%4$s' denied attempting to access %1$s.%2$s for user id %3$s"
+		}
+
 		schema.getJpaHooksSchema().getTopDomainService().deleteByNameIdx(argTldId,
 		argName);
 	}
@@ -253,6 +537,36 @@ public class CFIntJpaTopDomainTable implements ICFIntTopDomainTable
 	public void deleteTopDomainByNameIdx( ICFSecAuthorization Authorization,
 		ICFIntTopDomainByNameIdxKey argKey )
 	{
+		final String S_ProcName = "deleteTopDomainByNameIdx";
+		if (Authorization == null) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization");
+		}
+		boolean permissionGranted = false;
+		CFLibDbKeyHash256 authUserId = Authorization.getSecUserId();
+		if ((!permissionGranted) && (authUserId == null || authUserId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization.getSecUserId()");
+		}
+		// Check for "system" user
+		CFLibDbKeyHash256 sysAdminId = ICFSecSchema.getSysAdminId();
+		if ((!permissionGranted) && (sysAdminId != null && !sysAdminId.isNull() && sysAdminId.equals(authUserId))) {
+			permissionGranted = true;
+		}
+		else if ((!permissionGranted) && (sysAdminId == null || sysAdminId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "ICFSecSchema.getSysAdminId()");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfTenantGroup(Authorization.getSecUserId(), ICFSecSchema.getSysTenantId(), "deletetopdomain");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfClusterGroup(Authorization.getSecUserId(), ICFSecSchema.getSysClusterId(), "deletetopdomain");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfSystemGroup(Authorization.getSecUserId(), "deletetopdomain");
+		}
+		if (!permissionGranted) {
+			throw new CFLibPermissionDeniedException(getClass(), S_ProcName, ICFIntSchema.SCHEMA_NAME, ICFIntTopDomainTable.TABLE_NAME, "deletetopdomain", authUserId.toString());//"Permission '%4$s' denied attempting to access %1$s.%2$s for user id %3$s"
+		}
+
 		schema.getJpaHooksSchema().getTopDomainService().deleteByNameIdx(argKey.getRequiredTldId(),
 			argKey.getRequiredName());
 	}
@@ -377,10 +691,52 @@ public class CFIntJpaTopDomainTable implements ICFIntTopDomainTable
 	 */
 	@Override
 	public ICFIntTopDomain[] readAllDerived( ICFSecAuthorization Authorization ) {
-		List<CFIntJpaTopDomain> results = schema.getJpaHooksSchema().getTopDomainService().findAll();
-		ICFIntTopDomain[] retset = new ICFIntTopDomain[results.size()];
+		final String S_ProcName = "readAllDerived";
+		if (Authorization == null) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization");
+		}
+		boolean permissionGranted = false;
+		CFLibDbKeyHash256 authUserId = Authorization.getSecUserId();
+		if ((!permissionGranted) && (authUserId == null || authUserId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization.getSecUserId()");
+		}
+		// Check for "system" user
+		CFLibDbKeyHash256 sysAdminId = ICFSecSchema.getSysAdminId();
+		if ((!permissionGranted) && (sysAdminId != null && !sysAdminId.isNull() && sysAdminId.equals(authUserId))) {
+			permissionGranted = true;
+		}
+		else if ((!permissionGranted) && (sysAdminId == null || sysAdminId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "ICFSecSchema.getSysAdminId()");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfTenantGroup(Authorization.getSecUserId(), Authorization.getSecTenantId(), "readtopdomain");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfClusterGroup(Authorization.getSecUserId(), Authorization.getSecClusterId(), "readtopdomain");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfSystemGroup(Authorization.getSecUserId(), "readtopdomain");
+		}
+		if (!permissionGranted) {
+			throw new CFLibPermissionDeniedException(getClass(), S_ProcName, ICFIntSchema.SCHEMA_NAME, ICFIntTopDomainTable.TABLE_NAME, "readtopdomain", authUserId.toString());//"Permission '%4$s' denied attempting to access %1$s.%2$s for user id %3$s"
+		}
+
+		List<CFIntJpaTopDomain> retlist = schema.getJpaHooksSchema().getTopDomainService().findAll();
+		if(retlist != null) {
+			ArrayList<CFIntJpaTopDomain> finallist = new ArrayList<>();
+			for (var retval: retlist) {
+				if(retval != null) {
+					CFLibDbKeyHash256 effTenantId = CFLibDbKeyHash256.nullGet();
+					if (ICFSecSchema.getBackingCFSec().isMemberOfTenantGroup(Authorization.getSecUserId(), effTenantId, "readtopdomain")) {
+						finallist.add(retval);
+					}
+				}
+			}
+			retlist = finallist;
+		}
+		ICFIntTopDomain[] retset = new ICFIntTopDomain[retlist.size()];
 		int idx = 0;
-		for (CFIntJpaTopDomain cur: results) {
+		for (CFIntJpaTopDomain cur: retlist) {
 			retset[idx++] = cur;
 		}
 		return( retset );
@@ -400,7 +756,45 @@ public class CFIntJpaTopDomainTable implements ICFIntTopDomainTable
 	public ICFIntTopDomain readDerivedByIdIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 argId )
 	{
-		return( schema.getJpaHooksSchema().getTopDomainService().find(argId) );
+		final String S_ProcName = "readDerivedByIdIdx";
+		if (Authorization == null) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization");
+		}
+		boolean permissionGranted = false;
+		CFLibDbKeyHash256 authUserId = Authorization.getSecUserId();
+		if ((!permissionGranted) && (authUserId == null || authUserId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization.getSecUserId()");
+		}
+		// Check for "system" user
+		CFLibDbKeyHash256 sysAdminId = ICFSecSchema.getSysAdminId();
+		if ((!permissionGranted) && (sysAdminId != null && !sysAdminId.isNull() && sysAdminId.equals(authUserId))) {
+			permissionGranted = true;
+		}
+		else if ((!permissionGranted) && (sysAdminId == null || sysAdminId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "ICFSecSchema.getSysAdminId()");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfTenantGroup(Authorization.getSecUserId(), Authorization.getSecTenantId(), "readtopdomain");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfClusterGroup(Authorization.getSecUserId(), Authorization.getSecClusterId(), "readtopdomain");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfSystemGroup(Authorization.getSecUserId(), "readtopdomain");
+		}
+		if (!permissionGranted) {
+			throw new CFLibPermissionDeniedException(getClass(), S_ProcName, ICFIntSchema.SCHEMA_NAME, ICFIntTopDomainTable.TABLE_NAME, "readtopdomain", authUserId.toString());//"Permission '%4$s' denied attempting to access %1$s.%2$s for user id %3$s"
+		}
+
+		ICFIntTopDomain retval = schema.getJpaHooksSchema().getTopDomainService().find(argId);
+		if(retval != null) {
+			// Retrieve the TenantId from retval and check ICFSec.backingSchema().isMemberOfTenantGroup(auth,TenantId,'readtopdomain'), clear retval to null if not a member
+			CFLibDbKeyHash256 effTenantId = CFLibDbKeyHash256.nullGet();
+			if (!ICFSecSchema.getBackingCFSec().isMemberOfTenantGroup(Authorization.getSecUserId(), effTenantId, "readtopdomain")) {
+				retval = null;
+			}
+		}
+		return( retval );
 	}
 
 	/**
@@ -416,10 +810,52 @@ public class CFIntJpaTopDomainTable implements ICFIntTopDomainTable
 	public ICFIntTopDomain[] readDerivedByTenantIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 argTenantId )
 	{
-		List<CFIntJpaTopDomain> results = schema.getJpaHooksSchema().getTopDomainService().findByTenantIdx(argTenantId);
-		ICFIntTopDomain[] retset = new ICFIntTopDomain[results.size()];
+		final String S_ProcName = "readDerivedByTenantIdx";
+		if (Authorization == null) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization");
+		}
+		boolean permissionGranted = false;
+		CFLibDbKeyHash256 authUserId = Authorization.getSecUserId();
+		if ((!permissionGranted) && (authUserId == null || authUserId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization.getSecUserId()");
+		}
+		// Check for "system" user
+		CFLibDbKeyHash256 sysAdminId = ICFSecSchema.getSysAdminId();
+		if ((!permissionGranted) && (sysAdminId != null && !sysAdminId.isNull() && sysAdminId.equals(authUserId))) {
+			permissionGranted = true;
+		}
+		else if ((!permissionGranted) && (sysAdminId == null || sysAdminId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "ICFSecSchema.getSysAdminId()");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfTenantGroup(Authorization.getSecUserId(), Authorization.getSecTenantId(), "readtopdomain");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfClusterGroup(Authorization.getSecUserId(), Authorization.getSecClusterId(), "readtopdomain");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfSystemGroup(Authorization.getSecUserId(), "readtopdomain");
+		}
+		if (!permissionGranted) {
+			throw new CFLibPermissionDeniedException(getClass(), S_ProcName, ICFIntSchema.SCHEMA_NAME, ICFIntTopDomainTable.TABLE_NAME, "readtopdomain", authUserId.toString());//"Permission '%4$s' denied attempting to access %1$s.%2$s for user id %3$s"
+		}
+
+		List<CFIntJpaTopDomain> retlist = schema.getJpaHooksSchema().getTopDomainService().findByTenantIdx(argTenantId);
+		if(retlist != null) {
+			ArrayList<CFIntJpaTopDomain> finallist = new ArrayList<>();
+			for (var retval: retlist) {
+				if(retval != null) {
+					CFLibDbKeyHash256 effTenantId = CFLibDbKeyHash256.nullGet();
+					if (ICFSecSchema.getBackingCFSec().isMemberOfTenantGroup(Authorization.getSecUserId(), effTenantId, "readtopdomain")) {
+						finallist.add(retval);
+					}
+				}
+			}
+			retlist = finallist;
+		}
+		ICFIntTopDomain[] retset = new ICFIntTopDomain[retlist.size()];
 		int idx = 0;
-		for (CFIntJpaTopDomain cur: results) {
+		for (CFIntJpaTopDomain cur: retlist) {
 			retset[idx++] = cur;
 		}
 		return( retset );
@@ -438,10 +874,52 @@ public class CFIntJpaTopDomainTable implements ICFIntTopDomainTable
 	public ICFIntTopDomain[] readDerivedByTldIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 argTldId )
 	{
-		List<CFIntJpaTopDomain> results = schema.getJpaHooksSchema().getTopDomainService().findByTldIdx(argTldId);
-		ICFIntTopDomain[] retset = new ICFIntTopDomain[results.size()];
+		final String S_ProcName = "readDerivedByTldIdx";
+		if (Authorization == null) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization");
+		}
+		boolean permissionGranted = false;
+		CFLibDbKeyHash256 authUserId = Authorization.getSecUserId();
+		if ((!permissionGranted) && (authUserId == null || authUserId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization.getSecUserId()");
+		}
+		// Check for "system" user
+		CFLibDbKeyHash256 sysAdminId = ICFSecSchema.getSysAdminId();
+		if ((!permissionGranted) && (sysAdminId != null && !sysAdminId.isNull() && sysAdminId.equals(authUserId))) {
+			permissionGranted = true;
+		}
+		else if ((!permissionGranted) && (sysAdminId == null || sysAdminId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "ICFSecSchema.getSysAdminId()");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfTenantGroup(Authorization.getSecUserId(), Authorization.getSecTenantId(), "readtopdomain");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfClusterGroup(Authorization.getSecUserId(), Authorization.getSecClusterId(), "readtopdomain");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfSystemGroup(Authorization.getSecUserId(), "readtopdomain");
+		}
+		if (!permissionGranted) {
+			throw new CFLibPermissionDeniedException(getClass(), S_ProcName, ICFIntSchema.SCHEMA_NAME, ICFIntTopDomainTable.TABLE_NAME, "readtopdomain", authUserId.toString());//"Permission '%4$s' denied attempting to access %1$s.%2$s for user id %3$s"
+		}
+
+		List<CFIntJpaTopDomain> retlist = schema.getJpaHooksSchema().getTopDomainService().findByTldIdx(argTldId);
+		if(retlist != null) {
+			ArrayList<CFIntJpaTopDomain> finallist = new ArrayList<>();
+			for (var retval: retlist) {
+				if(retval != null) {
+					CFLibDbKeyHash256 effTenantId = CFLibDbKeyHash256.nullGet();
+					if (ICFSecSchema.getBackingCFSec().isMemberOfTenantGroup(Authorization.getSecUserId(), effTenantId, "readtopdomain")) {
+						finallist.add(retval);
+					}
+				}
+			}
+			retlist = finallist;
+		}
+		ICFIntTopDomain[] retset = new ICFIntTopDomain[retlist.size()];
 		int idx = 0;
-		for (CFIntJpaTopDomain cur: results) {
+		for (CFIntJpaTopDomain cur: retlist) {
 			retset[idx++] = cur;
 		}
 		return( retset );
@@ -464,8 +942,46 @@ public class CFIntJpaTopDomainTable implements ICFIntTopDomainTable
 		CFLibDbKeyHash256 argTldId,
 		String argName )
 	{
-		return( schema.getJpaHooksSchema().getTopDomainService().findByNameIdx(argTldId,
-		argName) );
+		final String S_ProcName = "readDerivedByNameIdx";
+		if (Authorization == null) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization");
+		}
+		boolean permissionGranted = false;
+		CFLibDbKeyHash256 authUserId = Authorization.getSecUserId();
+		if ((!permissionGranted) && (authUserId == null || authUserId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization.getSecUserId()");
+		}
+		// Check for "system" user
+		CFLibDbKeyHash256 sysAdminId = ICFSecSchema.getSysAdminId();
+		if ((!permissionGranted) && (sysAdminId != null && !sysAdminId.isNull() && sysAdminId.equals(authUserId))) {
+			permissionGranted = true;
+		}
+		else if ((!permissionGranted) && (sysAdminId == null || sysAdminId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "ICFSecSchema.getSysAdminId()");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfTenantGroup(Authorization.getSecUserId(), Authorization.getSecTenantId(), "readtopdomain");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfClusterGroup(Authorization.getSecUserId(), Authorization.getSecClusterId(), "readtopdomain");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfSystemGroup(Authorization.getSecUserId(), "readtopdomain");
+		}
+		if (!permissionGranted) {
+			throw new CFLibPermissionDeniedException(getClass(), S_ProcName, ICFIntSchema.SCHEMA_NAME, ICFIntTopDomainTable.TABLE_NAME, "readtopdomain", authUserId.toString());//"Permission '%4$s' denied attempting to access %1$s.%2$s for user id %3$s"
+		}
+
+		ICFIntTopDomain retval = schema.getJpaHooksSchema().getTopDomainService().findByNameIdx(argTldId,
+		argName);
+		if(retval != null) {
+			// Retrieve the TenantId from retval and check ICFSec.backingSchema().isMemberOfTenantGroup(auth,TenantId,'readtopdomain'), clear retval to null if not a member
+			CFLibDbKeyHash256 effTenantId = CFLibDbKeyHash256.nullGet();
+			if (!ICFSecSchema.getBackingCFSec().isMemberOfTenantGroup(Authorization.getSecUserId(), effTenantId, "readtopdomain")) {
+				retval = null;
+			}
+		}
+		return( retval );
 	}
 
 	/**
@@ -484,6 +1000,36 @@ public class CFIntJpaTopDomainTable implements ICFIntTopDomainTable
 	public ICFIntTopDomain readRec( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 PKey )
 	{
+		final String S_ProcName = "readRec";
+		if (Authorization == null) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization");
+		}
+		boolean permissionGranted = false;
+		CFLibDbKeyHash256 authUserId = Authorization.getSecUserId();
+		if ((!permissionGranted) && (authUserId == null || authUserId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization.getSecUserId()");
+		}
+		// Check for "system" user
+		CFLibDbKeyHash256 sysAdminId = ICFSecSchema.getSysAdminId();
+		if ((!permissionGranted) && (sysAdminId != null && !sysAdminId.isNull() && sysAdminId.equals(authUserId))) {
+			permissionGranted = true;
+		}
+		else if ((!permissionGranted) && (sysAdminId == null || sysAdminId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "ICFSecSchema.getSysAdminId()");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfTenantGroup(Authorization.getSecUserId(), Authorization.getSecTenantId(), "readtopdomain");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfClusterGroup(Authorization.getSecUserId(), Authorization.getSecClusterId(), "readtopdomain");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfSystemGroup(Authorization.getSecUserId(), "readtopdomain");
+		}
+		if (!permissionGranted) {
+			throw new CFLibPermissionDeniedException(getClass(), S_ProcName, ICFIntSchema.SCHEMA_NAME, ICFIntTopDomainTable.TABLE_NAME, "readtopdomain", authUserId.toString());//"Permission '%4$s' denied attempting to access %1$s.%2$s for user id %3$s"
+		}
+
 		throw new CFLibNotImplementedYetException(getClass(), "readRec");
 	}
 
@@ -503,6 +1049,36 @@ public class CFIntJpaTopDomainTable implements ICFIntTopDomainTable
 	public ICFIntTopDomain lockRec( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 PKey )
 	{
+		final String S_ProcName = "lockRec";
+		if (Authorization == null) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization");
+		}
+		boolean permissionGranted = false;
+		CFLibDbKeyHash256 authUserId = Authorization.getSecUserId();
+		if ((!permissionGranted) && (authUserId == null || authUserId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization.getSecUserId()");
+		}
+		// Check for "system" user
+		CFLibDbKeyHash256 sysAdminId = ICFSecSchema.getSysAdminId();
+		if ((!permissionGranted) && (sysAdminId != null && !sysAdminId.isNull() && sysAdminId.equals(authUserId))) {
+			permissionGranted = true;
+		}
+		else if ((!permissionGranted) && (sysAdminId == null || sysAdminId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "ICFSecSchema.getSysAdminId()");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfTenantGroup(Authorization.getSecUserId(), ICFSecSchema.getSysTenantId(), "updatetopdomain");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfClusterGroup(Authorization.getSecUserId(), ICFSecSchema.getSysClusterId(), "updatetopdomain");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfSystemGroup(Authorization.getSecUserId(), "updatetopdomain");
+		}
+		if (!permissionGranted) {
+			throw new CFLibPermissionDeniedException(getClass(), S_ProcName, ICFIntSchema.SCHEMA_NAME, ICFIntTopDomainTable.TABLE_NAME, "updatetopdomain", authUserId.toString());//"Permission '%4$s' denied attempting to access %1$s.%2$s for user id %3$s"
+		}
+
 		throw new CFLibNotImplementedYetException(getClass(), "lockRec");
 	}
 
@@ -515,6 +1091,36 @@ public class CFIntJpaTopDomainTable implements ICFIntTopDomainTable
 	 */
 	@Override
 	public ICFIntTopDomain[] readAllRec( ICFSecAuthorization Authorization ) {
+		final String S_ProcName = "readAllRec";
+		if (Authorization == null) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization");
+		}
+		boolean permissionGranted = false;
+		CFLibDbKeyHash256 authUserId = Authorization.getSecUserId();
+		if ((!permissionGranted) && (authUserId == null || authUserId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization.getSecUserId()");
+		}
+		// Check for "system" user
+		CFLibDbKeyHash256 sysAdminId = ICFSecSchema.getSysAdminId();
+		if ((!permissionGranted) && (sysAdminId != null && !sysAdminId.isNull() && sysAdminId.equals(authUserId))) {
+			permissionGranted = true;
+		}
+		else if ((!permissionGranted) && (sysAdminId == null || sysAdminId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "ICFSecSchema.getSysAdminId()");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfTenantGroup(Authorization.getSecUserId(), Authorization.getSecTenantId(), "readtopdomain");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfClusterGroup(Authorization.getSecUserId(), Authorization.getSecClusterId(), "readtopdomain");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfSystemGroup(Authorization.getSecUserId(), "readtopdomain");
+		}
+		if (!permissionGranted) {
+			throw new CFLibPermissionDeniedException(getClass(), S_ProcName, ICFIntSchema.SCHEMA_NAME, ICFIntTopDomainTable.TABLE_NAME, "readtopdomain", authUserId.toString());//"Permission '%4$s' denied attempting to access %1$s.%2$s for user id %3$s"
+		}
+
 		throw new CFLibNotImplementedYetException(getClass(), "readAllRec");
 	}
 
@@ -535,6 +1141,36 @@ public class CFIntJpaTopDomainTable implements ICFIntTopDomainTable
 	public ICFIntTopDomain readRecByIdIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 argId )
 	{
+		final String S_ProcName = "readRecByIdIdx";
+		if (Authorization == null) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization");
+		}
+		boolean permissionGranted = false;
+		CFLibDbKeyHash256 authUserId = Authorization.getSecUserId();
+		if ((!permissionGranted) && (authUserId == null || authUserId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization.getSecUserId()");
+		}
+		// Check for "system" user
+		CFLibDbKeyHash256 sysAdminId = ICFSecSchema.getSysAdminId();
+		if ((!permissionGranted) && (sysAdminId != null && !sysAdminId.isNull() && sysAdminId.equals(authUserId))) {
+			permissionGranted = true;
+		}
+		else if ((!permissionGranted) && (sysAdminId == null || sysAdminId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "ICFSecSchema.getSysAdminId()");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfTenantGroup(Authorization.getSecUserId(), Authorization.getSecTenantId(), "readtopdomain");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfClusterGroup(Authorization.getSecUserId(), Authorization.getSecClusterId(), "readtopdomain");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfSystemGroup(Authorization.getSecUserId(), "readtopdomain");
+		}
+		if (!permissionGranted) {
+			throw new CFLibPermissionDeniedException(getClass(), S_ProcName, ICFIntSchema.SCHEMA_NAME, ICFIntTopDomainTable.TABLE_NAME, "readtopdomain", authUserId.toString());//"Permission '%4$s' denied attempting to access %1$s.%2$s for user id %3$s"
+		}
+
 		throw new CFLibNotImplementedYetException(getClass(), "readRecByIdIdx");
 	}
 
@@ -553,6 +1189,36 @@ public class CFIntJpaTopDomainTable implements ICFIntTopDomainTable
 	public ICFIntTopDomain[] readRecByTenantIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 argTenantId )
 	{
+		final String S_ProcName = "readRecByTenantIdx";
+		if (Authorization == null) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization");
+		}
+		boolean permissionGranted = false;
+		CFLibDbKeyHash256 authUserId = Authorization.getSecUserId();
+		if ((!permissionGranted) && (authUserId == null || authUserId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization.getSecUserId()");
+		}
+		// Check for "system" user
+		CFLibDbKeyHash256 sysAdminId = ICFSecSchema.getSysAdminId();
+		if ((!permissionGranted) && (sysAdminId != null && !sysAdminId.isNull() && sysAdminId.equals(authUserId))) {
+			permissionGranted = true;
+		}
+		else if ((!permissionGranted) && (sysAdminId == null || sysAdminId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "ICFSecSchema.getSysAdminId()");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfTenantGroup(Authorization.getSecUserId(), Authorization.getSecTenantId(), "readtopdomain");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfClusterGroup(Authorization.getSecUserId(), Authorization.getSecClusterId(), "readtopdomain");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfSystemGroup(Authorization.getSecUserId(), "readtopdomain");
+		}
+		if (!permissionGranted) {
+			throw new CFLibPermissionDeniedException(getClass(), S_ProcName, ICFIntSchema.SCHEMA_NAME, ICFIntTopDomainTable.TABLE_NAME, "readtopdomain", authUserId.toString());//"Permission '%4$s' denied attempting to access %1$s.%2$s for user id %3$s"
+		}
+
 		throw new CFLibNotImplementedYetException(getClass(), "readRecByTenantIdx");
 	}
 
@@ -571,6 +1237,36 @@ public class CFIntJpaTopDomainTable implements ICFIntTopDomainTable
 	public ICFIntTopDomain[] readRecByTldIdx( ICFSecAuthorization Authorization,
 		CFLibDbKeyHash256 argTldId )
 	{
+		final String S_ProcName = "readRecByTldIdx";
+		if (Authorization == null) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization");
+		}
+		boolean permissionGranted = false;
+		CFLibDbKeyHash256 authUserId = Authorization.getSecUserId();
+		if ((!permissionGranted) && (authUserId == null || authUserId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization.getSecUserId()");
+		}
+		// Check for "system" user
+		CFLibDbKeyHash256 sysAdminId = ICFSecSchema.getSysAdminId();
+		if ((!permissionGranted) && (sysAdminId != null && !sysAdminId.isNull() && sysAdminId.equals(authUserId))) {
+			permissionGranted = true;
+		}
+		else if ((!permissionGranted) && (sysAdminId == null || sysAdminId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "ICFSecSchema.getSysAdminId()");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfTenantGroup(Authorization.getSecUserId(), Authorization.getSecTenantId(), "readtopdomain");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfClusterGroup(Authorization.getSecUserId(), Authorization.getSecClusterId(), "readtopdomain");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfSystemGroup(Authorization.getSecUserId(), "readtopdomain");
+		}
+		if (!permissionGranted) {
+			throw new CFLibPermissionDeniedException(getClass(), S_ProcName, ICFIntSchema.SCHEMA_NAME, ICFIntTopDomainTable.TABLE_NAME, "readtopdomain", authUserId.toString());//"Permission '%4$s' denied attempting to access %1$s.%2$s for user id %3$s"
+		}
+
 		throw new CFLibNotImplementedYetException(getClass(), "readRecByTldIdx");
 	}
 
@@ -593,6 +1289,36 @@ public class CFIntJpaTopDomainTable implements ICFIntTopDomainTable
 		CFLibDbKeyHash256 argTldId,
 		String argName )
 	{
+		final String S_ProcName = "readRecByNameIdx";
+		if (Authorization == null) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization");
+		}
+		boolean permissionGranted = false;
+		CFLibDbKeyHash256 authUserId = Authorization.getSecUserId();
+		if ((!permissionGranted) && (authUserId == null || authUserId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "Authorization.getSecUserId()");
+		}
+		// Check for "system" user
+		CFLibDbKeyHash256 sysAdminId = ICFSecSchema.getSysAdminId();
+		if ((!permissionGranted) && (sysAdminId != null && !sysAdminId.isNull() && sysAdminId.equals(authUserId))) {
+			permissionGranted = true;
+		}
+		else if ((!permissionGranted) && (sysAdminId == null || sysAdminId.isNull())) {
+			throw new CFLibNullArgumentException(getClass(), S_ProcName, 0, "ICFSecSchema.getSysAdminId()");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfTenantGroup(Authorization.getSecUserId(), Authorization.getSecTenantId(), "readtopdomain");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfClusterGroup(Authorization.getSecUserId(), Authorization.getSecClusterId(), "readtopdomain");
+		}
+		if(!permissionGranted) {
+			permissionGranted = ICFSecSchema.getBackingCFSec().isMemberOfSystemGroup(Authorization.getSecUserId(), "readtopdomain");
+		}
+		if (!permissionGranted) {
+			throw new CFLibPermissionDeniedException(getClass(), S_ProcName, ICFIntSchema.SCHEMA_NAME, ICFIntTopDomainTable.TABLE_NAME, "readtopdomain", authUserId.toString());//"Permission '%4$s' denied attempting to access %1$s.%2$s for user id %3$s"
+		}
+
 		throw new CFLibNotImplementedYetException(getClass(), "readRecByNameIdx");
 	}
 }
