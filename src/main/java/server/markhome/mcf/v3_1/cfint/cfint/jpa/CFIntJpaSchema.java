@@ -401,8 +401,13 @@ public class CFIntJpaSchema
 	}
 
 	@Override
-	public boolean isMemberOfTenantGroup(CFLibDbKeyHash256 userId, CFLibDbKeyHash256 tenantId, String permissionName) {
-		return ICFSecSchema.getBackingCFSec().isMemberOfTenantGroup(userId, tenantId, permissionName);
+	public boolean isMemberOfTenantGroup(CFLibDbKeyHash256 userId, CFLibDbKeyHash256 clusterId, CFLibDbKeyHash256 tenantId, String permissionName) {
+		return ICFSecSchema.getBackingCFSec().isMemberOfTenantGroup(userId, clusterId, tenantId, permissionName);
+	}
+
+	@Override
+	public boolean isMemberOfTenantGroup(String userLogin, CFLibDbKeyHash256 clusterId, CFLibDbKeyHash256 tenantId, String permissionName) {
+		return ICFSecSchema.getBackingCFSec().isMemberOfTenantGroup(userLogin, clusterId, tenantId, permissionName);
 	}
 
 	@Override
@@ -411,8 +416,18 @@ public class CFIntJpaSchema
 	}
 
 	@Override
+	public boolean isMemberOfClusterGroup(String userLogin, CFLibDbKeyHash256 clusterId, String permissionName) {
+		return ICFSecSchema.getBackingCFSec().isMemberOfClusterGroup(userLogin, clusterId, permissionName);
+	}
+
+	@Override
 	public boolean isMemberOfSystemGroup(CFLibDbKeyHash256 userId, String permissionName) {
 		return ICFSecSchema.getBackingCFSec().isMemberOfSystemGroup(userId, permissionName);
+	}
+
+	@Override
+	public boolean isMemberOfSystemGroup(String userLogin, String permissionName) {
+		return ICFSecSchema.getBackingCFSec().isMemberOfSystemGroup(userLogin, permissionName);
 	}
 
 	@Override
